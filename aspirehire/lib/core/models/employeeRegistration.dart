@@ -1,33 +1,24 @@
 class EmployeeRegistrationRequest {
-  final String username;
-  final String email;
-  final String phone;
-  final String password;
-  final String firstName;
-  final String lastName;
-  final String dob;
-  final String gender;
-
-  EmployeeRegistrationRequest({
-    required this.username,
-    required this.email,
-    required this.phone,
-    required this.password,
-    required this.firstName,
-    required this.lastName,
-    required this.dob,
-    required this.gender,
-  });
+  String? email;
+  String? password;
+  String? phone;
+  String? username;
+  String? firstName;
+  String? lastName;
+  String? dob;
+  String? gender;
+  // Add other attributes as needed
 
   Map<String, dynamic> toJson() => {
-    "username": username,
-    "email": email,
-    "phone": phone,
-    "password": password,
-    "firstName": firstName,
-    "lastName": lastName,
-    "dob": dob,
-    "gender": gender,
+    if (email != null) 'email': email,
+    if (password != null) 'password': password,
+    if (phone != null) 'phone': phone,
+    if (username != null) 'username': username,
+    if (firstName != null) 'firstName': firstName,
+    if (lastName != null) 'lastName': lastName,
+    if (dob != null) 'dob': dob,
+    if (gender != null) 'gender': gender,
+    // Add other attributes as needed
   };
 }
 
