@@ -1,4 +1,4 @@
-class JobSeekerRegistrationModel {
+class JobSeekerRegistrationRequest {
   String? email;
   String? password;
   String? phone;

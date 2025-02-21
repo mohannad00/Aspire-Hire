@@ -9,7 +9,7 @@ class JobSeekerRegisterCubit extends Cubit<JobSeekerRegisterState> {
 
   final Dio _dio = Dio();
 
-  Future<void> registerJobSeeker(JobseekerRegistrationRequest request) async {
+  Future<void> registerJobSeeker(JobSeekerRegistrationRequest request) async {
     emit(JobSeekerRegisterLoading());
 
     try {
