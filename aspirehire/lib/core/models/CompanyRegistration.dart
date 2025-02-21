@@ -1,27 +1,20 @@
 class CompanyRegistrationRequest {
-  final String username;
-  final String email;
-  final String phone;
-  final String password;
-  final String companyName;
-  final String address;
-
-  CompanyRegistrationRequest({
-    required this.username,
-    required this.email,
-    required this.phone,
-    required this.password,
-    required this.companyName,
-    required this.address,
-  });
+  String? email;
+  String? password;
+  String? phone;
+  String? username;
+  String? companyName;
+  String? address;
+  // Add other attributes as needed
 
   Map<String, dynamic> toJson() => {
-    "username": username,
-    "email": email,
-    "phone": phone,
-    "password": password,
-    "companyName": companyName,
-    "address": address,
+    if (email != null) 'email': email,
+    if (password != null) 'password': password,
+    if (phone != null) 'phone': phone,
+    if (username != null) 'username': username,
+    if (companyName != null) 'companyName': companyName,
+    if (address != null) 'address': address,
+    // Add other attributes as needed
   };
 }
 
