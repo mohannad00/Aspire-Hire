@@ -20,7 +20,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization':  token,
           },
         ),
       );

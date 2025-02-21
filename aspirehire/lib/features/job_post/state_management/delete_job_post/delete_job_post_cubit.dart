@@ -20,7 +20,7 @@ class DeleteJobPostCubit extends Cubit<DeleteJobPostState> {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization': token,
           },
         ),
       );

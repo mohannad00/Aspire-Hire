@@ -21,7 +21,7 @@ class SearchJobPostsCubit extends Cubit<SearchJobPostsState> {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization': token ,
           },
         ),
       );

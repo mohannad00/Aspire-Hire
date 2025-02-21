@@ -22,7 +22,7 @@ class CreateJobPostCubit extends Cubit<CreateJobPostState> {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization': token,
           },
         ),
       );
