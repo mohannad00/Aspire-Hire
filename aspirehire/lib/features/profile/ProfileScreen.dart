@@ -67,13 +67,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   top: 120,
                   left: 330,
                   child: IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
+                    icon: const Icon(Icons.edit, color: Colors.orange),
                     onPressed: () {},
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 60),
+            const SizedBox(height: 40),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(
@@ -86,23 +86,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                children: const [
+                children: [
+                  
+ListTile(
+  leading: SizedBox(
+    width: 20, // تحديد عرض الصورة
+    height: 20, // تحديد ارتفاع الصورة
+    child: Image.asset(
+      'assets/business.png', // مسار الصورة
+      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
+    ),
+  ),
+  title: const Text("Senior Fullstack Developer"),
+),
                   ListTile(
-                    leading: Icon(Icons.shopping_bag, color: Colors.black54),
-                    title: Text("Senior Fullstack Developer"),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.phone, color: Colors.black54),
-                    title: Text("+2010000001100"),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.email, color: Colors.black54),
-                    title: Text("MustafaMahmoud@gmail.com"),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.location_on, color: Colors.black54),
-                    title: Text("Egypt, Cairo"),
-                  ),
+  leading: SizedBox(
+    width: 20, // تحديد عرض الصورة
+    height: 20, // تحديد ارتفاع الصورة
+    child: Image.asset(
+      'assets/phone.png', // مسار الصورة
+      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
+    ),
+  ),
+  title: const Text("+201000001100"),
+),
+
+ListTile(
+  leading: SizedBox(
+    width: 20, // تحديد عرض الصورة
+    height: 20, // تحديد ارتفاع الصورة
+    child: Image.asset(
+      'assets/email.png', // مسار الصورة
+      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
+    ),
+  ),
+  title: const Text("MustafaMahmoud@gmail.com"),
+),
+ListTile(
+  leading: SizedBox(
+    width: 20, // تحديد عرض الصورة
+    height: 20, // تحديد ارتفاع الصورة
+    child: Image.asset(
+      'assets/location.png', // مسار الصورة
+      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
+    ),
+  ),
+  title: const Text("Egypt, Cairo"),
+),
                 ],
               ),
             ),
@@ -151,13 +181,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         IconButton(
-                            icon: const Icon(Icons.gite_outlined, size: 30),
+                            icon: Image.asset('assets/Clip path group.png', width: 24, height: 24),
                             onPressed: () {}),
                         IconButton(
-                            icon: const Icon(Icons.tab_sharp, size: 30),
+                            icon: Image.asset('assets/twitter.png', width: 24, height: 24),
                             onPressed: () {}),
                         IconButton(
-                            icon: const Icon(Icons.web, size: 30),
+                            icon: Image.asset('assets/world.png', width: 24, height: 24),
                             onPressed: () {}),
                       ],
                     )
@@ -190,15 +220,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Column(
                       children: const [
                         ListTile(
-                          leading: Icon(Icons.work, color: Colors.blueAccent),
-                          title: Text("Senior Fullstack Developer - Xceed"),
+  leading: CircleAvatar(
+    radius: 5, // حجم الأيقونة
+    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
+  ),
+  title: Text("Senior Fullstack Developer - Xceed"),
                           subtitle: Text("May, 2023 - Currently"),
                         ),
                         ListTile(
-                          leading: Icon(Icons.work, color: Colors.blueAccent),
-                          title: Text("Senior Fullstack Developer - Oracle"),
+  leading: CircleAvatar(
+    radius: 5, // حجم الأيقونة
+    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
+  ),
+  title: Text("Senior Fullstack Developer - Oracle"),
                           subtitle: Text("March 2021 - May 2023"),
                         ),
+                        
                       ],
                     ),
                   ],
@@ -229,16 +266,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Column(
                       children: const [
+                        
                         ListTile(
-                          leading: Icon(Icons.work, color: Colors.blueAccent),
-                          title: Text("Senior Fullstack Developer - Xceed"),
-                          subtitle: Text("May, 2023 - Currently"),
+  leading: CircleAvatar(
+    radius: 5, // حجم الأيقونة
+    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
+  ),
+  title: Text("Computer Science "),
+                          subtitle: Text(" Cairo University - Egypt"),
                         ),
                         ListTile(
-                          leading: Icon(Icons.work, color: Colors.blueAccent),
-                          title: Text("Senior Fullstack Developer - Oracle"),
-                          subtitle: Text("March 2021 - May 2023"),
+  leading: CircleAvatar(
+    radius: 5, // حجم الأيقونة
+    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
+  ),
+  title: Text("Computer Science "),
+                          subtitle: Text(" Cairo University - Egypt"),
                         ),
+                        
                       ],
                     ),
                   ],
@@ -272,13 +317,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Column(
                       children: const [
                         ListTile(
-                          leading: Icon(Icons.work, color: Colors.blueAccent),
-                          title: Text("Senior Fullstack Developer - Xceed"),
+leading: CircleAvatar(
+    radius: 5, // حجم الأيقونة
+    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
+  ),                          title: Text("Senior Fullstack Developer - Xceed"),
                           subtitle: Text("May, 2023 - Currently"),
                         ),
                         ListTile(
-                          leading: Icon(Icons.work, color: Colors.blueAccent),
-                          title: Text("Senior Fullstack Developer - Oracle"),
+leading: CircleAvatar(
+    radius: 5, // حجم الأيقونة
+    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
+  ),                          title: Text("Senior Fullstack Developer - Oracle"),
                           subtitle: Text("March 2021 - May 2023"),
                         ),
                       ],

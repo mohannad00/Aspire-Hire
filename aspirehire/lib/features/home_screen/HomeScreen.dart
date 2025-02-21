@@ -1,9 +1,11 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/core/components/ReusableComponent.dart';
+import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/job_post/CreatePost.dart';
 import 'package:flutter/material.dart';
-import 'package:aspirehire/features/job_search/JobSearch.dart'; // تأكدي أن المسار صحيح
-import 'package:aspirehire/features/profile/ProfileScreen.dart'; // تأكدي أن المسار صحيح
+import 'package:aspirehire/features/job_search/JobSearch.dart';
+import 'package:aspirehire/features/profile/ProfileScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,8 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 15,),
+        children: [          
           Container(
                   height: 85,
                   decoration: const BoxDecoration(
@@ -41,11 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(width: 10,),
                       Text("Hello,Mustafa",style: TextStyle(color: Colors.white),),
                      ],),
+                     
                       IconButton(
-  icon: Icon(Icons.notification_important_outlined, color: Colors.white),
-  onPressed: () {
-    // أضف وظيفة الزر هنا
-  },
+  icon:  Image.asset('assets/mage_notification-bell.png', width: 24, height: 24),
+  onPressed: () {},
 )
 ],
                   ),
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         children: [
-          Icon(Icons.photo, color: Color.fromARGB(255, 0, 0, 0)), // أيقونة الصورة
+          Image.asset('assets/proicons_photo.png', width: 18, height: 18), // أيقونة الصورة
           SizedBox(width: 5), // مسافة بين الأيقونة والنص
           Text("Photo"),
         ],
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         children: [
-          Icon(Icons.video_collection, color: Color.fromARGB(255, 0, 0, 0)), // أيقونة الفيديو
+          Image.asset('assets/proicons_video.png', width: 18, height: 18), // أيقونة الصورة
           SizedBox(width: 5),
           Text("Video"),
         ],
@@ -122,14 +122,19 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         children: [
-          Icon(Icons.insert_drive_file, color: Color.fromARGB(255, 0, 0, 0)), // أيقونة المستند
+          Image.asset('assets/ph_article.png', width: 18, height: 18), // أيقونة الصورة
           SizedBox(width: 5),
           Text("Document"),
         ],
       ),
     ),
   ],
-),
+),SizedBox(height: 20),
+ Container(
+                              height: 1,
+                              width: double.infinity,
+                              color: Colors.orange,
+                            ),
 
           SizedBox(height: 20),
           Text('Recommended Jobs', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -170,6 +175,19 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: ReusableComponents.reusableBackButton(
+          context: context,
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ChoosingRole()),
+            );
+          },
+        ),
+      ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -237,16 +255,40 @@ class JobCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: ListTile(
-        leading: Image.asset('assets/logo.png'),
-        title: Text('Web Designer.'),
-        subtitle: Text('hp  •  Part-time\nEgypt, Cairo'),
-        trailing: Icon(Icons.close, color: Colors.black),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+              Image.asset('assets/logo.png', width: 50, height: 50),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Web Designer.',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'hp  •  Part-time\nEgypt, Cairo',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                // Handle close button press
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
 class PostCard extends StatelessWidget {
   const PostCard({super.key});
 
@@ -278,26 +320,28 @@ class PostCard extends StatelessWidget {
               style: TextStyle(
                 fontFamily:'Poppins' ,
                 fontSize: 15),),
-            SizedBox(height: 10),
+            TextButton(
+  onPressed: () {  },
+  child: Text('56 comments'),
+),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Row(
                   children: [
                     IconButton(
-                       color: Colors.grey,
-                        onPressed: () {}, icon: Icon(Icons.thumb_up_rounded),),
+                        onPressed: () {}, icon: Image.asset('assets/like-wrapper.png', width: 24, height: 24),),
                         Text('258'),
+                        SizedBox(width: 50),
                     IconButton(
-                       color: Colors.grey,
-                        onPressed: () {}, icon: Icon(Icons.comment),),
+                        onPressed: () {}, icon:Image.asset('assets/comment-wrapper.png', width: 24, height: 24),),
+                   SizedBox(width: 50),
                     IconButton(
-                       color: Colors.grey,
-                        onPressed: () {}, icon: Icon(Icons.send),),
-                    SizedBox(width: 5),
+                        onPressed: () {}, icon: Image.asset('assets/send-wrapper.png', width: 24, height: 24),),
+                    SizedBox(width: 50),
                   ],
                 ),
-                Text('56 comments'),
+                
               ],
             ),
           ],

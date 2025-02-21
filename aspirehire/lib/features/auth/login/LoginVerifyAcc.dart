@@ -57,89 +57,24 @@ class _LoginVerifyAccState extends State<LoginVerifyAcc> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                const Padding(
-                  padding: EdgeInsets.all(7),
-                  child: Text(
-                    "Enter 4 digit code we have sent to youremail",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.21,
-                      child: ReusableComponents.reusableTextField(
-                        hintText: '',
-                        hintColor: Colors.grey,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        borderRadius: 10.0,
-                        borderColor: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.21,
-                      child: ReusableComponents.reusableTextField(
-                        hintText: '',
-                        hintColor: Colors.grey,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        borderRadius: 10.0,
-                        borderColor: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.21,
-                      child: ReusableComponents.reusableTextField(
-                        hintText: '',
-                        hintColor: Colors.grey,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        borderRadius: 10.0,
-                        borderColor: Colors.grey,
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.21,
-                      child: ReusableComponents.reusableTextField(
-                        hintText: '',
-                        hintColor: Colors.grey,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        borderRadius: 10.0,
-                        borderColor: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
+                
                 SizedBox(height: MediaQuery.of(context).size.height * 0.035),
                 const Text(
-                  "Haven’t received verification code?",
+                  "Please check your email inbox and click on the provided link to reset your password. If you don't receive email, ",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     color: Colors.grey,
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 TextButton(
                   onPressed: () {},
                   child: const Text(
-                    'Resend Code',
+                    'Click here to resend',
                     style: TextStyle(
                       color: Color(0xFF013E5D),
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       decoration: TextDecoration.underline,
                     ),

@@ -100,12 +100,10 @@ class ReusableComponents extends StatelessWidget {
       obscureText: obscureText,
       decoration: InputDecoration(
         hintText: hintText,
-        
         hintStyle: TextStyle(
           color: hintColor,
           fontSize: fontSize,
           fontWeight: fontWeight,
-          
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
@@ -135,6 +133,7 @@ class ReusableComponents extends StatelessWidget {
     );
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Container();
