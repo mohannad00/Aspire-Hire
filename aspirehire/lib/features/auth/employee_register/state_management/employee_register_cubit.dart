@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import '../../../../config/database/api/end_points.dart';
-import '../../../../core/models/employeeRegistration.dart';
+import '../../../../core/models/EmployeeRegistration.dart';
 import 'employee_register_state.dart';
 
 class EmployeeRegisterCubit extends Cubit<EmployeeRegisterState> {
