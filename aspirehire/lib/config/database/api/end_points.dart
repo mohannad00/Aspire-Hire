@@ -9,14 +9,11 @@ class ApiEndpoints {
   static const String companyRegister = '$baseUrl/auth/company';
   static const String login = '$baseUrl/auth/login';
   static const String resendConfirm = '$baseUrl/auth/resend-confirm';
-  static const String requestPasswordReset =
-      '$baseUrl/auth/request-password-reset';
+  static const String requestPasswordReset = '$baseUrl/auth/request-password-reset';
   static const String passwordReset = '$baseUrl/auth/password-reset';
 
   // Job Post Endpoints
-  static const String createJobPost =
-      '$baseUrl/jobpost'; 
-
+  static const String createJobPost = '$baseUrl/jobpost';
   static const String updateJobPost = '$baseUrl/jobpost'; // Append /:jobPostId
   static const String deleteJobPost = '$baseUrl/jobpost'; // Append /:jobPostId
   static const String getJobPost = '$baseUrl/jobpost'; // Append ?id=:jobPostId
@@ -30,5 +27,9 @@ class ApiEndpoints {
   static const String getCompanyProfile = '$baseUrl/company/profile';
   static const String updateCompanyProfile = '$baseUrl/company/profile';
 
-  
+  // Job Application Endpoints
+  static const String createJobApplication = '$baseUrl/jobpost/:jobPostId/application';
+  static const String updateJobApplication = '$baseUrl/jobpost/:jobPostId/application/:applicationId';
+  static const String getJobApplication = '$baseUrl/jobpost/:jobPostId/application/:applicationId';
+  static const String getJobApplications = '$baseUrl/jobpost/:jobPostId/application';
 }
