@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeCompany extends StatefulWidget {
+  const HomeCompany({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeCompanyState createState() => _HomeCompanyState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeCompanyState extends State<HomeCompany> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -136,8 +136,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.orange,
                             ),
 
-          const SizedBox(height: 20),
-          
+           const SizedBox(height: 20),
+          const PostCard(),
+          const PostCard(),
         ],
       ),
     ),
@@ -235,48 +236,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class JobCard extends StatelessWidget {
-  const JobCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-              Image.asset('assets/logo.png', width: 50, height: 50),
-            const SizedBox(width: 10),
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Web Designer.',
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'hp  •  Part-time\nEgypt, Cairo',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                // Handle close button press
-              },
-            ),
           ],
         ),
       ),

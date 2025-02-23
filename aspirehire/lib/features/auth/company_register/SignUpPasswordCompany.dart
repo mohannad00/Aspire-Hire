@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/features/home_screen/HomeCompany.dart';
 import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
@@ -179,7 +180,7 @@ class _SignUpPasswordCompanyState extends State<SignUpPasswordCompany> {
                   onPressed: () {
                     Navigator.pushReplacement(
                      context,
-                      MaterialPageRoute(builder: (context) =>  HomeScreen()),
+                      MaterialPageRoute(builder: (context) =>  HomeCompany()),
                     );
                   },
                 ),
