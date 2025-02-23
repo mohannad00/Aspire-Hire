@@ -1,4 +1,4 @@
-import 'package:aspirehire/features/onboarding/OnboardingScreen.dart';
+import 'package:aspirehire/features/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       debugShowCheckedModeBanner: false,
-      home: const OnboardingScreen(),
+      home: const SplashScreen(),
     );
   }
 }
