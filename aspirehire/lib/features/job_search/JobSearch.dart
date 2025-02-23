@@ -2,7 +2,7 @@
 
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:aspirehire/features/home_screen/HomeScreen.dart';
+import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:percent_indicator/percent_indicator.dart';

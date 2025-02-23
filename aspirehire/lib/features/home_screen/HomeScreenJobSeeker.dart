@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _pages = [
     SingleChildScrollView(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [          
@@ -32,10 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                     Row(
+                     const Row(
                       children: [
                         SizedBox(width: 10,),
-                      const CircleAvatar(
+                      CircleAvatar(
                     radius: 20,
                     backgroundImage: AssetImage(''),
                   ),
@@ -51,14 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Center(
   child: Builder(
     builder: (context) => GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CreatePost()),
+          MaterialPageRoute(builder: (context) => const CreatePost()),
         );
       },
       child: Container(
@@ -79,77 +79,77 @@ class _HomeScreenState extends State<HomeScreen> {
 ),
 
 
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
   mainAxisAlignment: MainAxisAlignment.spaceAround,
   children: [
     ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
-         backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        foregroundColor: Color.fromARGB(255, 0, 0, 0), // لون النص
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // تعديل المسافات
+         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        foregroundColor: const Color.fromARGB(255, 0, 0, 0), // لون النص
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), // تعديل المسافات
       ),
       child: Row(
         children: [
           Image.asset('assets/proicons_photo.png', width: 18, height: 18), // أيقونة الصورة
-          SizedBox(width: 5), // مسافة بين الأيقونة والنص
-          Text("Photo"),
+          const SizedBox(width: 5), // مسافة بين الأيقونة والنص
+          const Text("Photo"),
         ],
       ),
     ),
     ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        foregroundColor: Color.fromARGB(255, 0, 0, 0),
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       ),
       child: Row(
         children: [
           Image.asset('assets/proicons_video.png', width: 18, height: 18), // أيقونة الصورة
-          SizedBox(width: 5),
-          Text("Video"),
+          const SizedBox(width: 5),
+          const Text("Video"),
         ],
       ),
     ),
     ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        foregroundColor: Color.fromARGB(255, 0, 0, 0),
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       ),
       child: Row(
         children: [
           Image.asset('assets/ph_article.png', width: 18, height: 18), // أيقونة الصورة
-          SizedBox(width: 5),
-          Text("Document"),
+          const SizedBox(width: 5),
+          const Text("Document"),
         ],
       ),
     ),
   ],
-),SizedBox(height: 20),
+),const SizedBox(height: 20),
  Container(
                               height: 1,
                               width: double.infinity,
                               color: Colors.orange,
                             ),
 
-          SizedBox(height: 20),
-          Text('Recommended Jobs', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          JobCard(),
-          JobCard(),
-          SizedBox(height: 20),
-          PostCard(),
-          PostCard(),
+          const SizedBox(height: 20),
+          const Text('Recommended Jobs', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          const JobCard(),
+          const JobCard(),
+          const SizedBox(height: 20),
+          const PostCard(),
+          const PostCard(),
         ],
       ),
     ),
-    Center(child: Text("Search Page", style: TextStyle(fontSize: 24))),
-    Center(child: Text("List Page", style: TextStyle(fontSize: 24))),
-    Center(child: Text("Profile Page", style: TextStyle(fontSize: 24))),
+    const Center(child: Text("Search Page", style: TextStyle(fontSize: 24))),
+    const Center(child: Text("List Page", style: TextStyle(fontSize: 24))),
+    const Center(child: Text("Profile Page", style: TextStyle(fontSize: 24))),
   ];
 
   final List<String> _labels = ["Home", "Search", "List", "Profile"];
@@ -158,12 +158,12 @@ class _HomeScreenState extends State<HomeScreen> {
     if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => JobSearch()),
+        MaterialPageRoute(builder: (context) => const JobSearch()),
       );
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ProfileScreen()),
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
       );
     } else {
       setState(() {
@@ -190,10 +190,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        margin: EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Color(0xFF013E5D),
+          color: const Color(0xFF013E5D),
           borderRadius: BorderRadius.circular(30),
         ),
         child: Row(
@@ -216,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _onItemTapped(index);
       },
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: isSelected ? 16 : 0, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.transparent,
@@ -226,15 +226,15 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Icon(
               icon,
-              color: isSelected ? Color(0xFF013E5D) : Colors.white,
+              color: isSelected ? const Color(0xFF013E5D) : Colors.white,
               size: 28,
             ),
             if (isSelected)
               Padding(
-                padding: EdgeInsets.only(left: 8),
+                padding: const EdgeInsets.only(left: 8),
                 child: Text(
                   label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xFF013E5D),
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -261,14 +261,14 @@ class JobCard extends StatelessWidget {
           children: [
               Image.asset('assets/logo.png', width: 50, height: 50),
             const SizedBox(width: 10),
-            Expanded(
+            const Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Web Designer.',
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
                     'hp  •  Part-time\nEgypt, Cairo',
@@ -297,11 +297,11 @@ class PostCard extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            const Row(
               children: [
                 CircleAvatar(backgroundImage: AssetImage('')),
                 SizedBox(width: 10),
@@ -314,15 +314,15 @@ class PostCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.',
               style: TextStyle(
                 fontFamily:'Poppins' ,
                 fontSize: 15),),
             TextButton(
   onPressed: () {  },
-  child: Text('56 comments'),
+  child: const Text('56 comments'),
 ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -331,14 +331,14 @@ class PostCard extends StatelessWidget {
                   children: [
                     IconButton(
                         onPressed: () {}, icon: Image.asset('assets/like-wrapper.png', width: 24, height: 24),),
-                        Text('258'),
-                        SizedBox(width: 50),
+                        const Text('258'),
+                        const SizedBox(width: 50),
                     IconButton(
                         onPressed: () {}, icon:Image.asset('assets/comment-wrapper.png', width: 24, height: 24),),
-                   SizedBox(width: 50),
+                   const SizedBox(width: 50),
                     IconButton(
                         onPressed: () {}, icon: Image.asset('assets/send-wrapper.png', width: 24, height: 24),),
-                    SizedBox(width: 50),
+                    const SizedBox(width: 50),
                   ],
                 ),
                 

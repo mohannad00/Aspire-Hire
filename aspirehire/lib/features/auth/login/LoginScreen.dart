@@ -6,7 +6,7 @@ import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/auth/reset_password/LoginForgetPass.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpScreenJobSeeker.dart';
-import '../../home_screen/HomeScreen.dart';
+import '../../home_screen/HomeScreenJobSeeker.dart';
 import 'state_management/login_cubit.dart'; // Import the LoginCubit
 import 'state_management/login_state.dart'; // Import the LoginState
 

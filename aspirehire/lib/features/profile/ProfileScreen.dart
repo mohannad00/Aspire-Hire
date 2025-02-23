@@ -3,7 +3,7 @@
 //import 'package:aspirehire/ReusableComponent.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
-import 'package:aspirehire/features/home_screen/HomeScreen.dart';
+import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
