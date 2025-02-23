@@ -53,8 +53,6 @@ class CreateJobPostResponse {
   );
 }
 
-
-
 class JobPostData {
   final String company;
   final String jobTitle;
