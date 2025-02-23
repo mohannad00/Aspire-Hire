@@ -180,7 +180,7 @@ class _SignUpPasswordEmployeeState extends State<SignUpPasswordEmployee> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
+                          builder: (context) => const HomeScreenJobSeeker()),
                     );
                   },
                 ),

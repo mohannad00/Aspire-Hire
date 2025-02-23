@@ -1,9 +1,9 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
-import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpUserNameJobSeeker.dart';
+import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart' show HomeScreenJobSeeker;
 import 'package:flutter/material.dart';
 
 class SignUpPasswordJobSeeker extends StatefulWidget {
@@ -180,7 +180,7 @@ class _SignUpPasswordJobSeekerState extends State<SignUpPasswordJobSeeker> {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) =>  HomeScreen()),
+                      MaterialPageRoute(builder: (context) =>  const HomeScreenJobSeeker()),
                     );
                   },
                 ),

@@ -4,7 +4,6 @@
 import 'package:aspirehire/features/home_screen/HomeCompany.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
-import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 
 class ProfileCompany extends StatefulWidget {
   const ProfileCompany({super.key});

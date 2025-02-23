@@ -16,7 +16,7 @@ class CreatePost extends StatelessWidget {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              MaterialPageRoute(builder: (context) => const HomeScreenJobSeeker()),
             );
           },
         ),

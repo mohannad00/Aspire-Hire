@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Navigate to the next screen on successful login
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const HomeScreen()),
+                        MaterialPageRoute(builder: (context) => const HomeScreenJobSeeker()),
                       );
                     } else if (state is LoginFailure) {
                       // Show error message

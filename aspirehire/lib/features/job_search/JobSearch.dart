@@ -24,7 +24,7 @@ class _JobSearchState extends State<JobSearch> {
       // عند الضغط على Home، الانتقال إلى HomeScreen
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreenJobSeeker()),
       );
     } 
      else if (index == 3) {

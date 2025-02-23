@@ -21,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (index == 0) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => const HomeScreenJobSeeker()),
       );
     } else if (index == 1) {
       Navigator.pushReplacement(
