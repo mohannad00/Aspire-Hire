@@ -1,7 +1,6 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
 import 'package:aspirehire/features/home_screen/HomeCompany.dart';
-import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpUserNameCompany.dart';

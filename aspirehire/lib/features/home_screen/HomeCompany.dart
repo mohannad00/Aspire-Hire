@@ -2,11 +2,10 @@
 
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
-import 'package:aspirehire/features/job_post/CreatePost.dart';
 import 'package:aspirehire/features/job_post/PostJob.dart';
+import 'package:aspirehire/features/profile/ProfileCompany.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
-import 'package:aspirehire/features/profile/ProfileScreen.dart';
 
 class HomeCompany extends StatefulWidget {
   const HomeCompany({super.key});
@@ -159,7 +158,7 @@ class _HomeCompanyState extends State<HomeCompany> {
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        MaterialPageRoute(builder: (context) => const ProfileCompany()),
       );
     } else {
       setState(() {
