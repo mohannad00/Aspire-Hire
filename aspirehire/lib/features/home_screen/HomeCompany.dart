@@ -3,6 +3,7 @@
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/job_post/CreatePost.dart';
+import 'package:aspirehire/features/job_post/PostJob.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
@@ -58,7 +59,7 @@ class _HomeCompanyState extends State<HomeCompany> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const CreatePost()),
+          MaterialPageRoute(builder: (context) => const PostJob()),
         );
       },
       child: Container(
@@ -70,7 +71,7 @@ class _HomeCompanyState extends State<HomeCompany> {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
-          "Write a post!",
+          "Post a job!",
           style: TextStyle(fontSize: 18, color: Colors.grey[600]),
         ),
       ),
