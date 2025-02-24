@@ -12,20 +12,19 @@ class ApiEndpoints {
   static const String requestPasswordReset = '$baseUrl/auth/request-password-reset';
   static const String passwordReset = '$baseUrl/auth/password-reset';
 
+  // Profile Endpoints
+  static const String getProfile = '$baseUrl/profile';
+  static const String updateProfile = '$baseUrl/profile';
+  static const String updateProfilePicture = '$baseUrl/profile/profile-picture';
+  static const String uploadResume = '$baseUrl/profile/resume';
+  static const String deleteProfilePicture = '$baseUrl/profile/profile-picture';
+
   // Job Post Endpoints
   static const String createJobPost = '$baseUrl/jobpost';
   static const String updateJobPost = '$baseUrl/jobpost'; // Append /:jobPostId
   static const String deleteJobPost = '$baseUrl/jobpost'; // Append /:jobPostId
   static const String getJobPost = '$baseUrl/jobpost'; // Append ?id=:jobPostId
   static const String searchJobPosts = '$baseUrl/jobpost/search';
-
-  // Employee Endpoints
-  static const String getEmployeeProfile = '$baseUrl/employee/profile';
-  static const String updateEmployeeProfile = '$baseUrl/employee/profile';
-
-  // Company Endpoints
-  static const String getCompanyProfile = '$baseUrl/company/profile';
-  static const String updateCompanyProfile = '$baseUrl/company/profile';
 
   // Job Application Endpoints
   static const String createJobApplication = '$baseUrl/jobpost/:jobPostId/application';
