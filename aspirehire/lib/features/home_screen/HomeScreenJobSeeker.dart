@@ -65,17 +65,10 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: ReusableComponents.reusableBackButton(
-          context: context,
-          onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ChoosingRole()));
-          },
-        ),
+      // Removed the AppBar
+      body: SafeArea(
+        child: _pages[_selectedIndex],
       ),
-      body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         margin: const EdgeInsets.all(10),

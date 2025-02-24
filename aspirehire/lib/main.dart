@@ -1,5 +1,9 @@
-import 'package:aspirehire/features/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:aspirehire/features/splash_screen/splash_screen.dart';
+
+import 'features/auth/jobseeker_register/state_management/jobseeker_register_cubit.dart';
+import 'features/auth/login/state_management/login_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,14 +12,20 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
+    return MultiBlocProvider(
+      providers: [
+        // Provide all your cubits here
+        BlocProvider(create: (context) => JobSeekerRegisterCubit()), // Registration cubit
+        BlocProvider(create: (context) => LoginCubit()), // Login cubit
+        // Add more cubits here as needed
+      ],
+      child: MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+      ),
     );
   }
 }

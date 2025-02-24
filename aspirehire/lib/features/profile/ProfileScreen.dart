@@ -1,9 +1,8 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
-
-//import 'package:aspirehire/ReusableComponent.dart';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:aspirehire/features/job_search/JobSearch.dart';
-import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
+
+import '../home_screen/HomeScreenJobSeeker.dart';
+import '../job_search/JobSearch.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -39,308 +38,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                Container(
-                  height: 150,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF013E5D),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20),
-                    ),
+      body: ListView(
+        padding: const EdgeInsets.only(bottom: 20), // Add padding at the bottom
+        children: [
+          const ProfileHeader(
+            avatarImage: 'assets/avatar.png',
+          ),
+          const ProfileInfo(
+            name: "Mustafa Mahmoud",
+            jobTitle: "Senior Fullstack Developer",
+            phone: "+201000001100",
+            email: "MustafaMahmoud@gmail.com",
+            location: "Egypt, Cairo",
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: WebLinks(
+              onAddLinkPressed: () {
+                // Handle add link button press
+              },
+            ),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: Section(
+              title: "Experiences",
+              children: const [
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 5,
+                    backgroundImage: AssetImage('assets/Ellipse.png'),
                   ),
+                  title: Text("Senior Fullstack Developer - Xceed"),
+                  subtitle: Text("May, 2023 - Currently"),
                 ),
-                Positioned(
-                  top: 100,
-                  left: 20,
-                  child: const CircleAvatar(
-                    radius: 40,
-                    backgroundImage: AssetImage(''),
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 5,
+                    backgroundImage: AssetImage('assets/Ellipse.png'),
                   ),
-                ),
-                Positioned(
-                  top: 120,
-                  left: 330,
-                  child: IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.orange),
-                    onPressed: () {},
-                  ),
+                  title: Text("Senior Fullstack Developer - Oracle"),
+                  subtitle: Text("March 2021 - May 2023"),
                 ),
               ],
             ),
-            const SizedBox(height: 40),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                "Mustafa Mahmoud",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 5),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  
-ListTile(
-  leading: SizedBox(
-    width: 20, // تحديد عرض الصورة
-    height: 20, // تحديد ارتفاع الصورة
-    child: Image.asset(
-      'assets/business.png', // مسار الصورة
-      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
-    ),
-  ),
-  title: const Text("Senior Fullstack Developer"),
-),
-                  ListTile(
-  leading: SizedBox(
-    width: 20, // تحديد عرض الصورة
-    height: 20, // تحديد ارتفاع الصورة
-    child: Image.asset(
-      'assets/phone.png', // مسار الصورة
-      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
-    ),
-  ),
-  title: const Text("+201000001100"),
-),
-
-ListTile(
-  leading: SizedBox(
-    width: 20, // تحديد عرض الصورة
-    height: 20, // تحديد ارتفاع الصورة
-    child: Image.asset(
-      'assets/email.png', // مسار الصورة
-      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
-    ),
-  ),
-  title: const Text("MustafaMahmoud@gmail.com"),
-),
-ListTile(
-  leading: SizedBox(
-    width: 20, // تحديد عرض الصورة
-    height: 20, // تحديد ارتفاع الصورة
-    child: Image.asset(
-      'assets/location.png', // مسار الصورة
-      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
-    ),
-  ),
-  title: const Text("Egypt, Cairo"),
-),
-                ],
-              ),
-            ),
-            Center(
-              child: Container(
-                width: 400,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 0.5),
-                  borderRadius: BorderRadius.circular(12),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: Section(
+              title: "Education",
+              children: const [
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 5,
+                    backgroundImage: AssetImage('assets/Ellipse.png'),
+                  ),
+                  title: Text("Computer Science"),
+                  subtitle: Text("Cairo University - Egypt"),
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text("On the web",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 5),
-                            Container(
-                              height: 1,
-                              width: 105,
-                              color: Colors.orange,
-                            ),
-                          ],
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(
-                                255, 236, 246, 251), // لون الخلفية
-                            foregroundColor: Color(0xFF013E5D), // لون النص
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 10), // تعديل المسافات الداخلية
-                          ),
-                          child: const Text("+ Add Link"),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        IconButton(
-                            icon: Image.asset('assets/Clip path group.png', width: 24, height: 24),
-                            onPressed: () {}),
-                        IconButton(
-                            icon: Image.asset('assets/twitter.png', width: 24, height: 24),
-                            onPressed: () {}),
-                        IconButton(
-                            icon: Image.asset('assets/world.png', width: 24, height: 24),
-                            onPressed: () {}),
-                      ],
-                    )
-                  ],
-                ),
-              ),
+              ],
             ),
-            const SizedBox(height: 20),
-            Center(
-              child: Container(
-                width: 400,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 0.5),
-                  borderRadius: BorderRadius.circular(12),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: Section(
+              title: "Skills",
+              children: const [
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 5,
+                    backgroundImage: AssetImage('assets/Ellipse.png'),
+                  ),
+                  title: Text("Flutter"),
+                  subtitle: Text("Advanced"),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Experiences",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Container(
-                      height: 1,
-                      width: 105,
-                      color: Colors.orange,
-                    ),
-                    Column(
-                      children: const [
-                        ListTile(
-  leading: CircleAvatar(
-    radius: 5, // حجم الأيقونة
-    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
-  ),
-  title: Text("Senior Fullstack Developer - Xceed"),
-                          subtitle: Text("May, 2023 - Currently"),
-                        ),
-                        ListTile(
-  leading: CircleAvatar(
-    radius: 5, // حجم الأيقونة
-    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
-  ),
-  title: Text("Senior Fullstack Developer - Oracle"),
-                          subtitle: Text("March 2021 - May 2023"),
-                        ),
-                        
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-            const SizedBox(height: 20),
-            Center(
-              child: Container(
-                width: 400,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 0.5),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Education",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Container(
-                      height: 1,
-                      width: 90,
-                      color: Colors.orange,
-                    ),
-                    Column(
-                      children: const [
-                        
-                        ListTile(
-  leading: CircleAvatar(
-    radius: 5, // حجم الأيقونة
-    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
-  ),
-  title: Text("Computer Science "),
-                          subtitle: Text(" Cairo University - Egypt"),
-                        ),
-                        ListTile(
-  leading: CircleAvatar(
-    radius: 5, // حجم الأيقونة
-    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
-  ),
-  title: Text("Computer Science "),
-                          subtitle: Text(" Cairo University - Egypt"),
-                        ),
-                        
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: Container(
-                width: 400,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 0.5),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Skills",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Container(
-                      height: 1,
-                      width: 55,
-                      color: Colors.orange,
-                    ),
-                    Column(
-                      children: const [
-                        ListTile(
-leading: CircleAvatar(
-    radius: 5, // حجم الأيقونة
-    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
-  ),                          title: Text("Senior Fullstack Developer - Xceed"),
-                          subtitle: Text("May, 2023 - Currently"),
-                        ),
-                        ListTile(
-leading: CircleAvatar(
-    radius: 5, // حجم الأيقونة
-    backgroundImage: AssetImage('assets/Ellipse.png'), // الصورة
-  ),                          title: Text("Senior Fullstack Developer - Oracle"),
-                          subtitle: Text("March 2021 - May 2023"),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -368,17 +143,14 @@ leading: CircleAvatar(
       onTap: () => _onItemTapped(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding:
-            EdgeInsets.symmetric(horizontal: isSelected ? 16 : 0, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: isSelected ? 16 : 0, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Row(
           children: [
-            Icon(icon,
-                color: isSelected ? const Color(0xFF013E5D) : Colors.white,
-                size: 28),
+            Icon(icon, color: isSelected ? const Color(0xFF013E5D) : Colors.white, size: 28),
             if (isSelected)
               Padding(
                 padding: const EdgeInsets.only(left: 8),
@@ -397,3 +169,222 @@ leading: CircleAvatar(
     );
   }
 }
+
+/*
+
+*/
+
+
+class ProfileHeader extends StatelessWidget {
+  final String avatarImage;
+  final VoidCallback? onEditPressed;
+
+  const ProfileHeader({
+    super.key,
+    required this.avatarImage,
+      this.onEditPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          height: 150,
+          decoration: const BoxDecoration(
+            color: Color(0xFF013E5D),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 100,
+          left: 20,
+          child: CircleAvatar(
+            radius: 40,
+            backgroundImage: AssetImage(avatarImage),
+          ),
+        ),
+        Positioned(
+          top: 120,
+          left: 330,
+          child: IconButton(
+            icon: const Icon(Icons.edit, color: Colors.orange),
+            onPressed: onEditPressed,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ProfileInfo extends StatelessWidget {
+  final String name;
+  final String jobTitle;
+  final String phone;
+  final String email;
+  final String location;
+
+  const ProfileInfo({
+    super.key,
+    required this.name,
+    required this.jobTitle,
+    required this.phone,
+    required this.email,
+    required this.location,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 40),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            name,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              _buildInfoTile('assets/business.png', jobTitle),
+              _buildInfoTile('assets/phone.png', phone),
+              _buildInfoTile('assets/email.png', email),
+              _buildInfoTile('assets/location.png', location),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoTile(String iconPath, String text) {
+    return ListTile(
+      leading: SizedBox(
+        width: 20,
+        height: 20,
+        child: Image.asset(iconPath, fit: BoxFit.contain),
+      ),
+      title: Text(text),
+    );
+  }
+}
+
+class WebLinks extends StatelessWidget {
+  final VoidCallback onAddLinkPressed;
+
+  const WebLinks({super.key, required this.onAddLinkPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 400,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black, width: 0.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  const Text(
+                    "On the web",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    height: 1,
+                    width: 105,
+                    color: Colors.orange,
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: onAddLinkPressed,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 236, 246, 251),
+                  foregroundColor: const Color(0xFF013E5D),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                ),
+                child: const Text("+ Add Link"),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                icon: Image.asset('assets/Clip path group.png', width: 24, height: 24),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Image.asset('assets/twitter.png', width: 24, height: 24),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Image.asset('assets/world.png', width: 24, height: 24),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Section extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  const Section({
+    super.key,
+    required this.title,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 400,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black, width: 0.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 5),
+          Container(
+            height: 1,
+            width: title.length * 8, // Dynamic width based on title length
+            color: Colors.orange,
+          ),
+          const SizedBox(height: 10),
+          Column(children: children),
+        ],
+      ),
+    );
+  }
+}
+
+

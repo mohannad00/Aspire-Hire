@@ -17,7 +17,7 @@ class HomeHeader extends StatelessWidget {
           const Row(
             children: [
               SizedBox(width: 10),
-              CircleAvatar(radius: 20, backgroundImage: AssetImage('')),
+              CircleAvatar(radius: 20, backgroundImage: AssetImage('assets/avatar.png')),
               SizedBox(width: 10),
               Text("Hello, Mustafa", style: TextStyle(color: Colors.white)),
             ],

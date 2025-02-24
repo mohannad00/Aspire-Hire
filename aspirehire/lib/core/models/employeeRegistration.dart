@@ -5,8 +5,8 @@ class EmployeeRegistrationRequest {
   String? username;
   String? firstName;
   String? lastName;
-  String? dob;
-  String? gender;
+  String? dob = "2003-09-16" ;
+  String? gender = "Male";
   // Add other attributes as needed
 
   Map<String, dynamic> toJson() => {
