@@ -24,7 +24,7 @@ class _HomeCompanyState extends State<HomeCompany> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const HomeHeader(), // الهيدر
+  //        const HomeHeader(), // الهيدر
           const SizedBox(height: 10),
           const PostJobButton(), // زر "Post a Job!"
           const SizedBox(height: 10),

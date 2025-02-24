@@ -25,7 +25,7 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const HomeHeader(), // الهيدر
+          const HomeHeader(),
           const SizedBox(height: 10),
           const PostJobButton(), // زر "Post a Job!"
           const SizedBox(height: 10),
@@ -50,9 +50,15 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
 
   void _onItemTapped(int index) {
     if (index == 1) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const JobSearch()));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const JobSearch()),
+      );
     } else if (index == 3) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
     } else {
       setState(() {
         _selectedIndex = index;
@@ -64,13 +70,14 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
   Widget build(BuildContext context) {
     return Scaffold(
       // Removed the AppBar
-      body: SafeArea(
-        child: _pages[_selectedIndex],
-      ),
+      body: SafeArea(child: _pages[_selectedIndex]),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(color: const Color(0xFF013E5D), borderRadius: BorderRadius.circular(30)),
+        decoration: BoxDecoration(
+          color: const Color(0xFF013E5D),
+          borderRadius: BorderRadius.circular(30),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -92,15 +99,32 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: isSelected ? 16 : 0, vertical: 10),
-        decoration: BoxDecoration(color: isSelected ? Colors.white : Colors.transparent, borderRadius: BorderRadius.circular(30)),
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 16 : 0,
+          vertical: 10,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+        ),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? const Color(0xFF013E5D) : Colors.white, size: 28),
+            Icon(
+              icon,
+              color: isSelected ? const Color(0xFF013E5D) : Colors.white,
+              size: 28,
+            ),
             if (isSelected)
               Padding(
                 padding: const EdgeInsets.only(left: 8),
-                child: Text(label, style: const TextStyle(color: Color(0xFF013E5D), fontWeight: FontWeight.bold, fontSize: 16)),
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Color(0xFF013E5D),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
               ),
           ],
         ),

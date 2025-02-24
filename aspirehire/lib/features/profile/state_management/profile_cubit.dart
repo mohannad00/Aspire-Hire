@@ -8,19 +8,19 @@ import '../../../core/models/UpdateProfileRequest.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  final Dio dio;
+  final Dio _dio = Dio(); // Internal Dio instance
 
-  ProfileCubit({required this.dio}) : super(ProfileInitial());
+  ProfileCubit() : super(ProfileInitial());
 
   // Get Profile
   Future<void> getProfile(String token) async {
     emit(ProfileLoading());
     try {
-      final response = await dio.get(
+      final response = await _dio.get(
         ApiEndpoints.getProfile,
         options: Options(headers: {'Authorization': token}),
       );
-      final profile = Profile.fromJson(response.data);
+      final profile = Profile.fromJson(response.data['data']); // Extract data from response
       emit(ProfileLoaded(profile));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));
@@ -31,12 +31,12 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> updateProfile(String token, UpdateProfileRequest request) async {
     emit(ProfileLoading());
     try {
-      final response = await dio.put(
+      final response = await _dio.put(
         ApiEndpoints.updateProfile,
         data: request.toJson(),
         options: Options(headers: {'Authorization': token}),
       );
-      final profile = Profile.fromJson(response.data);
+      final profile = Profile.fromJson(response.data['data']); // Extract data from response
       emit(ProfileUpdated(profile));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));
@@ -50,12 +50,12 @@ class ProfileCubit extends Cubit<ProfileState> {
       final formData = FormData.fromMap({
         'attachment': await MultipartFile.fromFile(filePath),
       });
-      final response = await dio.patch(
+      final response = await _dio.patch(
         ApiEndpoints.updateProfilePicture,
         data: formData,
         options: Options(headers: {'Authorization': token}),
       );
-      final profile = Profile.fromJson(response.data);
+      final profile = Profile.fromJson(response.data['data']); // Extract data from response
       emit(ProfilePictureUpdated(profile));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));
@@ -69,12 +69,12 @@ class ProfileCubit extends Cubit<ProfileState> {
       final formData = FormData.fromMap({
         'attachment': await MultipartFile.fromFile(filePath),
       });
-      final response = await dio.patch(
+      final response = await _dio.patch(
         ApiEndpoints.uploadResume,
         data: formData,
         options: Options(headers: {'Authorization': token}),
       );
-      final profile = Profile.fromJson(response.data);
+      final profile = Profile.fromJson(response.data['data']); // Extract data from response
       emit(ResumeUploaded(profile));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));
@@ -85,7 +85,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> deleteProfilePicture(String token) async {
     emit(ProfileLoading());
     try {
-      final response = await dio.delete(
+      final response = await _dio.delete(
         ApiEndpoints.deleteProfilePicture,
         options: Options(headers: {'Authorization': token}),
       );

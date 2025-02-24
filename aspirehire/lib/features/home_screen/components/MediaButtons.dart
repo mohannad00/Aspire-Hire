@@ -6,7 +6,6 @@ class MediaButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get the screen width
-    final screenWidth = MediaQuery.of(context).size.width;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
