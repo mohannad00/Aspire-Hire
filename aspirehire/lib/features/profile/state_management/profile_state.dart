@@ -1,30 +1,43 @@
-import 'package:equatable/equatable.dart';
+import '../../../core/models/GetProfile.dart';
 
-abstract class ProfileState extends Equatable {
-  const ProfileState();
-
-  @override
-  List<Object?> get props => [];
-}
+abstract class ProfileState {}
 
 class ProfileInitial extends ProfileState {}
 
 class ProfileLoading extends ProfileState {}
 
-class ProfileSuccess extends ProfileState {
-  final Map<String, dynamic> profileData;
+class ProfileLoaded extends ProfileState {
+  final Profile profile;
 
-  const ProfileSuccess(this.profileData);
-
-  @override
-  List<Object?> get props => [profileData];
+  ProfileLoaded(this.profile);
 }
 
-class ProfileFailure extends ProfileState {
-  final String error;
+class ProfileUpdated extends ProfileState {
+  final Profile profile;
 
-  const ProfileFailure(this.error);
+  ProfileUpdated(this.profile);
+}
 
-  @override
-  List<Object?> get props => [error];
+class ProfilePictureUpdated extends ProfileState {
+  final Profile profile;
+
+  ProfilePictureUpdated(this.profile);
+}
+
+class ResumeUploaded extends ProfileState {
+  final Profile profile;
+
+  ResumeUploaded(this.profile);
+}
+
+class ProfilePictureDeleted extends ProfileState {
+  final String message;
+
+  ProfilePictureDeleted(this.message);
+}
+
+class ProfileError extends ProfileState {
+  final String message;
+
+  ProfileError(this.message);
 }

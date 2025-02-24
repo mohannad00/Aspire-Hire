@@ -1,54 +1,98 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../../config/database/api/end_points.dart';
+import '../../../core/models/DeleteProfilePicture.dart';
+import '../../../core/models/GetProfile.dart';
+import '../../../core/models/UpdateProfileRequest.dart';
 import 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit() : super(ProfileInitial());
+  final Dio dio;
 
-  final Dio _dio = Dio();
+  ProfileCubit({required this.dio}) : super(ProfileInitial());
 
+  // Get Profile
   Future<void> getProfile(String token) async {
     emit(ProfileLoading());
-
     try {
-      // Print the token being used
-      print('Fetching Profile with Token: $token');
-
-      final response = await _dio.get(
+      final response = await dio.get(
         ApiEndpoints.getProfile,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization':  token,
-          },
-        ),
+        options: Options(headers: {'Authorization': token}),
       );
-
-      // Print the full response for debugging
-      print('Profile Response: $response');
-      print('Status Code: ${response.statusCode}');
-      print('Headers: ${response.headers}');
-      print('Data: ${response.data}');
-
-      if (response.statusCode == 200) {
-        emit(ProfileSuccess(response.data));
-      } else {
-        emit(ProfileFailure(response.data['message'] ?? 'Failed to fetch profile'));
-      }
+      final profile = Profile.fromJson(response.data);
+      emit(ProfileLoaded(profile));
     } on DioException catch (e) {
-      // Print DioException details
-      print('DioException: $e');
-      print('DioException Type: ${e.type}');
-      print('DioException Message: ${e.message}');
-      print('DioException Response: ${e.response}');
+      emit(ProfileError(e.message ?? 'An error occurred'));
+    }
+  }
 
-      final error = e.response?.data['message'] ?? 'An error occurred';
-      emit(ProfileFailure(error));
-    } catch (e) {
-      // Print unexpected errors
-      print('Unexpected Error: $e');
-      emit(ProfileFailure('An unexpected error occurred: $e'));
+  // Update Profile
+  Future<void> updateProfile(String token, UpdateProfileRequest request) async {
+    emit(ProfileLoading());
+    try {
+      final response = await dio.put(
+        ApiEndpoints.updateProfile,
+        data: request.toJson(),
+        options: Options(headers: {'Authorization': token}),
+      );
+      final profile = Profile.fromJson(response.data);
+      emit(ProfileUpdated(profile));
+    } on DioException catch (e) {
+      emit(ProfileError(e.message ?? 'An error occurred'));
+    }
+  }
+
+  // Update Profile Picture
+  Future<void> updateProfilePicture(String token, String filePath) async {
+    emit(ProfileLoading());
+    try {
+      final formData = FormData.fromMap({
+        'attachment': await MultipartFile.fromFile(filePath),
+      });
+      final response = await dio.patch(
+        ApiEndpoints.updateProfilePicture,
+        data: formData,
+        options: Options(headers: {'Authorization': token}),
+      );
+      final profile = Profile.fromJson(response.data);
+      emit(ProfilePictureUpdated(profile));
+    } on DioException catch (e) {
+      emit(ProfileError(e.message ?? 'An error occurred'));
+    }
+  }
+
+  // Upload Resume
+  Future<void> uploadResume(String token, String filePath) async {
+    emit(ProfileLoading());
+    try {
+      final formData = FormData.fromMap({
+        'attachment': await MultipartFile.fromFile(filePath),
+      });
+      final response = await dio.patch(
+        ApiEndpoints.uploadResume,
+        data: formData,
+        options: Options(headers: {'Authorization': token}),
+      );
+      final profile = Profile.fromJson(response.data);
+      emit(ResumeUploaded(profile));
+    } on DioException catch (e) {
+      emit(ProfileError(e.message ?? 'An error occurred'));
+    }
+  }
+
+  // Delete Profile Picture
+  Future<void> deleteProfilePicture(String token) async {
+    emit(ProfileLoading());
+    try {
+      final response = await dio.delete(
+        ApiEndpoints.deleteProfilePicture,
+        options: Options(headers: {'Authorization': token}),
+      );
+      final message = DeleteProfilePictureResponse.fromJson(response.data).message;
+      emit(ProfilePictureDeleted(message));
+    } on DioException catch (e) {
+      emit(ProfileError(e.message ?? 'An error occurred'));
     }
   }
 }
