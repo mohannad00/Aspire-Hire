@@ -27,6 +27,7 @@ class _PostJobState extends State<PostJob> {
   String city = 'Cairo';
   
   List<String> selectedSkills = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,10 +35,7 @@ class _PostJobState extends State<PostJob> {
         backgroundColor: const Color(0xFF013E5D),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-          ), // لون الأيقونة أبيض
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -46,12 +44,7 @@ class _PostJobState extends State<PostJob> {
           },
         ),
         title: const Text("Post a job", style: TextStyle(color: Colors.white)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.check, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
+        
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -59,99 +52,68 @@ class _PostJobState extends State<PostJob> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: const Text(
-                'Job Details',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              child: Column(
+                children: [
+                  Text("Job Details",style: TextStyle(fontFamily: "Poppins" ,fontSize: 24),),
+                  Container(
+                                height: 1,
+                                width: 155,
+                                color: Colors.orange,
+                              ),
+                ],
               ),
             ),
-            const SizedBox(height: 10),
-            _buildSectionTitle('Basic Information'),
+            SizedBox(height: 20,),
+            Text("Basic Information",style: TextStyle(color: const Color(0xFF013E5D),fontFamily: "Poppins" ,fontSize: 20),),
+            SizedBox(height: 20,),
+            
             _buildTextField('Job Title*', _titleController),
-            _buildTextField(
-              'Job Description*',
-              _descriptionController,
-              maxLines: 3,
-            ),
-            _buildDropdown(
-              'Job Type*',
-              ['Full Time', 'Part Time'],
-              jobType,
-              (val) => setState(() => jobType = val),
-            ),
-            _buildDropdown(
-              'Job Category*',
-              ['Designer', 'Developer','Engineer'],
-              jobCategory,
-              (val) => setState(() => jobCategory = val),
-            ),
-
-            _buildSectionTitle('Salary*'),
-            _buildDropdown(
-              'Type',
-              ['Monthly', 'Hourly'],
-              salaryType,
-              (val) => setState(() => salaryType = val),
-            ),
+            _buildTextField('Job Description*', _descriptionController, maxLines: 3),
             Row(
               children: [
-                Expanded(child: _buildTextField('Min', _minSalaryController)),
+                Expanded(child:_buildDropdown('Job Type*', ['Full Time', 'Part Time'], jobType, (val) => setState(() => jobType = val)),),
                 const SizedBox(width: 10),
-                Expanded(child: _buildTextField('Max', _maxSalaryController)),
+                Expanded(child: _buildDropdown('Job Category*', ['Designer', 'Developer', 'Engineer'], jobCategory, (val) => setState(() => jobCategory = val)),),
               ],
             ),
-
-            _buildSectionTitle('Skills & Experiences'),
-            _buildTextField(
-              'Add Skills',
-              _skillsController,
-              onSubmitted: (val) {
-                setState(() {
-                  selectedSkills.add(val);
-                  _skillsController.clear();
-                });
-              },
+            _buildDropdown('Salary', ['Monthly', 'Hourly'], salaryType, (val) => setState(() => salaryType = val)),
+            Row(
+              children: [
+                Expanded(child: _buildTextField('Min Salary', _minSalaryController)),
+                const SizedBox(width: 10),
+                Expanded(child: _buildTextField('Max Salary', _maxSalaryController)),
+              ],
             ),
-            Wrap(
-              children:
-                  selectedSkills
-                      .map((skill) => Chip(label: Text(skill)))
-                      .toList(),
-            ),
-            _buildDropdown(
-              'Experience*',
-              ['Beginner', 'Intermediate', 'Expert'],
-              experienceLevel,
-              (val) => setState(() => experienceLevel = val),
-            ),
-
-            _buildSectionTitle('Address & Location'),
+            SizedBox(height: 20,),
+            Text("Skills & Experiences ",style: TextStyle(color: const Color(0xFF013E5D),fontFamily: "Poppins" ,fontSize: 20),),
+            SizedBox(height: 20,),
+            _buildTextField('Skills', _skillsController, onSubmitted: (val) {
+              setState(() {
+                selectedSkills.add(val);
+                _skillsController.clear();
+              });
+            }),
+            Wrap(children: selectedSkills.map((skill) => Chip(label: Text(skill))).toList()),
+            _buildDropdown('Experiences', ['Beginner', 'Intermediate', 'Expert'], experienceLevel, (val) => setState(() => experienceLevel = val)),
+            SizedBox(height: 20,),
+            Text("Address & Location  ",style: TextStyle(color: const Color(0xFF013E5D),fontFamily: "Poppins" ,fontSize: 20),),
+            SizedBox(height: 20,),
             _buildTextField('Address*', _addressController),
-            _buildDropdown(
-              'Country*',
-              ['Egypt', 'USA'],
-              country,
-              (val) => setState(() => country = val),
-            ),
-            _buildDropdown(
-              'City*',
-              ['Cairo', 'New York'],
-              city,
-              (val) => setState(() => city = val),
-            ),
-
+            _buildDropdown('Country*', ['Egypt', 'USA'], country, (val) => setState(() => country = val)),
+            _buildDropdown('City*', ['Cairo', 'New York'], city, (val) => setState(() => city = val)),
             const SizedBox(height: 20),
             Center(
               child: SizedBox(
-                  width: 103,
-                  height: 48,
-                  child: ReusableComponents.reusableButton(
-                    title: 'Post',
-                    fontSize: 15,
-                    backgroundColor: const Color(0xFF013E5D),
-                    textColor: Colors.white,
-                    onPressed: () {},
-                  ),
+                width: 103,
+                height: 48,
+                child: ReusableComponents.reusableButton(
+                  title: 'Post',
+                  fontSize: 15,
+                  backgroundColor: const Color(0xFF013E5D),
+                  textColor: Colors.white,
+                  onPressed: () {},
                 ),
+              ),
             ),
           ],
         ),
@@ -159,59 +121,27 @@ class _PostJobState extends State<PostJob> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color:  Color(0xFF013E5D),fontFamily: "Poppins" ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(
-    String label,
-    TextEditingController controller, {
-    int maxLines = 1,
-    Function(String)? onSubmitted,
-  }) {
+  Widget _buildTextField(String label, TextEditingController controller, {int maxLines = 1, Function(String)? onSubmitted}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: TextField(
         controller: controller,
         maxLines: maxLines,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
+        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
         onSubmitted: onSubmitted,
       ),
     );
   }
 
-  Widget _buildDropdown(
-    String label,
-    List<String> items,
-    String value,
-    Function(String) onChanged,
-  ) {
+  Widget _buildDropdown(String label, List<String> items, String value, Function(String) onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: InputDecorator(
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
+        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
             value: value,
-            items:
-                items
-                    .map(
-                      (item) =>
-                          DropdownMenuItem(value: item, child: Text(item,style: TextStyle(fontFamily: "Poppins"),)),
-                    )
-                    .toList(),
+            items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
             onChanged: (val) => onChanged(val!),
           ),
         ),
