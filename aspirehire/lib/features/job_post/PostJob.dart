@@ -2,6 +2,7 @@
 
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/home_screen/HomeCompany.dart';
+import 'package:aspirehire/features/job_application/JobApply.dart';
 import 'package:flutter/material.dart';
 
 class PostJob extends StatefulWidget {
@@ -111,7 +112,12 @@ class _PostJobState extends State<PostJob> {
                   fontSize: 15,
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const ApplyJob()),
+            );
+          },
                 ),
               ),
             ),

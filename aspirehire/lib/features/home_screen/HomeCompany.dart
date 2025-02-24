@@ -5,10 +5,8 @@ import 'package:aspirehire/features/home_screen/components/MediaButtons.dart';
 import 'package:aspirehire/features/home_screen/components/PostCard.dart';
 import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';
 import 'package:flutter/material.dart';
-import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 import 'package:aspirehire/features/profile/ProfileCompany.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 
 class HomeCompany extends StatefulWidget {
   const HomeCompany({super.key});
@@ -61,17 +59,11 @@ class _HomeCompanyState extends State<HomeCompany> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: ReusableComponents.reusableBackButton(
-          context: context,
-          onPressed: () {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ChoosingRole()));
-          },
-        ),
+      
+      body:
+      SafeArea(
+        child: _pages[_selectedIndex],
       ),
-      body: _pages[_selectedIndex],
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         margin: const EdgeInsets.all(10),
