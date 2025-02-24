@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:aspirehire/features/job_post/CreatePost.dart';
+import 'package:aspirehire/features/job_post/PostJob.dart';
 import 'package:flutter/material.dart';
 
 class PostJobButton extends StatelessWidget {
@@ -10,7 +10,7 @@ class PostJobButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const CreatePost()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const PostJob()));
       },
       child: Container(
         width: double.infinity,
