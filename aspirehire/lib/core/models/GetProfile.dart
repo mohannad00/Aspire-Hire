@@ -1,17 +1,23 @@
-class ProfileResponse {
-  final bool success;
-  final String message;
-  final Map<String, dynamic> data;
+class Profile {
+  final String email;
+  final String? profilePictureUrl;
+  final String? resumeUrl;
 
-  ProfileResponse({
-    required this.success,
-    required this.message,
-    required this.data,
-  });
+  Profile({required this.email, this.profilePictureUrl, this.resumeUrl});
 
-  factory ProfileResponse.fromJson(Map<String, dynamic> json) => ProfileResponse(
-    success: json["success"],
-    message: json["message"],
-    data: json["data"],
-  );
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
+      email: json['email'],
+      profilePictureUrl: json['profilePictureUrl'],
+      resumeUrl: json['resumeUrl'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'profilePictureUrl': profilePictureUrl,
+      'resumeUrl': resumeUrl,
+    };
+  }
 }
