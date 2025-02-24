@@ -16,7 +16,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       print('Fetching Profile with Token: $token');
 
       final response = await _dio.get(
-        ApiEndpoints.getEmployeeProfile,
+        ApiEndpoints.getProfile,
         options: Options(
           headers: {
             'Content-Type': 'application/json',
