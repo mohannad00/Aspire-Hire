@@ -7,9 +7,7 @@ import 'package:aspirehire/features/home_screen/components/PostCard.dart';
 import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 
 class HomeScreenJobSeeker extends StatefulWidget {
   const HomeScreenJobSeeker({super.key});
