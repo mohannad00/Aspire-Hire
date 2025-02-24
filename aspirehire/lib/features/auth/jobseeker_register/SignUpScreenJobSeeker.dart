@@ -1,10 +1,11 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
-
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpEmailJobSeeker.dart';
-import 'package:flutter/material.dart';
+
+import 'state_management/jobseeker_register_cubit.dart'; // Import the cubit
 
 class SignUpScreenJobSeeker extends StatefulWidget {
   const SignUpScreenJobSeeker({super.key});
@@ -15,6 +16,9 @@ class SignUpScreenJobSeeker extends StatefulWidget {
 
 class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
   bool isSignUp = true;
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +45,7 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
               ),
               // Logo and text
               const Text(
-                'LOGO',
+                'Hiro',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
@@ -130,6 +134,7 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
                 children: [
                   Expanded(
                       child: ReusableComponents.reusableTextField(
+                    controller: _firstNameController, // Add controller
                     hintText: 'First Name',
                     hintColor: Colors.grey,
                     fontSize: 16.0,
@@ -140,6 +145,7 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   Expanded(
                       child: ReusableComponents.reusableTextField(
+                    controller: _lastNameController, // Add controller
                     hintText: 'Last Name',
                     hintColor: Colors.grey,
                     fontSize: 16.0,
@@ -159,10 +165,22 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    // Get the cubit instance
+                    final cubit = context.read<JobSeekerRegisterCubit>();
+
+                    // Update the cubit with the first name and last name
+                    cubit.updateFirstName(_firstNameController.text);
+                    cubit.updateLastName(_lastNameController.text);
+
+                    // Navigate to the next screen
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignUpEmailJobSeeker()),
+                        builder: (context) => BlocProvider.value(
+                          value: cubit, // Pass the existing cubit
+                          child: const SignUpEmailJobSeeker(),
+                        ),
+                      ),
                     );
                   },
                 ),

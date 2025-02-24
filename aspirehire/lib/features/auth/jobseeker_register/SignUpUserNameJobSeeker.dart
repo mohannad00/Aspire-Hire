@@ -1,10 +1,12 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpPasswordJobSeeker.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpPhoneJobSeeker.dart';
-import 'package:flutter/material.dart';
+import 'state_management/jobseeker_register_cubit.dart'; // Import the cubit
 
 class SignUpUserNameJobSeeker extends StatefulWidget {
   const SignUpUserNameJobSeeker({super.key});
@@ -16,6 +18,7 @@ class SignUpUserNameJobSeeker extends StatefulWidget {
 
 class _SignUpUserNameJobSeekerState extends State<SignUpUserNameJobSeeker> {
   bool isSignUp = true;
+  final TextEditingController _usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -131,14 +134,16 @@ class _SignUpUserNameJobSeekerState extends State<SignUpUserNameJobSeeker> {
               Row(
                 children: [
                   Expanded(
-                      child: ReusableComponents.reusableTextField(
-                    hintText: 'Username',
-                    hintColor: Colors.grey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    borderRadius: 10.0,
-                    borderColor: Colors.grey,
-                  )),
+                    child: ReusableComponents.reusableTextField(
+                      controller: _usernameController, // Add controller
+                      hintText: 'Username',
+                      hintColor: Colors.grey,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 10.0,
+                      borderColor: Colors.grey,
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.04),
@@ -152,11 +157,21 @@ class _SignUpUserNameJobSeekerState extends State<SignUpUserNameJobSeeker> {
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    // Get the cubit instance
+                    final cubit = context.read<JobSeekerRegisterCubit>();
+
+                    // Update the cubit with the username
+                    cubit.updateUsername(_usernameController.text);
+
+                    // Navigate to the next screen
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const SignUpPasswordJobSeeker()),
+                        builder: (context) => BlocProvider.value(
+                          value: cubit, // Pass the existing cubit
+                          child: const SignUpPasswordJobSeeker(),
+                        ),
+                      ),
                     );
                   },
                 ),

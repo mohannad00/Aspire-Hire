@@ -9,16 +9,52 @@ class JobSeekerRegisterCubit extends Cubit<JobSeekerRegisterState> {
 
   final Dio _dio = Dio();
 
-  Future<void> registerJobSeeker(JobSeekerRegistrationRequest request) async {
+  // Store the registration data
+  JobSeekerRegistrationRequest _registrationData = JobSeekerRegistrationRequest();
+
+  // Getter for registration data
+  JobSeekerRegistrationRequest get registrationData => _registrationData;
+
+  // Methods to update registration data
+  void updateFirstName(String firstName) {
+    _registrationData.firstName = firstName;
+  }
+
+  void updateLastName(String lastName) {
+    _registrationData.lastName = lastName;
+  }
+
+  void updateEmail(String email) {
+    _registrationData.email = email;
+  }
+
+  void updatePhone(String phone) {
+    _registrationData.phone = phone;
+  }
+
+  void updateUsername(String username) {
+    _registrationData.username = username;
+  }
+
+  void updatePassword(String password) {
+    _registrationData.password = password;
+  }
+
+  // Clear registration data
+  void clearRegistrationData() {
+    _registrationData = JobSeekerRegistrationRequest();
+  }
+
+  Future<void> registerJobSeeker() async {
     emit(JobSeekerRegisterLoading());
 
     try {
       // Print the request being sent
-      print('Sending Job Seeker Registration Request: ${request.toJson()}');
+      print('Sending Job Seeker Registration Request: ${_registrationData.toJson()}');
 
       final response = await _dio.post(
         ApiEndpoints.jobseekerRegister,
-        data: request.toJson(),
+        data: _registrationData.toJson(),
         options: Options(
           headers: {'Content-Type': 'application/json'},
         ),
@@ -30,8 +66,9 @@ class JobSeekerRegisterCubit extends Cubit<JobSeekerRegisterState> {
       print('Headers: ${response.headers}');
       print('Data: ${response.data}');
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         emit(JobSeekerRegisterSuccess('Job Seeker registered successfully'));
+        clearRegistrationData(); // Clear data after successful registration
       } else {
         emit(JobSeekerRegisterFailure(response.data['message'] ?? 'Registration failed'));
       }

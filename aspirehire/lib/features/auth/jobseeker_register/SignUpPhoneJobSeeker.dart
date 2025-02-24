@@ -1,10 +1,13 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpEmailJobSeeker.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpUserNameJobSeeker.dart';
-import 'package:flutter/material.dart';
+
+import 'state_management/jobseeker_register_cubit.dart'; // Import the cubit
 
 class SignUpPhoneJobSeeker extends StatefulWidget {
   const SignUpPhoneJobSeeker({super.key});
@@ -15,6 +18,9 @@ class SignUpPhoneJobSeeker extends StatefulWidget {
 
 class _SignUpPhoneJobSeekerState extends State<SignUpPhoneJobSeeker> {
   bool isSignUp = true;
+  final TextEditingController _countryCodeController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,25 +135,29 @@ class _SignUpPhoneJobSeekerState extends State<SignUpPhoneJobSeeker> {
               Row(
                 children: [
                   SizedBox(
-                      width: 80,
-                      child: ReusableComponents.reusableTextField(
-                        hintText: '+20',
-                        hintColor: Colors.grey,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        borderRadius: 10.0,
-                        borderColor: Colors.grey,
-                      )),
+                    width: 80,
+                    child: ReusableComponents.reusableTextField(
+                      controller: _countryCodeController, // Add controller
+                      hintText: '+20',
+                      hintColor: Colors.grey,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 10.0,
+                      borderColor: Colors.grey,
+                    ),
+                  ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.04),
                   Expanded(
-                      child: ReusableComponents.reusableTextField(
-                    hintText: 'Phone Number ',
-                    hintColor: Colors.grey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    borderRadius: 10.0,
-                    borderColor: Colors.grey,
-                  )),
+                    child: ReusableComponents.reusableTextField(
+                      controller: _phoneNumberController, // Add controller
+                      hintText: 'Phone Number',
+                      hintColor: Colors.grey,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 10.0,
+                      borderColor: Colors.grey,
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.04),
@@ -160,11 +170,25 @@ class _SignUpPhoneJobSeekerState extends State<SignUpPhoneJobSeeker> {
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    // Get the cubit instance
+                    final cubit = context.read<JobSeekerRegisterCubit>();
+
+                    // Combine country code and phone number
+                    final phoneNumber =
+                        '${_countryCodeController.text}${_phoneNumberController.text}';
+
+                    // Update the cubit with the phone number
+                    cubit.updatePhone(phoneNumber);
+
+                    // Navigate to the next screen
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const SignUpUserNameJobSeeker()),
+                        builder: (context) => BlocProvider.value(
+                          value: cubit, // Pass the existing cubit
+                          child: const SignUpUserNameJobSeeker(),
+                        ),
+                      ),
                     );
                   },
                 ),

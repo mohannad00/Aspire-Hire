@@ -1,10 +1,13 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpPhoneJobSeeker.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpScreenJobSeeker.dart';
-import 'package:flutter/material.dart';
+
+import 'state_management/jobseeker_register_cubit.dart'; // Import the cubit
 
 class SignUpEmailJobSeeker extends StatefulWidget {
   const SignUpEmailJobSeeker({super.key});
@@ -15,6 +18,7 @@ class SignUpEmailJobSeeker extends StatefulWidget {
 
 class _SignUpEmailJobSeekerState extends State<SignUpEmailJobSeeker> {
   bool isSignUp = true;
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +135,7 @@ class _SignUpEmailJobSeekerState extends State<SignUpEmailJobSeeker> {
                 children: [
                   Expanded(
                     child: ReusableComponents.reusableTextField(
+                      controller: _emailController, // Add controller
                       hintText: 'Email Address',
                       hintColor: Colors.grey,
                       fontSize: 16.0,
@@ -152,10 +157,21 @@ class _SignUpEmailJobSeekerState extends State<SignUpEmailJobSeeker> {
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    // Get the cubit instance
+                    final cubit = context.read<JobSeekerRegisterCubit>();
+
+                    // Update the cubit with the email
+                    cubit.updateEmail(_emailController.text);
+
+                    // Navigate to the next screen
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignUpPhoneJobSeeker()),
+                        builder: (context) => BlocProvider.value(
+                          value: cubit, // Pass the existing cubit
+                          child: const SignUpPhoneJobSeeker(),
+                        ),
+                      ),
                     );
                   },
                 ),
