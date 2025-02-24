@@ -1,3 +1,4 @@
+import 'package:aspirehire/features/profile/state_management/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/splash_screen/splash_screen.dart';
@@ -17,8 +18,13 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         // Provide all your cubits here
-        BlocProvider(create: (context) => JobSeekerRegisterCubit()), // Registration cubit
-        BlocProvider(create: (context) => LoginCubit()), // Login cubit
+        BlocProvider(
+          create: (context) => JobSeekerRegisterCubit(),
+        ), // Registration cubit
+        BlocProvider(create: (context) => LoginCubit()),
+
+        BlocProvider(create: (context) => ProfileCubit()),
+        // Login cubit
         // Add more cubits here as needed
       ],
       child: MaterialApp(
