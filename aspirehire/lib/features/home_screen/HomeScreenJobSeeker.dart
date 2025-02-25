@@ -1,10 +1,10 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/features/home_screen/components/CreatePostButton.dart';
 import 'package:aspirehire/features/home_screen/components/HomeHeader.dart';
 import 'package:aspirehire/features/home_screen/components/JobCard.dart';
 import 'package:aspirehire/features/home_screen/components/MediaButtons.dart';
 import 'package:aspirehire/features/home_screen/components/PostCard.dart';
-import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
@@ -27,7 +27,7 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
         children: [
           const HomeHeader(),
           const SizedBox(height: 10),
-          const PostJobButton(), // زر "Post a Job!"
+          const CreatePostButton(), // زر "Post a Job!"
           const SizedBox(height: 10),
           const MediaButtons(), // أزرار الصور والفيديوهات والمستندات
           const SizedBox(height: 20),
