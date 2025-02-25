@@ -1,8 +1,4 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
-<<<<<<< HEAD
 
-=======
->>>>>>> 60aa4b0efdcaeca15d43c21c3da49e951bdb8fc3
 import 'package:aspirehire/features/home_screen/components/MediaButtons.dart';
 import 'package:aspirehire/features/home_screen/components/PostCard.dart';
 import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';

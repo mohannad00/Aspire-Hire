@@ -43,7 +43,7 @@ class _SignUpEmailEmployeeState extends State<SignUpEmailEmployee> {
               ),
               // Logo and text
               const Text(
-                'LOGO',
+                'Hiro',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,

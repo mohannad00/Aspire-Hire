@@ -48,7 +48,7 @@ class _SignUpPhoneJobSeekerState extends State<SignUpPhoneJobSeeker> {
               ),
               // Logo and text
               const Text(
-                'LOGO',
+                'Hiro',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,

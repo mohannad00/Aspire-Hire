@@ -42,7 +42,7 @@ class _SignUpPhoneEmployeeState extends State<SignUpPhoneEmployee> {
               ),
               // Logo and text
               const Text(
-                'LOGO',
+                'Hiro',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
