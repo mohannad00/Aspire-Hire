@@ -5,6 +5,7 @@ import 'package:aspirehire/features/splash_screen/splash_screen.dart';
 
 import 'features/auth/jobseeker_register/state_management/jobseeker_register_cubit.dart';
 import 'features/auth/login/state_management/login_cubit.dart';
+import 'features/job_application/JobApply.dart';
 
 void main() {
   runApp(const MyApp());
