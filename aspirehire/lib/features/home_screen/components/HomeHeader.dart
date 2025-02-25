@@ -1,4 +1,4 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class HomeHeader extends StatelessWidget {
   final String firstName;
@@ -28,9 +28,7 @@ class HomeHeader extends StatelessWidget {
               const SizedBox(width: 10),
               CircleAvatar(
                 radius: 20,
-                backgroundImage: profilePicture != null
-                    ? NetworkImage(profilePicture!) // Use the profile picture from the API
-                    : const AssetImage('assets/avatar.png') as ImageProvider, // Fallback to default avatar
+                backgroundImage: NetworkImage(profilePicture!),
               ),
               const SizedBox(width: 10),
               Text(
@@ -40,7 +38,11 @@ class HomeHeader extends StatelessWidget {
             ],
           ),
           IconButton(
-            icon: Image.asset('assets/mage_notification-bell.png', width: 24, height: 24),
+            icon: Image.asset(
+              'assets/mage_notification-bell.png',
+              width: 24,
+              height: 24,
+            ),
             onPressed: () {},
           ),
         ],
@@ -48,7 +50,9 @@ class HomeHeader extends StatelessWidget {
     );
   }
 }
-*/
+
+
+/*
 import 'package:flutter/material.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -82,3 +86,4 @@ class HomeHeader extends StatelessWidget {
     );
   }
 }
+*/
