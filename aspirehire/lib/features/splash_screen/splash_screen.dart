@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aspirehire/features/onboarding/OnboardingScreen.dart';
 import 'package:flutter/material.dart';
 
+import '../../config/database/cache/shared_pref.dart';
 import '../../core/utils/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,9 +15,10 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState() {
+  void initState()  {
     super.initState();
-    Timer(const Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 2), () async {
+      await CacheHelper.init();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const OnboardingScreen()),
