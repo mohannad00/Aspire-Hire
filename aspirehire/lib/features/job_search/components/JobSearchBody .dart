@@ -20,9 +20,9 @@ class JobSearchBody extends StatelessWidget {
           SizedBox(height: 25),
           Row(
             children: [
-              JobCard(), // First job card
+              //JobCard(), // First job card
               SizedBox(width: 25),
-              JobCard(), // Second job card
+              //JobCard(), // Second job card
             ],
           ),
         ],

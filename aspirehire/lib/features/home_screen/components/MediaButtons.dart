@@ -5,8 +5,6 @@ class MediaButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the screen width
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -18,40 +16,60 @@ class MediaButtons extends StatelessWidget {
   }
 
   Widget _buildButton(BuildContext context, String text, String assetPath) {
-    // Get the screen width
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Adjust button width based on screen size
     final buttonWidth = screenWidth * 0.25; // 25% of screen width
     final iconSize = screenWidth * 0.05; // 5% of screen width
     final fontSize = screenWidth * 0.035; // 3.5% of screen width
 
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.02,
-          vertical: 10,
-        ), // Responsive padding
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: Colors.transparent),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(255, 255, 145, 19),
+            blurRadius: 0.5,
+            spreadRadius: -0.5,
+            offset: Offset(0, 3), // Shadow only at the bottom
+          ),
+        ],
       ),
-      child: SizedBox(
-        width: buttonWidth, // Set a responsive width
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              assetPath,
-              width: iconSize,
-              height: iconSize,
-            ),
-            const SizedBox(width: 5),
-            Text(
-              text,
-              style: TextStyle(fontSize: fontSize), // Responsive font size
-            ),
-          ],
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          shadowColor: Colors.transparent, // Disable default shadow
+          padding: EdgeInsets.symmetric(
+            horizontal: screenWidth * 0.02,
+            vertical: 12,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(color: Colors.transparent),
+          ),
+        ),
+        child: SizedBox(
+          width: buttonWidth,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                assetPath,
+                width: iconSize,
+                height: iconSize,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

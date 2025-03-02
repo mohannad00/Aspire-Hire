@@ -3,11 +3,27 @@
 import 'package:flutter/material.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({Key? key}) : super(key: key);
+  final String jobTitle;
+  final String company;
+  final String jobType;
+  final String location;
+  final String description;
+
+  const PostCard({
+    Key? key,
+    required this.jobTitle,
+    required this.company,
+    required this.jobType,
+    required this.location,
+    required this.description,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
+      elevation: 5, // Adds shadow to the card
+      shadowColor: Colors.grey.withOpacity(0.5), // Customize shadow color
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -21,14 +37,14 @@ class PostCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Mustafa Mahmoud', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text('2,871 followers  •  1d'),
+                    Text('Web Designer', style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text('hp  •  Part-time  •  Egypt, Cairo'),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            const Text('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.', style: TextStyle(fontSize: 15)),
+            Text(description, style: const TextStyle(fontSize: 15)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

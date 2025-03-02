@@ -18,11 +18,12 @@ class CustomNavBar extends StatelessWidget {
     List<IconData> icons = [Icons.home, Icons.search, Icons.list, Icons.person];
 
     return Container(
+      height: 56,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: const Color(0xFF013E5D),
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

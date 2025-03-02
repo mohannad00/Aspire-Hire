@@ -15,7 +15,7 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 85,
+      height: 62,
       decoration: const BoxDecoration(
         color: Color(0xFF013E5D),
         borderRadius: BorderRadius.all(Radius.circular(20)),

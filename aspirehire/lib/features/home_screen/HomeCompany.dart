@@ -30,8 +30,20 @@ class _HomeCompanyState extends State<HomeCompany> {
           const SizedBox(height: 20),
           Container(height: 1, width: double.infinity, color: Colors.orange),
           const SizedBox(height: 20),
-          const PostCard(), // المنشورات
-          const PostCard(), // يمكن استدعاؤه عدة مرات لعرض منشورات متعددة
+          const PostCard(
+  jobTitle: 'Web Designer',
+  company: 'hp',
+  jobType: 'Part-time',
+  location: 'Egypt, Cairo',
+  description: 'Looking for a skilled Web Designer to join our team part-time. Must be located in Cairo, Egypt.',
+), // المنشورات
+          const PostCard(
+  jobTitle: 'Web Designer',
+  company: 'hp',
+  jobType: 'Part-time',
+  location: 'Egypt, Cairo',
+  description: 'Looking for a skilled Web Designer to join our team part-time. Must be located in Cairo, Egypt.',
+), // يمكن استدعاؤه عدة مرات لعرض منشورات متعددة
         ],
       ),
     ),

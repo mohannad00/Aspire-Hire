@@ -18,9 +18,9 @@ class CreatePostButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.black, width: 0.5),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(50),
         ),
-        child: Text("Post a job!", style: TextStyle(fontSize: 18, color: Colors.grey[600])),
+        child: Text("Write a post !", style: TextStyle(fontSize: 18, color: Colors.grey[600])),
       ),
     );
   }
