@@ -5,7 +5,6 @@ import 'package:aspirehire/features/onboarding/OnboardingScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../../config/datasources/cache/shared_pref.dart';
-import '../../core/utils/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
