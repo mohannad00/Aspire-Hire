@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import '../../../../config/database/api/end_points.dart';
+import '../../../../config/datasources/api/end_points.dart';
 import 'get_job_post_state.dart';
 
 class GetJobPostCubit extends Cubit<GetJobPostState> {

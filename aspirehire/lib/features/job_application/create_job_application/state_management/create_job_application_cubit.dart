@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 
-import '../../../../config/database/api/end_points.dart';
+import '../../../../config/datasources/api/end_points.dart';
 import '../../../../core/models/CreateJobApplication.dart';
 
 part 'create_job_application_state.dart';

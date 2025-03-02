@@ -145,7 +145,7 @@ import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 
-import '../../config/database/cache/shared_pref.dart';
+import '../../config/datasources/cache/shared_pref.dart';
 import '../profile/state_management/profile_cubit.dart';
 import '../profile/state_management/profile_state.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import '../../../../config/database/api/end_points.dart';
+import '../../../../config/datasources/api/end_points.dart';
 import '../../../../core/models/JobseekerRegistration.dart';
 import 'jobseeker_register_state.dart';
 

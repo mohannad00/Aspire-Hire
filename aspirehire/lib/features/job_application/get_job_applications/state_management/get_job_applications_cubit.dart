@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:dio/dio.dart';
 
-import '../../../../config/database/api/end_points.dart';
+import '../../../../config/datasources/api/end_points.dart';
 import '../../../../core/models/GetJobApplications.dart';
 
 part 'get_job_applications_state.dart';

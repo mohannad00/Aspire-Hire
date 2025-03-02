@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import '../../../../config/database/api/end_points.dart';
+import '../../../../config/datasources/api/end_points.dart';
 import 'delete_job_post_state.dart';
 
 class DeleteJobPostCubit extends Cubit<DeleteJobPostState> {

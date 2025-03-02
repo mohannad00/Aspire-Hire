@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import '../../../../config/database/api/end_points.dart';
+import '../../../../config/datasources/api/end_points.dart';
 import 'search_job_posts_state.dart';
 
 class SearchJobPostsCubit extends Cubit<SearchJobPostsState> {

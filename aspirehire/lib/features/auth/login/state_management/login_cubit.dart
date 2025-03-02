@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import '../../../../config/database/api/end_points.dart';
-import '../../../../config/database/cache/shared_pref.dart';
+import '../../../../config/datasources/api/end_points.dart';
+import '../../../../config/datasources/cache/shared_pref.dart';
 import '../../../../core/models/Login.dart';
 import 'login_state.dart';
 

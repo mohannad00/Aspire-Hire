@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../config/database/api/end_points.dart';
+import '../../../config/datasources/api/end_points.dart';
 import '../../../core/models/DeleteProfilePicture.dart';
 import '../../../core/models/GetProfile.dart';
 import '../../../core/models/UpdateProfileRequest.dart';
