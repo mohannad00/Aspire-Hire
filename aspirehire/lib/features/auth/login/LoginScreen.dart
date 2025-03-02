@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 const Text(
-                  'LOGO',
+                  'Hiro',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,

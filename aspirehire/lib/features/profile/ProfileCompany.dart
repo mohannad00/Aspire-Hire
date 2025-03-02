@@ -2,6 +2,7 @@
 
 //import 'package:aspirehire/ReusableComponent.dart';
 import 'package:aspirehire/features/home_screen/HomeCompany.dart';
+import 'package:aspirehire/features/profile/EditProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 
@@ -68,7 +69,12 @@ class _ProfileCompanyState extends State<ProfileCompany> {
                   left: 330,
                   child: IconButton(
                     icon: const Icon(Icons.edit, color: Colors.orange),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const EditProfile()),
+          );
+                    },
                   ),
                 ),
               ],

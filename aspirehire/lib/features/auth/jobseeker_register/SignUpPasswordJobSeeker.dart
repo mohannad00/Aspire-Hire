@@ -101,7 +101,7 @@ class _SignUpPasswordJobSeekerState extends State<SignUpPasswordJobSeeker> {
                         height: MediaQuery.of(context).size.height * 0.03,
                       ),
                       const Text(
-                        'LOGO',
+                        'Hiro',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,

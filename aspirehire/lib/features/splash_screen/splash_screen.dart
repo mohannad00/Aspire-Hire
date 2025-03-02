@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aspirehire/core/utils/app_text_styles.dart';
 import 'package:aspirehire/features/onboarding/OnboardingScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     Timer(const Duration(seconds: 2), () async {
       await CacheHelper.init();
@@ -32,11 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Text(
           'Hiro',
-          style: TextStyle(
-        fontSize: 50,
-        color: AppColors.primary,
-        fontWeight:  FontWeight.w900,
-          ),
+          style: CustomTextStyles.pacifico400style64,
         ),
       ),
     );
