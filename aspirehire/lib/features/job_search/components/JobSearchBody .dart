@@ -1,6 +1,3 @@
-// ignore_for_file: file_names
-
-import 'package:aspirehire/features/home_screen/components/JobCard.dart';
 import 'package:aspirehire/features/job_search/components/JobSearchContainer%20.dart';
 import 'package:flutter/material.dart';
 

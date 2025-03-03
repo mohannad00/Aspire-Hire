@@ -162,7 +162,7 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 20),
                 // Horizontal Scrollable JobCard Section
                 SizedBox(
-                  height: 92, // Set a fixed height for the horizontal ListView
+                  height: 97, // Set a fixed height for the horizontal ListView
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: const [
