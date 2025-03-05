@@ -1,8 +1,12 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpEmailJobSeeker.dart';
 
 import 'state_management/jobseeker_register_cubit.dart'; // Import the cubit
@@ -25,7 +29,7 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -133,7 +137,7 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
               Row(
                 children: [
                   Expanded(
-                      child: ReusableComponents.reusableTextField(
+                      child: ReusableTextField.build(
                     controller: _firstNameController, // Add controller
                     hintText: 'First Name',
                     hintColor: Colors.grey,
@@ -144,7 +148,7 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
                   )),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   Expanded(
-                      child: ReusableComponents.reusableTextField(
+                      child: ReusableTextField.build(
                     controller: _lastNameController, // Add controller
                     hintText: 'Last Name',
                     hintColor: Colors.grey,
@@ -159,7 +163,7 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
               SizedBox(
                 width: double.infinity,
                 height: 60,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Next',
                   fontSize: 18,
                   backgroundColor: const Color(0xFF013E5D),

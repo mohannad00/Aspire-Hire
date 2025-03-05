@@ -1,8 +1,9 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/features/auth/reset_password/LoginForgetPass.dart';
 import 'package:aspirehire/features/auth/reset_password/LoginResetPass.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:flutter/material.dart';
 
 class LoginVerifyAcc extends StatefulWidget {
@@ -19,7 +20,7 @@ class _LoginVerifyAccState extends State<LoginVerifyAcc> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -84,7 +85,7 @@ class _LoginVerifyAccState extends State<LoginVerifyAcc> {
                 SizedBox(
                   width: double.infinity,
                   height: 60,
-                  child: ReusableComponents.reusableButton(
+                  child: ReusableButton.build(
                     title: 'Verify Now',
                     fontSize: 18,
                     backgroundColor: const Color(0xFF013E5D),

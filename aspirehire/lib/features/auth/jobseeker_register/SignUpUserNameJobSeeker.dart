@@ -1,9 +1,11 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpPasswordJobSeeker.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpPhoneJobSeeker.dart';
 import 'state_management/jobseeker_register_cubit.dart'; // Import the cubit
@@ -26,7 +28,7 @@ class _SignUpUserNameJobSeekerState extends State<SignUpUserNameJobSeeker> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -134,7 +136,7 @@ class _SignUpUserNameJobSeekerState extends State<SignUpUserNameJobSeeker> {
               Row(
                 children: [
                   Expanded(
-                    child: ReusableComponents.reusableTextField(
+                    child: ReusableTextField.build(
                       controller: _usernameController, // Add controller
                       hintText: 'Username',
                       hintColor: Colors.grey,
@@ -151,7 +153,7 @@ class _SignUpUserNameJobSeekerState extends State<SignUpUserNameJobSeeker> {
               SizedBox(
                 width: double.infinity,
                 height: 60,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Next',
                   fontSize: 18,
                   backgroundColor: const Color(0xFF013E5D),

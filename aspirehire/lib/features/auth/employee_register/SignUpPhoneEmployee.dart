@@ -1,7 +1,9 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/employee_register/SignUpEmailEmployee.dart';
 import 'package:aspirehire/features/auth/employee_register/SignUpUserNameEmployee.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,7 @@ class _SignUpPhoneEmployeeState extends State<SignUpPhoneEmployee> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -130,7 +132,7 @@ class _SignUpPhoneEmployeeState extends State<SignUpPhoneEmployee> {
                 children: [
                   SizedBox(
                       width: 80,
-                      child: ReusableComponents.reusableTextField(
+                      child: ReusableTextField.build(
                         hintText: '+20',
                         hintColor: Colors.grey,
                         fontSize: 16.0,
@@ -140,7 +142,7 @@ class _SignUpPhoneEmployeeState extends State<SignUpPhoneEmployee> {
                       )),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.04),
                   Expanded(
-                      child: ReusableComponents.reusableTextField(
+                      child: ReusableTextField.build(
                     hintText: 'Phone Number ',
                     hintColor: Colors.grey,
                     fontSize: 16.0,
@@ -154,7 +156,7 @@ class _SignUpPhoneEmployeeState extends State<SignUpPhoneEmployee> {
               SizedBox(
                 width: double.infinity,
                 height: 60,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Next',
                   fontSize: 18,
                   backgroundColor: const Color(0xFF013E5D),

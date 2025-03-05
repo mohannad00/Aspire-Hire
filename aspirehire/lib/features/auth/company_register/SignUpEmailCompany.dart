@@ -1,7 +1,9 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/core/components/ReusableAppBar.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpPhoneCompany.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpScreenCompany.dart';
 import 'package:flutter/material.dart';
@@ -19,20 +21,17 @@ class _SignUpEmailCompanyState extends State<SignUpEmailCompany> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
-          context: context,
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const SignUpScreenCompany()),
-            );
-          },
+      appBar: ReusableAppBar.build(
+    title: "",
+    onBackPressed: () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const SignUpScreenCompany(),
         ),
-      ),
+      );
+    },
+  ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -130,7 +129,7 @@ class _SignUpEmailCompanyState extends State<SignUpEmailCompany> {
               Row(
                 children: [
                   Expanded(
-                    child: ReusableComponents.reusableTextField(
+                    child: ReusableTextField.build(
                       hintText: 'Email Address',
                       hintColor: Colors.grey,
                       fontSize: 16.0,
@@ -146,7 +145,7 @@ class _SignUpEmailCompanyState extends State<SignUpEmailCompany> {
               SizedBox(
                 width: double.infinity,
                 height: 60,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Next',
                   fontSize: 18,
                   backgroundColor: const Color(0xFF013E5D),

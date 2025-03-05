@@ -1,8 +1,10 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/employee_register/SignUpUserNameEmployee.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +26,7 @@ class _SignUpPasswordEmployeeState extends State<SignUpPasswordEmployee> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -127,7 +129,7 @@ class _SignUpPasswordEmployeeState extends State<SignUpPasswordEmployee> {
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              ReusableComponents.reusableTextField(
+              ReusableTextField.build(
                 hintText: 'Password',
                 hintColor: Colors.grey,
                 fontSize: 16.0,
@@ -147,7 +149,7 @@ class _SignUpPasswordEmployeeState extends State<SignUpPasswordEmployee> {
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              ReusableComponents.reusableTextField(
+              ReusableTextField.build(
                 hintText: 'Confirm Passwprd',
                 hintColor: Colors.grey,
                 fontSize: 16.0,
@@ -171,7 +173,7 @@ class _SignUpPasswordEmployeeState extends State<SignUpPasswordEmployee> {
               SizedBox(
                 width: double.infinity,
                 height: 60,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Sign Up',
                   fontSize: 18,
                   backgroundColor: const Color(0xFF013E5D),

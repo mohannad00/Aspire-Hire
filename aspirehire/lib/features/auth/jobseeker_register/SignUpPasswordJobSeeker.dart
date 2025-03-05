@@ -1,7 +1,11 @@
+// ignore_for_file: library_private_types_in_public_api, file_names
+
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'state_management/jobseeker_register_cubit.dart';
 import 'state_management/jobseeker_register_state.dart';
 
@@ -82,10 +86,9 @@ class _SignUpPasswordJobSeekerState extends State<SignUpPasswordJobSeeker> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: ReusableComponents.reusableBackButton(
+            leading: ReusableBackButton.build(
               context: context,
               onPressed: () {
-                // Navigate to the login screen when the back button is pressed
                 _navigateToLoginScreen(context);
               },
             ),
@@ -140,7 +143,7 @@ class _SignUpPasswordJobSeekerState extends State<SignUpPasswordJobSeeker> {
                         ],
                       ),
                       SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                      ReusableComponents.reusableTextField(
+                      ReusableTextField.build(
                         controller: _passwordController,
                         hintText: 'Password',
                         hintColor: Colors.grey,
@@ -161,7 +164,7 @@ class _SignUpPasswordJobSeekerState extends State<SignUpPasswordJobSeeker> {
                         ),
                       ),
                       SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                      ReusableComponents.reusableTextField(
+                      ReusableTextField.build(
                         controller: _confirmPasswordController,
                         hintText: 'Confirm Password',
                         hintColor: Colors.grey,
@@ -186,7 +189,7 @@ class _SignUpPasswordJobSeekerState extends State<SignUpPasswordJobSeeker> {
                       SizedBox(
                         width: double.infinity,
                         height: 60,
-                        child: ReusableComponents.reusableButton(
+                        child: ReusableButton.build(
                           title: 'Sign Up',
                           fontSize: 18,
                           backgroundColor: const Color(0xFF013E5D),
