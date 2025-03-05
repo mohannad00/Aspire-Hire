@@ -12,20 +12,26 @@ dependencies:
     sdk: flutter
   percent_indicator: ^4.2.3
   shared_preferences: ^2.2.2
-  flutter_bloc: ^8.1.6  # Downgraded for compatibility
+  flutter_bloc: ^8.1.6
   equatable: ^2.0.5
   dio: ^5.4.2+1
   cupertino_icons: ^1.0.6
   smooth_page_indicator: ^1.1.0
   carousel_slider: ^4.2.1
+  file_picker: ^9.0.1     
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
 
-
 flutter:
+  uses-material-design: true
+
   assets:
     - assets/
-  uses-material-design: true
+
+  fonts:
+    - family: Pacifico
+      fonts:
+        - asset: assets/fonts/Pacifico-Regular.ttf
