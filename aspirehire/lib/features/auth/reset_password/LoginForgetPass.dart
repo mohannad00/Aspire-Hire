@@ -1,6 +1,10 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/features/auth/login/LoginVerifyAcc.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:flutter/material.dart';
 
 class LoginForgetPass extends StatefulWidget {
@@ -17,7 +21,7 @@ class _LoginForgetPassState extends State<LoginForgetPass> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -68,7 +72,7 @@ class _LoginForgetPassState extends State<LoginForgetPass> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                ReusableComponents.reusableTextField(
+                ReusableTextField.build(
                   hintText: 'Enter Your Email',
                   hintColor: Colors.grey,
                   fontSize: 16.0,
@@ -80,7 +84,7 @@ class _LoginForgetPassState extends State<LoginForgetPass> {
                 SizedBox(
                   width: double.infinity,
                   height: 60,
-                  child: ReusableComponents.reusableButton(
+                  child: ReusableButton.build(
                     title: 'Reset Password ',
                     fontSize: 18,
                     backgroundColor: const Color(0xFF013E5D),

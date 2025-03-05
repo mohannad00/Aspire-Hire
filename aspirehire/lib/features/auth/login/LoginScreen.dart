@@ -1,10 +1,12 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, file_names
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/auth/reset_password/LoginForgetPass.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpScreenJobSeeker.dart';
 import '../../home_screen/HomeScreenJobSeeker.dart';
 import 'state_management/login_cubit.dart'; // Import the LoginCubit
@@ -29,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -107,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                ReusableComponents.reusableTextField(
+                ReusableTextField.build(
                   hintText: 'Email Address',
                   hintColor: Colors.grey,
                   fontSize: 16.0,
@@ -117,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _usernameController, // Add controller
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                ReusableComponents.reusableTextField(
+                ReusableTextField.build(
                   hintText: 'Password',
                   hintColor: Colors.grey,
                   fontSize: 16.0,
@@ -183,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     return SizedBox(
                       width: double.infinity,
                       height: 60,
-                      child: ReusableComponents.reusableButton(
+                      child: ReusableButton.build(
                         title: 'Login',
                         fontSize: 18,
                         backgroundColor: const Color(0xFF013E5D),

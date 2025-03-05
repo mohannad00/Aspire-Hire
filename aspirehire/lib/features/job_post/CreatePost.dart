@@ -1,7 +1,8 @@
 // ignore_for_file: file_names, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/job_post/components/PostOptions%20.dart';
 import 'package:aspirehire/features/job_post/components/PostTextField%20.dart';
 import 'package:aspirehire/features/job_post/components/ProfileHeader%20.dart';
@@ -16,7 +17,7 @@ class CreatePost extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -31,7 +32,7 @@ class CreatePost extends StatelessWidget {
             onPressed: () {},
             child: SizedBox(
               width: 100,
-              child: ReusableComponents.reusableButton(
+              child: ReusableButton.build(
                 title: 'Post',
                 fontSize: 15,
                 backgroundColor: const Color(0xFF013E5D),

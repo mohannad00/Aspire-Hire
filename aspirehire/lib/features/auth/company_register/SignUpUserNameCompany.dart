@@ -1,7 +1,9 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpPasswordCompany.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpPhoneCompany.dart';
 import 'package:flutter/material.dart';
@@ -22,12 +24,12 @@ class _SignUpUserNameCompanyState extends State<SignUpUserNameCompany> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => SignUpPhoneCompany()),
+              MaterialPageRoute(builder: (context) => const SignUpPhoneCompany()),
             );
           },
         ),
@@ -91,7 +93,7 @@ class _SignUpUserNameCompanyState extends State<SignUpUserNameCompany> {
                       });
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
                       );
                     },
                     child: Text(
@@ -128,7 +130,7 @@ class _SignUpUserNameCompanyState extends State<SignUpUserNameCompany> {
               Row(
                 children: [
                   Expanded(
-                      child: ReusableComponents.reusableTextField(
+                      child: ReusableTextField.build(
                     hintText: 'Username',
                     hintColor: Colors.grey,
                     fontSize: 16.0,
@@ -143,7 +145,7 @@ class _SignUpUserNameCompanyState extends State<SignUpUserNameCompany> {
               SizedBox(
                 width: double.infinity,
                 height: 60,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Next',
                   fontSize: 18,
                   backgroundColor: const Color(0xFF013E5D),
@@ -152,7 +154,7 @@ class _SignUpUserNameCompanyState extends State<SignUpUserNameCompany> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SignUpPasswordCompany()),
+                          builder: (context) => const SignUpPasswordCompany()),
                     );
                   },
                 ),

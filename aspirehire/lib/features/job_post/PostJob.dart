@@ -1,6 +1,6 @@
 // ignore_for_file: file_names, library_private_types_in_public_api, prefer_const_constructors
 
-import 'package:aspirehire/core/components/ReusableComponent.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/features/home_screen/HomeCompany.dart';
 import 'package:aspirehire/features/job_application/JobApply.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +107,7 @@ class _PostJobState extends State<PostJob> {
               child: SizedBox(
                 width: 103,
                 height: 48,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Post',
                   fontSize: 15,
                   backgroundColor: const Color(0xFF013E5D),

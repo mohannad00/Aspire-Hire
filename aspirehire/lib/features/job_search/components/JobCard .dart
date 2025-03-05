@@ -1,6 +1,8 @@
+// ignore_for_file: file_names
+
+import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 
 class JobCard extends StatelessWidget {
   const JobCard({super.key});
@@ -56,7 +58,7 @@ class JobCard extends StatelessWidget {
             children: [
               SizedBox(
                 width: 100,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Apply',
                   fontSize: 15,
                   backgroundColor: const Color(0xFF013E5D),

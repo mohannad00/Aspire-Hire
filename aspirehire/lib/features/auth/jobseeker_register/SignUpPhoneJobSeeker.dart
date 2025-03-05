@@ -1,9 +1,11 @@
 // ignore_for_file: file_names, library_private_types_in_public_api
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusableButton.dart';
+import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpEmailJobSeeker.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpUserNameJobSeeker.dart';
 
@@ -27,7 +29,7 @@ class _SignUpPhoneJobSeekerState extends State<SignUpPhoneJobSeeker> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
@@ -136,7 +138,7 @@ class _SignUpPhoneJobSeekerState extends State<SignUpPhoneJobSeeker> {
                 children: [
                   SizedBox(
                     width: 80,
-                    child: ReusableComponents.reusableTextField(
+                    child: ReusableTextField.build(
                       controller: _countryCodeController, // Add controller
                       hintText: '+20',
                       hintColor: Colors.grey,
@@ -148,7 +150,7 @@ class _SignUpPhoneJobSeekerState extends State<SignUpPhoneJobSeeker> {
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.04),
                   Expanded(
-                    child: ReusableComponents.reusableTextField(
+                    child: ReusableTextField.build(
                       controller: _phoneNumberController, // Add controller
                       hintText: 'Phone Number',
                       hintColor: Colors.grey,
@@ -164,7 +166,7 @@ class _SignUpPhoneJobSeekerState extends State<SignUpPhoneJobSeeker> {
               SizedBox(
                 width: double.infinity,
                 height: 60,
-                child: ReusableComponents.reusableButton(
+                child: ReusableButton.build(
                   title: 'Next',
                   fontSize: 18,
                   backgroundColor: const Color(0xFF013E5D),

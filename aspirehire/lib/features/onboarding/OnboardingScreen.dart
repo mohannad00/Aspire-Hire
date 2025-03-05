@@ -1,7 +1,8 @@
 // ignore_for_file: file_names
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
+import 'package:aspirehire/core/components/ReusablePageIndicator.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:flutter/material.dart';
 
 import 'OnboardingPage.dart';
@@ -56,7 +57,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: _currentPage > 0 ? _onBackPressed : null,
         ),
@@ -113,7 +114,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  ReusableComponents.reusablePageIndicator(
+                  ReusablePageIndicator.build(
                       controller: _controller, count: 3),
                   const SizedBox(
                     height: 50,

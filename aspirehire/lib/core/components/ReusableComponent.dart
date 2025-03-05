@@ -1,5 +1,5 @@
 // ignore_for_file: file_names, sort_child_properties_last
-
+/*
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -139,3 +139,5 @@ class ReusableComponents extends StatelessWidget {
     return Container();
   }
 }
+
+*/

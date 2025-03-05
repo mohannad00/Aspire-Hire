@@ -1,5 +1,5 @@
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:flutter/material.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 
 class JobSearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onBackPressed;
@@ -11,7 +11,7 @@ class JobSearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0,
       backgroundColor: Colors.transparent,
-      leading: ReusableComponents.reusableBackButton(
+      leading: ReusableBackButton.build(
         context: context,
         onPressed: onBackPressed,
       ),

@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, sort_child_properties_last, prefer_const_constructors, prefer_final_fields
 
+import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/features/onboarding/OnboardingScreen.dart';
-import 'package:aspirehire/core/components/ReusableComponent.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpScreenCompany.dart';
 import 'package:aspirehire/features/auth/employee_register/SignUpScreenEmployee.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpScreenJobSeeker.dart';
@@ -24,7 +24,7 @@ class _ChoosingRoleState extends State<ChoosingRole> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: ReusableComponents.reusableBackButton(
+        leading: ReusableBackButton.build(
           context: context,
           onPressed: () {
             Navigator.pushReplacement(
