@@ -21,9 +21,9 @@ class ApiEndpoints {
 
   // Job Post Endpoints
   static const String createJobPost = '$baseUrl/jobpost';
-  static const String updateJobPost = '$baseUrl/jobpost'; // Append /:jobPostId
-  static const String deleteJobPost = '$baseUrl/jobpost'; // Append /:jobPostId
-  static const String getJobPost = '$baseUrl/jobpost'; // Append ?id=:jobPostId
+  static const String updateJobPost = '$baseUrl/jobpost'; // Todo Append /:jobPostId
+  static const String deleteJobPost = '$baseUrl/jobpost'; // Todo Append /:jobPostId
+  static const String getJobPost = '$baseUrl/jobpost'; //  Todo Append ?id=:jobPostId
   static const String searchJobPosts = '$baseUrl/jobpost/search';
 
   // Job Application Endpoints

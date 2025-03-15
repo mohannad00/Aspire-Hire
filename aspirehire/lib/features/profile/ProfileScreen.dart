@@ -1,8 +1,4 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-
-import '../home_screen/HomeScreenJobSeeker.dart';
-import '../job_search/JobSearch.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,28 +8,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 3;
-
-  final List<String> _labels = ["Home", "Search", "List", "Profile"];
-
-  void _onItemTapped(int index) {
-    if (index == 0) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreenJobSeeker()),
-      );
-    } else if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const JobSearch()),
-      );
-    } else {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,10 +34,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          Center(
+          const Center(
             child: Section(
               title: "Experiences",
-              children: const [
+              children: [
                 ListTile(
                   leading: CircleAvatar(
                     radius: 5,
@@ -84,10 +58,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          Center(
+          const Center(
             child: Section(
               title: "Education",
-              children: const [
+              children: [
                 ListTile(
                   leading: CircleAvatar(
                     radius: 5,
@@ -100,10 +74,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          Center(
+          const Center(
             child: Section(
               title: "Skills",
-              children: const [
+              children: [
                 ListTile(
                   leading: CircleAvatar(
                     radius: 5,
@@ -117,63 +91,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: const Color(0xFF013E5D),
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildNavItem(Icons.home, _labels[0], 0),
-            _buildNavItem(Icons.search, _labels[1], 1),
-            _buildNavItem(Icons.list, _labels[2], 2),
-            _buildNavItem(Icons.person, _labels[3], 3),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, int index) {
-    bool isSelected = _selectedIndex == index;
-    return GestureDetector(
-      onTap: () => _onItemTapped(index),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: isSelected ? 16 : 0, vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: isSelected ? const Color(0xFF013E5D) : Colors.white, size: 28),
-            if (isSelected)
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                    color: Color(0xFF013E5D),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 }
-
-/*
-
-*/
-
 
 class ProfileHeader extends StatelessWidget {
   final String avatarImage;
@@ -182,7 +102,7 @@ class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
     super.key,
     required this.avatarImage,
-      this.onEditPressed,
+    this.onEditPressed,
   });
 
   @override
@@ -386,5 +306,3 @@ class Section extends StatelessWidget {
     );
   }
 }
-
-

@@ -3,12 +3,12 @@
 import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/core/components/ReusableTextField.dart';
+import 'package:aspirehire/features/hame_nav_bar/home_nav_bar.dart';
+import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/auth/reset_password/LoginForgetPass.dart';
-import 'package:aspirehire/features/auth/jobseeker_register/SignUpScreenJobSeeker.dart';
-import '../../home_screen/HomeScreenJobSeeker.dart';
 import 'state_management/login_cubit.dart'; // Import the LoginCubit
 import 'state_management/login_state.dart'; // Import the LoginState
 
@@ -20,7 +20,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isSignUp = true;
   bool _isObscure = true;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -67,48 +66,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          isSignUp = true;
-                        });
-                      },
-                      child: Text(
-                        'Login',
-                        style: TextStyle(
-                          color: isSignUp ? const Color(0xFF013E5D) : Colors.grey,
-                          fontSize: 16,
-                          fontWeight: isSignUp ? FontWeight.bold : FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.13),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          isSignUp = false;
-                        });
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignUpScreenJobSeeker()),
-                        );
-                      },
-                      child: Text(
-                        'Sign up',
-                        style: TextStyle(
-                          color: isSignUp ? Colors.grey : const Color(0xFF013E5D),
-                          fontSize: 16,
-                          fontWeight: isSignUp ? FontWeight.normal : FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 ReusableTextField.build(
                   hintText: 'Email Address',
                   hintColor: Colors.grey,
@@ -148,7 +105,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const LoginForgetPass()),
+                            builder: (context) => const LoginForgetPass(),
+                          ),
                         );
                       },
                       child: const Text(
@@ -169,13 +127,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Navigate to the next screen on successful login
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const HomeScreenJobSeeker()),
+                        MaterialPageRoute(
+                          builder: (context) => const HomeNavBar(),
+                        ),
                       );
                     } else if (state is LoginFailure) {
                       // Show error message
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.error)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(state.error)));
                     }
                   },
                   builder: (context, state) {

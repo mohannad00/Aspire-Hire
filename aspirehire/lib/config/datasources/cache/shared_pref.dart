@@ -43,7 +43,7 @@ class CacheHelper {
     return await _preferences!.remove(key);
   }
 
-  /// Clear all stored data
+  ///  Clear all stored data
   static Future<bool> clearAll() async {
     if (_preferences == null) return false;
     return await _preferences!.clear();

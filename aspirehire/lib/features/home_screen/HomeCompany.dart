@@ -1,4 +1,3 @@
-
 import 'package:aspirehire/features/home_screen/components/MediaButtons.dart';
 import 'package:aspirehire/features/home_screen/components/PostCard.dart';
 import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';
@@ -22,7 +21,7 @@ class _HomeCompanyState extends State<HomeCompany> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-  //        const HomeHeader(), // الهيدر
+          //        const HomeHeader(), // الهيدر
           const SizedBox(height: 10),
           const PostJobButton(), // زر "Post a Job!"
           const SizedBox(height: 10),
@@ -31,19 +30,21 @@ class _HomeCompanyState extends State<HomeCompany> {
           Container(height: 1, width: double.infinity, color: Colors.orange),
           const SizedBox(height: 20),
           const PostCard(
-  jobTitle: 'Web Designer',
-  company: 'hp',
-  jobType: 'Part-time',
-  location: 'Egypt, Cairo',
-  description: 'Looking for a skilled Web Designer to join our team part-time. Must be located in Cairo, Egypt.',
-), // المنشورات
+            jobTitle: 'Web Designer',
+            company: 'hp',
+            jobType: 'Part-time',
+            location: 'Egypt, Cairo',
+            description:
+                'Looking for a skilled Web Designer to join our team part-time. Must be located in Cairo, Egypt.',
+          ), // المنشورات
           const PostCard(
-  jobTitle: 'Web Designer',
-  company: 'hp',
-  jobType: 'Part-time',
-  location: 'Egypt, Cairo',
-  description: 'Looking for a skilled Web Designer to join our team part-time. Must be located in Cairo, Egypt.',
-), // يمكن استدعاؤه عدة مرات لعرض منشورات متعددة
+            jobTitle: 'Web Designer',
+            company: 'hp',
+            jobType: 'Part-time',
+            location: 'Egypt, Cairo',
+            description:
+                'Looking for a skilled Web Designer to join our team part-time. Must be located in Cairo, Egypt.',
+          ), // يمكن استدعاؤه عدة مرات لعرض منشورات متعددة
         ],
       ),
     ),
@@ -56,9 +57,15 @@ class _HomeCompanyState extends State<HomeCompany> {
 
   void _onItemTapped(int index) {
     if (index == 1) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const JobSearch()));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const JobSearch()),
+      );
     } else if (index == 3) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileCompany()));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileCompany()),
+      );
     } else {
       setState(() {
         _selectedIndex = index;
@@ -69,15 +76,14 @@ class _HomeCompanyState extends State<HomeCompany> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      body:
-      SafeArea(
-        child: _pages[_selectedIndex],
-      ),
+      body: SafeArea(child: _pages[_selectedIndex]),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(color: const Color(0xFF013E5D), borderRadius: BorderRadius.circular(30)),
+        decoration: BoxDecoration(
+          color: const Color(0xFF013E5D),
+          borderRadius: BorderRadius.circular(30),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -99,15 +105,32 @@ class _HomeCompanyState extends State<HomeCompany> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: isSelected ? 16 : 0, vertical: 10),
-        decoration: BoxDecoration(color: isSelected ? Colors.white : Colors.transparent, borderRadius: BorderRadius.circular(30)),
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 16 : 0,
+          vertical: 10,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+        ),
         child: Row(
           children: [
-            Icon(icon, color: isSelected ? const Color(0xFF013E5D) : Colors.white, size: 28),
+            Icon(
+              icon,
+              color: isSelected ? const Color(0xFF013E5D) : Colors.white,
+              size: 28,
+            ),
             if (isSelected)
               Padding(
                 padding: const EdgeInsets.only(left: 8),
-                child: Text(label, style: const TextStyle(color: Color(0xFF013E5D), fontWeight: FontWeight.bold, fontSize: 16)),
+                child: Text(
+                  label,
+                  style: const TextStyle(
+                    color: Color(0xFF013E5D),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
               ),
           ],
         ),

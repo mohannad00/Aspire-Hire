@@ -29,7 +29,7 @@ class MediaButtons extends StatelessWidget {
         border: Border.all(color: Colors.transparent),
         boxShadow: const [
           BoxShadow(
-            color: Color.fromARGB(255, 255, 145, 19),
+            color: Color(0xFFFF804B),
             blurRadius: 0.5,
             spreadRadius: -0.5,
             offset: Offset(0, 3), // Shadow only at the bottom

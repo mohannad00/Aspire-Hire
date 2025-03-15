@@ -30,10 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text(
-          'Hiro',
-          style: CustomTextStyles.pacifico400style64,
-        ),
+        child: Text('Hiro', style: CustomTextStyles.pacifico400style64),
       ),
     );
   }
