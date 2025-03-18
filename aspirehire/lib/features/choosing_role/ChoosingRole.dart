@@ -3,7 +3,6 @@
 import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/features/onboarding/OnboardingScreen.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpScreenCompany.dart';
-import 'package:aspirehire/features/auth/employee_register/SignUpScreenEmployee.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpScreenJobSeeker.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/auth/login/LoginScreen.dart';
@@ -48,7 +47,8 @@ class _ChoosingRoleState extends State<ChoosingRole> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SignUpScreenJobSeeker()),
+                    builder: (context) => const SignUpScreenJobSeeker(),
+                  ),
                 );
                 setState(() {
                   isUser = true;
@@ -99,59 +99,8 @@ class _ChoosingRoleState extends State<ChoosingRole> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SignUpScreenEmployee()),
-                );
-                setState(() {
-                  isUser = false;
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                  color: const Color(0xffB3C5CE),
-                  borderRadius: BorderRadius.circular(45),
-                ),
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        Image.asset("assets/Manager.png"),
-                        const SizedBox(height: 20),
-                        const Text(
-                          "Employee",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 65),
-                    Expanded(
-                      child: const Text(
-                        "Access valuable insights to enhance your hiring process. Find the right candidates for your team",
-                        maxLines: 6,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color(0xFF4D4949),
-                          fontWeight: FontWeight.normal,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SignUpScreenCompany()),
+                    builder: (context) => const SignUpScreenCompany(),
+                  ),
                 );
                 setState(() {
                   isUser = false;
@@ -211,7 +160,8 @@ class _ChoosingRoleState extends State<ChoosingRole> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginScreen()),
+                        builder: (context) => const LoginScreen(),
+                      ),
                     );
                   },
                   child: const Text(
