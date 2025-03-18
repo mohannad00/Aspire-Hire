@@ -111,14 +111,4 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginFailure('An unexpected error occurred: $e'));
     }
   }
-
-  // Method to retrieve the stored token
-  Future<String?> getStoredToken() async {
-    return await CacheHelper.getData('token');
-  }
-
-  // Method to clear the stored token (e.g., on logout)
-  Future<void> clearStoredToken() async {
-    await CacheHelper.removeKey('token');
-  }
 }

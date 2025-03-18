@@ -4,7 +4,6 @@ import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:aspirehire/features/hame_nav_bar/home_nav_bar.dart';
-import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
