@@ -27,6 +27,7 @@ class _SignUpEmailCompanyState extends State<SignUpEmailCompany> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: ReusableAppBar.build(
         title: "",
         onBackPressed: () {

@@ -9,13 +9,14 @@ class ReusableAppBar {
     List<Widget> actions = const [],
   }) {
     return AppBar(
+      
       title: Text(title),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios),
         onPressed: onBackPressed,
       ),
       actions: actions,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       elevation: 0,
     );
   }

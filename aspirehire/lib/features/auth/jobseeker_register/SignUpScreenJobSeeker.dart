@@ -6,7 +6,6 @@ import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
-import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/features/auth/jobseeker_register/SignUpEmailJobSeeker.dart';
 
 import 'state_management/jobseeker_register_cubit.dart'; // Import the cubit
@@ -26,8 +25,9 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: ReusableBackButton.build(
           context: context,
@@ -88,51 +88,6 @@ class _SignUpScreenJobSeekerState extends State<SignUpScreenJobSeeker> {
                   ),
                 ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = false;
-                      });
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: isSignUp ? Colors.grey : const Color(0xFF013E5D),
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.normal : FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.13),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = true;
-                      });
-                    },
-                    child: Text(
-                      'Sign up',
-                      style: TextStyle(
-                        color: isSignUp ? const Color(0xFF013E5D) : Colors.grey,
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Row(
                 children: [

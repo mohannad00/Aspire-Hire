@@ -86,6 +86,7 @@ class _SignUpPasswordCompanyState extends State<SignUpPasswordCompany> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: ReusableAppBar.build(
           title: "",
           onBackPressed: () {

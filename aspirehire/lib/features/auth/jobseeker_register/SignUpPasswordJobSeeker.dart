@@ -83,8 +83,9 @@ class _SignUpPasswordJobSeekerState extends State<SignUpPasswordJobSeeker> {
       },
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.white,
             elevation: 0,
             leading: ReusableBackButton.build(
               context: context,
