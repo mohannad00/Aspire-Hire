@@ -12,84 +12,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: const EdgeInsets.only(bottom: 20), // Add padding at the bottom
-        children: [
-          const ProfileHeader(
-            avatarImage: 'assets/avatar.png',
-          ),
-          const ProfileInfo(
-            name: "Mustafa Mahmoud",
-            jobTitle: "Senior Fullstack Developer",
-            phone: "+201000001100",
-            email: "MustafaMahmoud@gmail.com",
-            location: "Egypt, Cairo",
-          ),
-          const SizedBox(height: 20),
-          Center(
-            child: WebLinks(
-              onAddLinkPressed: () {
-                // Handle add link button press
-              },
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: 20), // Add padding at the bottom
+          children: [
+            const ProfileHeader(
+              avatarImage: 'assets/avatar.png',
             ),
-          ),
-          const SizedBox(height: 20),
-          const Center(
-            child: Section(
-              title: "Experiences",
-              children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 5,
-                    backgroundImage: AssetImage('assets/Ellipse.png'),
-                  ),
-                  title: Text("Senior Fullstack Developer - Xceed"),
-                  subtitle: Text("May, 2023 - Currently"),
-                ),
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 5,
-                    backgroundImage: AssetImage('assets/Ellipse.png'),
-                  ),
-                  title: Text("Senior Fullstack Developer - Oracle"),
-                  subtitle: Text("March 2021 - May 2023"),
-                ),
-              ],
+            const ProfileInfo(
+              name: "Mustafa Mahmoud",
+              jobTitle: "Senior Fullstack Developer",
+              phone: "+201000001100",
+              email: "MustafaMahmoud@gmail.com",
+              location: "Egypt, Cairo",
             ),
-          ),
-          const SizedBox(height: 20),
-          const Center(
-            child: Section(
-              title: "Education",
-              children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 5,
-                    backgroundImage: AssetImage('assets/Ellipse.png'),
-                  ),
-                  title: Text("Computer Science"),
-                  subtitle: Text("Cairo University - Egypt"),
-                ),
-              ],
+            const SizedBox(height: 20),
+            Center(
+              child: WebLinks(
+                onAddLinkPressed: () {
+                  // Handle add link button press
+                },
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          const Center(
-            child: Section(
-              title: "Skills",
-              children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 5,
-                    backgroundImage: AssetImage('assets/Ellipse.png'),
+            const SizedBox(height: 20),
+            const Center(
+              child: Section(
+                title: "Experiences",
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 5,
+                      backgroundImage: AssetImage('assets/Ellipse.png'),
+                    ),
+                    title: Text("Senior Fullstack Developer - Xceed"),
+                    subtitle: Text("May, 2023 - Currently"),
                   ),
-                  title: Text("Flutter"),
-                  subtitle: Text("Advanced"),
-                ),
-              ],
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 5,
+                      backgroundImage: AssetImage('assets/Ellipse.png'),
+                    ),
+                    title: Text("Senior Fullstack Developer - Oracle"),
+                    subtitle: Text("March 2021 - May 2023"),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            const Center(
+              child: Section(
+                title: "Education",
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 5,
+                      backgroundImage: AssetImage('assets/Ellipse.png'),
+                    ),
+                    title: Text("Computer Science"),
+                    subtitle: Text("Cairo University - Egypt"),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Center(
+              child: Section(
+                title: "Skills",
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 5,
+                      backgroundImage: AssetImage('assets/Ellipse.png'),
+                    ),
+                    title: Text("Flutter"),
+                    subtitle: Text("Advanced"),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

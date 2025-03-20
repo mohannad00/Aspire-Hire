@@ -6,23 +6,26 @@ class JobSearchBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          JobSearchContainer(), // Search bar and filter button
-          SizedBox(height: 25),
-          Text("All 100 jobs found", style: TextStyle(fontSize: 20)),
-          SizedBox(height: 25),
-          Row(
-            children: [
-              //JobCard(), // First job card
-              SizedBox(width: 25),
-              //JobCard(), // Second job card
-            ],
-          ),
-        ],
+    return SafeArea(
+      child: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+         
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            JobSearchContainer(), // Search bar and filter button
+            SizedBox(height: 25),
+            Text("All 100 jobs found", style: TextStyle(fontSize: 20)),
+            SizedBox(height: 25),
+            Row(
+              children: [
+                //JobCard(), // First job card
+                SizedBox(width: 25),
+                //JobCard(), // Second job card
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

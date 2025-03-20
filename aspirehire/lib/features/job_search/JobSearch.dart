@@ -13,10 +13,9 @@ class JobSearch extends StatefulWidget {
 class _JobSearchState extends State<JobSearch> {
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
-      child:  Scaffold(
-        body: JobSearchBody(), // Body of the screen
-      ),
+    return  Scaffold(
+      backgroundColor: Colors.white, // Background color of the screen
+      body: JobSearchBody(), // Body of the screen
     );
   }
 }

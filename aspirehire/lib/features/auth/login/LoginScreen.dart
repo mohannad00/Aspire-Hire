@@ -3,11 +3,13 @@
 import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/core/components/ReusableTextField.dart';
+import 'package:aspirehire/core/utils/app_text_styles.dart';
+import 'package:aspirehire/features/auth/resend_confirm/resend_confirmation_screen.dart';
 import 'package:aspirehire/features/hame_nav_bar/home_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
-import 'package:aspirehire/features/auth/reset_password/LoginForgetPass.dart';
+import 'package:aspirehire/features/auth/reset_password/forget_password_screen.dart';
 import 'state_management/login_cubit.dart'; // Import the LoginCubit
 import 'state_management/login_state.dart'; // Import the LoginState
 
@@ -28,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: ReusableBackButton.build(
           context: context,
@@ -48,12 +50,10 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                const Text(
+                 Text(
                   'Hiro',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF013E5D),
+                  style: CustomTextStyles.pacifico400style64.copyWith(
+                    fontSize: 40,
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -97,30 +97,57 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.001),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    TextButton(
+                    Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
                       onPressed: () {
                         Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginForgetPass(),
-                          ),
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ResendConfirmationScreen(),
+                        ),
+                        );
+                      },
+                      child: const Text(
+                        'Resend Confirmation Email?',
+                        style: TextStyle(
+                        color: Color(0xFF013E5D),
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      ),
+                    ],
+                    ),                    Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginForgetPass(),
+                        ),
                         );
                       },
                       child: const Text(
                         'Forget Password?',
                         style: TextStyle(
-                          color: Color(0xFF013E5D),
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
+                        color: Color(0xFF013E5D),
+                        fontSize: 16,
+                        fontWeight: FontWeight.normal,
                         ),
                       ),
+                      ),
+                    ],
                     ),
+    
                   ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.025),
                 BlocConsumer<LoginCubit, LoginState>(
                   listener: (context, state) {
                     if (state is LoginSuccess) {

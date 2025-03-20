@@ -22,7 +22,7 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      elevation: 5, // Adds shadow to the card
+      elevation: 3, // Adds shadow to the card
       shadowColor: Colors.grey.withOpacity(0.5), // Customize shadow color
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(

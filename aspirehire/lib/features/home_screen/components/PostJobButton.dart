@@ -13,7 +13,7 @@ class PostJobButton extends StatelessWidget {
         //Navigator.push(context, MaterialPageRoute(builder: (context) => const PostJob()));
       },
       child: Container(
-        height:48 ,
+        height:5 ,
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(

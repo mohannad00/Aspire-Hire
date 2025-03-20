@@ -3,7 +3,7 @@
 import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/core/components/ReusableTextField.dart';
-import 'package:aspirehire/features/auth/login/LoginVerifyAcc.dart';
+import 'package:aspirehire/features/auth/reset_password/LoginVerifyAcc.dart';
 import 'package:flutter/material.dart';
 
 class LoginResetPass extends StatefulWidget {
