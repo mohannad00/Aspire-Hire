@@ -1,12 +1,11 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
-
+import 'package:aspirehire/features/auth/company_register/state_management/company_register_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/core/components/ReusableTextField.dart';
 import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
-import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpEmailCompany.dart';
-import 'package:flutter/material.dart';
 
 class SignUpScreenCompany extends StatefulWidget {
   const SignUpScreenCompany({super.key});
@@ -16,7 +15,17 @@ class SignUpScreenCompany extends StatefulWidget {
 }
 
 class _SignUpScreenCompanyState extends State<SignUpScreenCompany> {
-  bool isSignUp = true;
+  final TextEditingController _companyNameController = TextEditingController();
+  final TextEditingController _companyAddressController =
+      TextEditingController();
+
+  @override
+  void dispose() {
+    _companyNameController.dispose();
+    _companyAddressController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +47,7 @@ class _SignUpScreenCompanyState extends State<SignUpScreenCompany> {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.03,
-              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               // Logo and text
               const Text(
                 'Hiro',
@@ -66,88 +73,50 @@ class _SignUpScreenCompanyState extends State<SignUpScreenCompany> {
                   Text(
                     "Sign Up as",
                     style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Poppins'),
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Poppins',
+                    ),
                   ),
                   Text(
                     " Company",
                     style: TextStyle(
-                        fontSize: 18,
-                        color: Color.fromARGB(255, 216, 130, 10),
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Poppins'),
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 216, 130, 10),
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Poppins',
+                    ),
                   ),
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = false;
-                      });
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: isSignUp ? Colors.grey : const Color(0xFF013E5D),
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.normal : FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.13),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = true;
-                      });
-                    },
-                    child: Text(
-                      'Sign up',
-                      style: TextStyle(
-                        color: isSignUp ? const Color(0xFF013E5D) : Colors.grey,
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Row(
                 children: [
                   Expanded(
-                      child: ReusableTextField.build(
-                    hintText: 'First Name',
-                    hintColor: Colors.grey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    borderRadius: 10.0,
-                    borderColor: Colors.grey,
-                  )),
+                    child: ReusableTextField.build(
+                      controller: _companyNameController,
+                      hintText: 'Company Name',
+                      hintColor: Colors.grey,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 10.0,
+                      borderColor: Colors.grey,
+                    ),
+                  ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                   Expanded(
-                      child: ReusableTextField.build(
-                    hintText: 'Last Name',
-                    hintColor: Colors.grey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    borderRadius: 10.0,
-                    borderColor: Colors.grey,
-                  )),
+                    child: ReusableTextField.build(
+                      controller: _companyAddressController,
+                      hintText: 'Company Address',
+                      hintColor: Colors.grey,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 10.0,
+                      borderColor: Colors.grey,
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.04),
@@ -160,10 +129,19 @@ class _SignUpScreenCompanyState extends State<SignUpScreenCompany> {
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {
+                    // Get the cubit instance using context.read
+                    final cubit = context.read<CompanyRegisterCubit>();
+
+                    // Update the company name and address in the cubit
+                    cubit.updateCompanyName(_companyNameController.text);
+                    cubit.updateAddress(_companyAddressController.text);
+
+                    // Navigate to the next screen
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SignUpEmailCompany()),
+                        builder: (context) => const SignUpEmailCompany(),
+                      ),
                     );
                   },
                 ),

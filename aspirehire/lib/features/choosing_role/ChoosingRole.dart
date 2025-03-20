@@ -33,7 +33,7 @@ class _ChoosingRoleState extends State<ChoosingRole> {
           },
         ),
       ),
-      body: SingleChildScrollView(
+      body: Center(
         child: Column(
           children: [
             const SizedBox(height: 20),

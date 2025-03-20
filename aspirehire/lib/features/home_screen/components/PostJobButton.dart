@@ -10,7 +10,7 @@ class PostJobButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const PostJob()));
+        //Navigator.push(context, MaterialPageRoute(builder: (context) => const PostJob()));
       },
       child: Container(
         height:48 ,

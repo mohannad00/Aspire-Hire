@@ -1,12 +1,11 @@
-// ignore_for_file: file_names, library_private_types_in_public_api
-
+import 'package:aspirehire/features/auth/company_register/state_management/company_register_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/core/components/ReusableAppBar.dart';
 import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/core/components/ReusableTextField.dart';
-import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpPhoneCompany.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpScreenCompany.dart';
-import 'package:flutter/material.dart';
 
 class SignUpEmailCompany extends StatefulWidget {
   const SignUpEmailCompany({super.key});
@@ -16,22 +15,29 @@ class SignUpEmailCompany extends StatefulWidget {
 }
 
 class _SignUpEmailCompanyState extends State<SignUpEmailCompany> {
+  final TextEditingController _emailController = TextEditingController();
   bool isSignUp = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ReusableAppBar.build(
-    title: "",
-    onBackPressed: () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SignUpScreenCompany(),
-        ),
-      );
-    },
-  ),
+        title: "",
+        onBackPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SignUpScreenCompany(),
+            ),
+          );
+        },
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -82,54 +88,10 @@ class _SignUpEmailCompanyState extends State<SignUpEmailCompany> {
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = false;
-                      });
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: isSignUp ? Colors.grey : const Color(0xFF013E5D),
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.normal : FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.13),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = true;
-                      });
-                    },
-                    child: Text(
-                      'Sign up',
-                      style: TextStyle(
-                        color: isSignUp ? const Color(0xFF013E5D) : Colors.grey,
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Row(
                 children: [
                   Expanded(
                     child: ReusableTextField.build(
+                      controller: _emailController,
                       hintText: 'Email Address',
                       hintColor: Colors.grey,
                       fontSize: 16.0,
@@ -151,6 +113,13 @@ class _SignUpEmailCompanyState extends State<SignUpEmailCompany> {
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {
+                    // Get the cubit instance
+                    final cubit = context.read<CompanyRegisterCubit>();
+
+                    // Update the email in the cubit
+                    cubit.updateEmail(_emailController.text);
+
+                    // Navigate to the next screen
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

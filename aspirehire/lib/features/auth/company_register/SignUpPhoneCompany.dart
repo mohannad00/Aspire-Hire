@@ -3,10 +3,11 @@
 import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/core/components/ReusableTextField.dart';
-import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpEmailCompany.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpUserNameCompany.dart';
+import 'package:aspirehire/features/auth/company_register/state_management/company_register_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpPhoneCompany extends StatefulWidget {
   const SignUpPhoneCompany({super.key});
@@ -16,10 +17,21 @@ class SignUpPhoneCompany extends StatefulWidget {
 }
 
 class _SignUpPhoneCompanyState extends State<SignUpPhoneCompany> {
+  final TextEditingController _countryCodeController = TextEditingController(text: '+20');
+  final TextEditingController _phoneController = TextEditingController();
   bool isSignUp = true;
+
+  @override
+  void dispose() {
+    _countryCodeController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -84,72 +96,31 @@ class _SignUpPhoneCompanyState extends State<SignUpPhoneCompany> {
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = false;
-                      });
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginScreen()),
-                      );
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: isSignUp ? Colors.grey : const Color(0xFF013E5D),
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.normal : FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.13),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = true;
-                      });
-                    },
-                    child: Text(
-                      'Sign up',
-                      style: TextStyle(
-                        color: isSignUp ? const Color(0xFF013E5D) : Colors.grey,
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Row(
                 children: [
                   SizedBox(
-                      width: 80,
-                      child: ReusableTextField.build(
-                        hintText: '+20',
-                        hintColor: Colors.grey,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                        borderRadius: 10.0,
-                        borderColor: Colors.grey,
-                      )),
+                    width: 80,
+                    child: ReusableTextField.build(
+                      controller: _countryCodeController,
+                      hintText: '+20',
+                      hintColor: Colors.grey,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 10.0,
+                      borderColor: Colors.grey,
+                    ),
+                  ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.04),
                   Expanded(
-                      child: ReusableTextField.build(
-                    hintText: 'Phone Number ',
-                    hintColor: Colors.grey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    borderRadius: 10.0,
-                    borderColor: Colors.grey,
-                  )),
+                    child: ReusableTextField.build(
+                      controller: _phoneController,
+                      hintText: 'Phone Number',
+                      hintColor: Colors.grey,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 10.0,
+                      borderColor: Colors.grey,
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.04),
@@ -162,6 +133,16 @@ class _SignUpPhoneCompanyState extends State<SignUpPhoneCompany> {
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {
+                    // Get the cubit instance
+                    final cubit = context.read<CompanyRegisterCubit>();
+
+                    // Combine country code and phone number
+                    final phoneNumber = '${_countryCodeController.text}${_phoneController.text}';
+                    
+                    // Update the phone number in the cubit
+                    cubit.updatePhone(phoneNumber);
+
+                    // Navigate to the next screen
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

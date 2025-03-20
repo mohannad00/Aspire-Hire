@@ -3,10 +3,11 @@
 import 'package:aspirehire/core/components/ReusableBackButton.dart';
 import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:aspirehire/core/components/ReusableTextField.dart';
-import 'package:aspirehire/features/auth/login/LoginScreen.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpPasswordCompany.dart';
 import 'package:aspirehire/features/auth/company_register/SignUpPhoneCompany.dart';
+import 'package:aspirehire/features/auth/company_register/state_management/company_register_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUpUserNameCompany extends StatefulWidget {
   const SignUpUserNameCompany({super.key});
@@ -16,7 +17,14 @@ class SignUpUserNameCompany extends StatefulWidget {
 }
 
 class _SignUpUserNameCompanyState extends State<SignUpUserNameCompany> {
+  final TextEditingController _usernameController = TextEditingController();
   bool isSignUp = true;
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,60 +92,18 @@ class _SignUpUserNameCompanyState extends State<SignUpUserNameCompany> {
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = false;
-                      });
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      );
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        color: isSignUp ? Colors.grey : const Color(0xFF013E5D),
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.normal : FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.13),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        isSignUp = true;
-                      });
-                    },
-                    child: Text(
-                      'Sign up',
-                      style: TextStyle(
-                        color: isSignUp ? const Color(0xFF013E5D) : Colors.grey,
-                        fontSize: 16,
-                        fontWeight:
-                            isSignUp ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Row(
                 children: [
                   Expanded(
-                      child: ReusableTextField.build(
-                    hintText: 'Username',
-                    hintColor: Colors.grey,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.normal,
-                    borderRadius: 10.0,
-                    borderColor: Colors.grey,
-                  )),
+                    child: ReusableTextField.build(
+                      controller: _usernameController,
+                      hintText: 'Username',
+                      hintColor: Colors.grey,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                      borderRadius: 10.0,
+                      borderColor: Colors.grey,
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.04),
@@ -151,6 +117,13 @@ class _SignUpUserNameCompanyState extends State<SignUpUserNameCompany> {
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {
+                    // Get the cubit instance
+                    final cubit = context.read<CompanyRegisterCubit>();
+
+                    // Update the username in the cubit
+                    cubit.updateUsername(_usernameController.text);
+
+                    // Navigate to the next screen
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
