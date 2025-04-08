@@ -1,4 +1,5 @@
 import 'package:aspirehire/features/auth/company_register/state_management/company_register_cubit.dart';
+import 'package:aspirehire/features/my_applications/MyApplicationScreen.dart';
 import 'package:aspirehire/features/profile/state_management/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),
         debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
+        home: const Myapplicationscreen(),
       ),
     );
   }
