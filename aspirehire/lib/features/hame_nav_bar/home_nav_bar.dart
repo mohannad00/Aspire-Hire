@@ -161,6 +161,9 @@ class _HomeNavBarState extends State<HomeNavBar> {
   }
 }
 
+
+// ! this is just a dump screen to test the bottom navigation bar
+// ! you can remove this later
 class Dump extends StatelessWidget {
   const Dump({super.key});
 

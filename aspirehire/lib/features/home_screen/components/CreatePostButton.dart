@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 
-import 'package:aspirehire/features/job_post/CreatePost.dart';
 import 'package:flutter/material.dart';
 
 class CreatePostButton extends StatelessWidget {
