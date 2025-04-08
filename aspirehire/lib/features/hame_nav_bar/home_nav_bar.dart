@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:aspirehire/features/community/communityScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/core/utils/app_colors.dart';
 import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
@@ -20,7 +21,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
   final List<Widget> _screens = [
     const HomeScreenJobSeeker(),
     const JobSearch(),
-    const Dump(),
+    CommunityScreen(),
     const ProfileScreen(),
   ];
 
