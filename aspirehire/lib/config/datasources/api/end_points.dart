@@ -31,4 +31,36 @@ class ApiEndpoints {
   static const String updateJobApplication = '$baseUrl/jobpost/:jobPostId/application/:applicationId';
   static const String getJobApplication = '$baseUrl/jobpost/:jobPostId/application/:applicationId';
   static const String getJobApplications = '$baseUrl/jobpost/:jobPostId/application';
+  
+  // Community - Friend Endpoints
+  static const String sendOrCancelFriendRequest = '$baseUrl/friend/:userId/request';
+  static const String approveOrDeclineFriendRequest = '$baseUrl/friend/:userId/request';
+  static const String unfriendUser = '$baseUrl/friend/:userId';
+  static const String getAllFriends = '$baseUrl/friend';
+  static const String getAllFriendRequests = '$baseUrl/friend/requests';
+
+  // Community - Follower Endpoints
+  static const String followOrUnfollowUser = '$baseUrl/follow/:userId';
+  static const String getAllFollowers = '$baseUrl/follow';
+  static const String getAllFollowing = '$baseUrl/follow/following';
+
+  // Community - Post Endpoints
+  static const String createPost = '$baseUrl/post';
+  static const String getPost = '$baseUrl/post/:postId';
+  static const String getAllLikesOfPost = '$baseUrl/post/:postId/reacts';
+  static const String getArchivedPosts = '$baseUrl/post/archived';
+  static const String deletePost = '$baseUrl/post/:postId';
+  static const String archivePost = '$baseUrl/post/:postId';
+  static const String updatePost = '$baseUrl/post/:postId';
+  static const String likeOrDislikePost = '$baseUrl/post/:postId';
+
+  // Community - Comment Endpoints
+  static const String createComment = '$baseUrl/post/:postId/comment';
+  static const String updateComment = '$baseUrl/post/:postId/comment/:commentId';
+  static const String getAllComments = '$baseUrl/post/:postId/comment';
+  static const String likeOrDislikeComment = '$baseUrl/post/:postId/comment/:commentId';
+  static const String getAllLikesOfComment = '$baseUrl/post/:postId/comment/:commentId/reacts';
+
+  // Community - Feed Endpoints
+  static const String getFeedPosts = '$baseUrl/feed';
 }

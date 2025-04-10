@@ -1,11 +1,10 @@
-// ignore_for_file: file_names
-
-import 'package:aspirehire/features/community/communityScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:aspirehire/features/community/communityScreen.dart';
 import 'package:aspirehire/core/utils/app_colors.dart';
 import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
+import '../my_applications/myApplicationScreen.dart';
 
 class HomeNavBar extends StatefulWidget {
   const HomeNavBar({super.key});
@@ -16,172 +15,230 @@ class HomeNavBar extends StatefulWidget {
 
 class _HomeNavBarState extends State<HomeNavBar> {
   int _selectedIndex = 0;
+  late PageController _pageController;
+  final _animationDuration = const Duration(milliseconds: 250);
 
   // List of screens for the bottom navigation bar
-  final List<Widget> _screens = [
-    const HomeScreenJobSeeker(),
-    const JobSearch(),
+  final List<Widget> _screens =  [
+    HomeScreenJobSeeker(),
+    JobSearch(),
     CommunityScreen(),
-    const ProfileScreen(),
+    ProfileScreen(),
+    Myapplicationscreen(),
   ];
 
-  // PageController for swipe navigation
-  final PageController _pageController = PageController();
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(
+      initialPage: _selectedIndex,
+      viewportFraction: 1.0,
+    );
+  }
 
   // Handle bottom navigation bar item tap
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    // Animate to the selected page
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+      // Use jumpToPage for immediate response with smooth transition
+      _pageController.jumpToPage(index);
+    }
   }
 
   // Handle page change when swiping
   void _onPageChanged(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
+
+  // Function to calculate responsive font size
+  double getResponsiveFontSize(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    // Base font size for small screens (320px width)
+    const double baseFontSize = 12.0;
+    // Maximum font size for large screens
+    const double maxFontSize = 16.0;
+    // Calculate font size based on screen width
+    double fontSize = baseFontSize + (screenWidth - 320) * 0.01;
+    // Clamp the value between base and max
+    return fontSize.clamp(baseFontSize, maxFontSize);
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenWidth < 350;
+    final responsiveFontSize = getResponsiveFontSize(context);
+
     return Scaffold(
-      backgroundColor: Colors.transparent, // Make the background transparent
-      body: Stack(
-        children: [
-          // PageView for swipe navigation
-          PageView(
-            controller: _pageController, // Assign the PageController
-            onPageChanged: _onPageChanged, // Handle page changes
-            children: _screens, // Use the same screens as the bottom nav bar
-          ),
+      backgroundColor: Colors.transparent,
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            // Optimized PageView with keepAlive
+            PageView.builder(
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              itemCount: _screens.length,
+              itemBuilder: (context, index) {
+                return KeepAliveWrapper(
+                  child: _screens[index],
+                );
+              },
+              physics: const ClampingScrollPhysics(), // Smoother scrolling
+            ),
 
-          // Transparent bottom navigation bar
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 17),
-              child: Container(
-                height: 60, // Exact height as CustomNavBar
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ), // Exact padding
-                margin: const EdgeInsets.all(10), // Exact margin
-                decoration: BoxDecoration(
-                  color: AppColors.primary, // Slightly transparent background
-                  borderRadius: BorderRadius.circular(
-                    20,
-                  ), // Exact border radius
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: List.generate(4, (index) {
-                      bool isSelected = _selectedIndex == index;
-                      List<String> labels = [
-                        "Home",
-                        "Search",
-                        "Community",
-                        "Profile",
-                      ];
-                      List<IconData> icons = [
-                        Icons.home,
-                        Icons.search,
-                        Icons.people,
-                        Icons.person,
-                      ];
+            // Bottom navigation bar
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.03,
+                    vertical: screenHeight * 0.015,
+                  ),
+                  child: Container(
+                    height: screenHeight * 0.07,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.05,
+                      vertical: screenHeight * 0.01,
+                    ),
+                    margin: EdgeInsets.all(screenWidth * 0.02),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: List.generate(5, (index) {
+                            bool isSelected = _selectedIndex == index;
+                            List<String> labels = [
+                              "Home",
+                              "Search",
+                              "Community",
+                              "Profile",
+                              "My Apps",
+                            ];
+                            List<IconData> icons = [
+                              Icons.home,
+                              Icons.search,
+                              Icons.people,
+                              Icons.person,
+                              Icons.menu,
+                            ];
 
-                      return GestureDetector(
-                        onTap: () => _onItemTapped(index),
-                        child: Center(
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 100),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: isSelected ? 16 : 0, // Exact horizontal padding
-                              vertical: 10, // Exact vertical padding
-                            ),
-                            decoration: BoxDecoration(
-                              color: isSelected ? Colors.white : Colors.transparent,
-                              borderRadius: BorderRadius.circular(
-                                30,
-                              ), // Exact border radius for selected item
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min, // Ensure the Row takes minimum space
-                              children: [
-                                Icon(
-                                  icons[index],
-                                  color: isSelected ? AppColors.primary : Colors.white,
-                                  size: 28, // Exact icon size
-                                ),
-                                if (isSelected)
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 8,
-                                    ), // Exact padding between icon and label
-                                    child: Text(
-                                      labels[index],
-                                      style: const TextStyle(
-                                        color: AppColors.primary,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16, // Exact font size
-                                      ),
+                            return GestureDetector(
+                              onTap: () => _onItemTapped(index),
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: screenWidth * 0.01),
+                                child: Center(
+                                  child: AnimatedContainer(
+                                    duration: _animationDuration,
+                                    curve: Curves.easeOutQuad, // Smoother animation
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isSelected
+                                          ? screenWidth * 0.04
+                                          : screenWidth * 0.02,
+                                      vertical: screenHeight * 0.01,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          icons[index],
+                                          color: isSelected
+                                              ? AppColors.primary
+                                              : Colors.white,
+                                          size: responsiveFontSize * 1.75,
+                                        ),
+                                        if (isSelected)
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: screenWidth * 0.02),
+                                            child: Text(
+                                              isSmallScreen &&
+                                                      labels[index].length > 5
+                                                  ? labels[index]
+                                                      .split(' ')
+                                                      .map((word) =>
+                                                          word[0].toUpperCase())
+                                                      .join('')
+                                                  : labels[index],
+                                              style: TextStyle(
+                                                color: AppColors.primary,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: responsiveFontSize,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
                                     ),
                                   ),
-                              ],
-                            ),
-                          ),
+                                ),
+                              ),
+                            );
+                          }),
                         ),
-                      );
-                    }),
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   @override
   void dispose() {
-    // Dispose the PageController when the widget is disposed
     _pageController.dispose();
     super.dispose();
   }
 }
 
+// Helper widget to maintain state of pages
+class KeepAliveWrapper extends StatefulWidget {
+  final Widget child;
 
-// ! this is just a dump screen to test the bottom navigation bar
-// ! you can remove this later
-class Dump extends StatelessWidget {
-  const Dump({super.key});
+  const KeepAliveWrapper({super.key, required this.child});
+
+  @override
+  State<KeepAliveWrapper> createState() => _KeepAliveWrapperState();
+}
+
+class _KeepAliveWrapperState extends State<KeepAliveWrapper>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 20),
-            Text('This is a dump screen'),
-          ],
-        ),
-      ),
-    );
+    super.build(context);
+    return widget.child;
   }
 }

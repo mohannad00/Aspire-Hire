@@ -77,7 +77,7 @@ class PostCard extends StatelessWidget {
                             'name': 'Sara Ali',
                             'comment':
                                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do.ut enim',
-                            'avatar': 'aspirehire/assets/avatar.png',
+                            'avatar': 'assets/avatar.png',
                           },
                         ];
                         TextEditingController _controller =
@@ -211,7 +211,7 @@ class PostCard extends StatelessWidget {
                                       children: [
                                         const CircleAvatar(
                                           backgroundImage: AssetImage(
-                                            'aspirehire/assets/User.png',
+                                            'assets/User.png',
                                           ),
                                           radius: 18,
                                         ),
@@ -250,7 +250,7 @@ class PostCard extends StatelessWidget {
                                                   'comment':
                                                       _controller.text.trim(),
                                                   'avatar':
-                                                      'aspirehire/assets/User.png',
+                                                      'assets/User.png',
                                                 });
                                                 _controller.clear();
                                               });
