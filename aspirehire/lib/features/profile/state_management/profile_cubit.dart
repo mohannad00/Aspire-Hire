@@ -20,7 +20,9 @@ class ProfileCubit extends Cubit<ProfileState> {
         ApiEndpoints.getProfile,
         options: Options(headers: {'Authorization': token}),
       );
-      final profile = Profile.fromJson(response.data['data']); // Extract data from response
+      final profile = Profile.fromJson(
+        response.data['data']['user'],
+      ); // Extract data from response
       emit(ProfileLoaded(profile));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));
@@ -36,7 +38,9 @@ class ProfileCubit extends Cubit<ProfileState> {
         data: request.toJson(),
         options: Options(headers: {'Authorization': token}),
       );
-      final profile = Profile.fromJson(response.data['data']); // Extract data from response
+      final profile = Profile.fromJson(
+        response.data['data'],
+      ); // Extract data from response
       emit(ProfileUpdated(profile));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));
@@ -55,7 +59,9 @@ class ProfileCubit extends Cubit<ProfileState> {
         data: formData,
         options: Options(headers: {'Authorization': token}),
       );
-      final profile = Profile.fromJson(response.data['data']); // Extract data from response
+      final profile = Profile.fromJson(
+        response.data['data'],
+      ); // Extract data from response
       emit(ProfilePictureUpdated(profile));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));
@@ -74,7 +80,9 @@ class ProfileCubit extends Cubit<ProfileState> {
         data: formData,
         options: Options(headers: {'Authorization': token}),
       );
-      final profile = Profile.fromJson(response.data['data']); // Extract data from response
+      final profile = Profile.fromJson(
+        response.data['data'],
+      ); // Extract data from response
       emit(ResumeUploaded(profile));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));
@@ -89,7 +97,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         ApiEndpoints.deleteProfilePicture,
         options: Options(headers: {'Authorization': token}),
       );
-      final message = DeleteProfilePictureResponse.fromJson(response.data).message;
+      final message =
+          DeleteProfilePictureResponse.fromJson(response.data).message;
       emit(ProfilePictureDeleted(message));
     } on DioException catch (e) {
       emit(ProfileError(e.message ?? 'An error occurred'));

@@ -1,5 +1,8 @@
+import 'package:aspirehire/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'state_management/profile_cubit.dart';
+import 'state_management/profile_state.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -9,88 +12,80 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.only(bottom: 20), // Add padding at the bottom
-          children: [
-            const ProfileHeader(
-              avatarImage: 'assets/avatar.png',
-            ),
-            const ProfileInfo(
-              name: "Mustafa Mahmoud",
-              jobTitle: "Senior Fullstack Developer",
-              phone: "+201000001100",
-              email: "MustafaMahmoud@gmail.com",
-              location: "Egypt, Cairo",
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: WebLinks(
-                onAddLinkPressed: () {
-                  // Handle add link button press
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Center(
-              child: Section(
-                title: "Experiences",
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            if (state is ProfileLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is ProfileLoaded ||
+                state is ProfileUpdated ||
+                state is ProfilePictureUpdated ||
+                state is ResumeUploaded) {
+              final profile = (state is ProfileLoaded
+                  ? state.profile
+                  : state is ProfileUpdated
+                      ? state.profile
+                      : state is ProfilePictureUpdated
+                          ? state.profile
+                          : (state as ResumeUploaded).profile);
+              return ListView(
+                padding: const EdgeInsets.only(bottom: 20),
                 children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      radius: 5,
-                      backgroundImage: AssetImage('assets/Ellipse.png'),
-                    ),
-                    title: Text("Senior Fullstack Developer - Xceed"),
-                    subtitle: Text("May, 2023 - Currently"),
+                  ProfileHeader(
+                    avatarImage: profile.profilePicture?.secureUrl ??
+                        'assets/avatar.png',
+                    onEditPressed: () {
+                      // Navigate to edit profile screen or show dialog
+                    },
                   ),
-                  ListTile(
-                    leading: CircleAvatar(
-                      radius: 5,
-                      backgroundImage: AssetImage('assets/Ellipse.png'),
+                  ProfileInfo(
+                    name: '${profile.firstName} ${profile.lastName}',
+                    username: profile.username,
+                    phone: profile.phone,
+                    email: profile.email,
+                    dob: profile.dob,
+                    gender: profile.gender,
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: WebLinks(
+                      onAddLinkPressed: () {
+                        // Handle add link logic
+                      },
+                      links: [], // No socialLinks in Profile model; adjust if added later
                     ),
-                    title: Text("Senior Fullstack Developer - Oracle"),
-                    subtitle: Text("March 2021 - May 2023"),
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: Section(
+                      title: "Skills",
+                      children: profile.skills.map((skill) => ListTile(
+                            leading: const CircleAvatar(
+                              radius: 5,
+                              backgroundImage: AssetImage('assets/Ellipse.png'),
+                            ),
+                            title: Text(skill),
+                          )).toList(),
+                    ),
                   ),
                 ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Center(
-              child: Section(
-                title: "Education",
-                children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      radius: 5,
-                      backgroundImage: AssetImage('assets/Ellipse.png'),
-                    ),
-                    title: Text("Computer Science"),
-                    subtitle: Text("Cairo University - Egypt"),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Center(
-              child: Section(
-                title: "Skills",
-                children: [
-                  ListTile(
-                    leading: CircleAvatar(
-                      radius: 5,
-                      backgroundImage: AssetImage('assets/Ellipse.png'),
-                    ),
-                    title: Text("Flutter"),
-                    subtitle: Text("Advanced"),
-                  ),
-                ],
-              ),
-            ),
-          ],
+              );
+            } else if (state is ProfileError) {
+              return Center(child: Text(state.message));
+            } else if (state is ProfilePictureDeleted) {
+              return Center(child: Text(state.message));
+            }
+            return const Center(child: Text('Please load profile'));
+          },
         ),
       ),
     );
@@ -111,30 +106,48 @@ class ProfileHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          height: 150,
-          decoration: const BoxDecoration(
-            color: Color(0xFF013E5D),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
+        Column(
+          children: [
+            Container(
+              height: 150,
+              decoration: const BoxDecoration(
+                color: Color(0xFF013E5D),
+              ),
             ),
-          ),
+            Container(
+              height: 55,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+            ),
+          ],
         ),
         Positioned(
           top: 100,
           left: 20,
           child: CircleAvatar(
-            radius: 40,
-            backgroundImage: AssetImage(avatarImage),
+            radius: 50,
+            backgroundImage: NetworkImage(avatarImage),
+            onBackgroundImageError: (_, __) =>
+                const AssetImage('assets/avatar.png'),
           ),
         ),
         Positioned(
           top: 120,
-          left: 330,
-          child: IconButton(
-            icon: const Icon(Icons.edit, color: Colors.orange),
-            onPressed: onEditPressed,
+          right: 20,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: AppColors.grey,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.edit, color: Colors.orange, size: 25),
+              onPressed: onEditPressed,
+            ),
           ),
         ),
       ],
@@ -144,18 +157,20 @@ class ProfileHeader extends StatelessWidget {
 
 class ProfileInfo extends StatelessWidget {
   final String name;
-  final String jobTitle;
+  final String username;
   final String phone;
   final String email;
-  final String location;
+  final String dob;
+  final String gender;
 
   const ProfileInfo({
     super.key,
     required this.name,
-    required this.jobTitle,
+    required this.username,
     required this.phone,
     required this.email,
-    required this.location,
+    required this.dob,
+    required this.gender,
   });
 
   @override
@@ -171,15 +186,22 @@ class ProfileInfo extends StatelessWidget {
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Text(
+            '@$username',
+            style: const TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        ),
         const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              _buildInfoTile('assets/business.png', jobTitle),
-              _buildInfoTile('assets/phone.png', phone),
               _buildInfoTile('assets/email.png', email),
-              _buildInfoTile('assets/location.png', location),
+              _buildInfoTile('assets/phone.png', phone),
+              _buildInfoTile('assets/phone.png', dob),
+              _buildInfoTile('assets/phone.png', gender),
             ],
           ),
         ),
@@ -201,8 +223,9 @@ class ProfileInfo extends StatelessWidget {
 
 class WebLinks extends StatelessWidget {
   final VoidCallback onAddLinkPressed;
+  final List<String> links;
 
-  const WebLinks({super.key, required this.onAddLinkPressed});
+  const WebLinks({super.key, required this.onAddLinkPressed, required this.links});
 
   @override
   Widget build(BuildContext context) {
@@ -226,11 +249,7 @@ class WebLinks extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
-                  Container(
-                    height: 1,
-                    width: 105,
-                    color: Colors.orange,
-                  ),
+                  Container(height: 1, width: 105, color: Colors.orange),
                 ],
               ),
               ElevatedButton(
@@ -238,30 +257,33 @@ class WebLinks extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 236, 246, 251),
                   foregroundColor: const Color(0xFF013E5D),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 10),
                 ),
                 child: const Text("+ Add Link"),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: Image.asset('assets/Clip path group.png', width: 24, height: 24),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Image.asset('assets/twitter.png', width: 24, height: 24),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Image.asset('assets/world.png', width: 24, height: 24),
-                onPressed: () {},
-              ),
-            ],
-          ),
+          if (links.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: links.map((link) {
+                String iconPath = 'assets/world.png';
+                if (link.contains('linkedin')) {
+                  iconPath = 'assets/Clip path group.png';
+                } else if (link.contains('twitter') || link.contains('x.com')) {
+                  iconPath = 'assets/twitter.png';
+                }
+                return IconButton(
+                  icon: Image.asset(iconPath, width: 24, height: 24),
+                  onPressed: () {
+                    // Open link (use url_launcher package)
+                  },
+                );
+              }).toList(),
+            ),
+          ],
         ],
       ),
     );
@@ -272,11 +294,7 @@ class Section extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const Section({
-    super.key,
-    required this.title,
-    required this.children,
-  });
+  const Section({super.key, required this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
@@ -298,7 +316,7 @@ class Section extends StatelessWidget {
           const SizedBox(height: 5),
           Container(
             height: 1,
-            width: title.length * 8, // Dynamic width based on title length
+            width: title.length * 8,
             color: Colors.orange,
           ),
           const SizedBox(height: 10),
