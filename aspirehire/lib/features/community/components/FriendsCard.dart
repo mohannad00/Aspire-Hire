@@ -12,38 +12,40 @@ class FriendsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      color: Colors.white,
+      child: Card(
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         child: Row(
+        children: [
+          CircleAvatar(child: Text(name[0])),
+          const SizedBox(width: 12),
+          Expanded(
+          child: Text(
+            name,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          ),
+          Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            CircleAvatar(child: Text(name[0])),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                name,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+            ElevatedButton(
+            onPressed: () {},
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: Colors.grey),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.grey),
-                  ),
-                  child: Text(friend),
-                ),
-                
-                
-              ],
+            child: Text(friend),
             ),
           ],
+          ),
+        ],
         ),
+      ),
       ),
     );
   }

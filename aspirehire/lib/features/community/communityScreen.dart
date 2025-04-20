@@ -12,7 +12,7 @@ class CommunityScreen extends StatelessWidget {
     return DefaultTabController(
       length: 3, // عدد التابات
       child: Scaffold(
-        
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
