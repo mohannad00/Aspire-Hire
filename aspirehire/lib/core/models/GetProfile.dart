@@ -32,9 +32,10 @@ class Profile {
       email: json['email'],
       phone: json['phone'],
       role: json['role'], // Optional, not in the provided response
-      profilePicture: json['profilePicture'] != null
-          ? ProfilePicture.fromJson(json['profilePicture'])
-          : null,
+      profilePicture:
+          json['profilePicture'] != null
+              ? ProfilePicture.fromJson(json['profilePicture'])
+              : null,
       firstName: json['firstName'],
       lastName: json['lastName'],
       dob: json['dob'],
@@ -48,10 +49,7 @@ class ProfilePicture {
   final String publicId;
   final String secureUrl;
 
-  ProfilePicture({
-    required this.publicId,
-    required this.secureUrl,
-  });
+  ProfilePicture({required this.publicId, required this.secureUrl});
 
   factory ProfilePicture.fromJson(Map<String, dynamic> json) {
     return ProfilePicture(

@@ -1,7 +1,5 @@
 import 'package:aspirehire/features/job_search/components/JobSearchContainer%20.dart';
 import 'package:flutter/material.dart';
-
-import '../../home_screen/components/JobCard.dart';
 import 'JobCard .dart';
 
 class JobSearchBody extends StatelessWidget {
