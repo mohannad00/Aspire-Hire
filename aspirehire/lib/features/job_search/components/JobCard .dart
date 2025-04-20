@@ -4,8 +4,8 @@ import 'package:aspirehire/core/components/ReusableButton.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class JobCard extends StatelessWidget {
-  const JobCard({super.key});
+class JobSearchCard extends StatelessWidget {
+  const JobSearchCard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +18,14 @@ class JobCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const CircleAvatar(
                 radius: 20,
-                backgroundImage: AssetImage(''), 
+                backgroundImage: AssetImage('assets/dell.png'), 
               ),
               Column(
                 children: [
@@ -57,10 +58,11 @@ class JobCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               SizedBox(
-                width: 100,
+                width: 90,
+                height: 40,
                 child: ReusableButton.build(
                   title: 'Apply',
-                  fontSize: 15,
+                  fontSize: 11,
                   backgroundColor: const Color(0xFF013E5D),
                   textColor: Colors.white,
                   onPressed: () {},
