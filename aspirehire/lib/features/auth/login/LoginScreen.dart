@@ -42,6 +42,17 @@ class _LoginScreenState extends State<LoginScreen> {
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Fill in the login credentials
+          setState(() {
+            _usernameController.text = 'mohannadonly90@gmail.com';
+            _passwordController.text = 'Mm123123';
+          });
+        },
+        backgroundColor: const Color(0xFF013E5D),
+        child: const Icon(Icons.login, color: Colors.white),
+      ),
       body: BlocProvider(
         create: (context) => LoginCubit(),
         child: SingleChildScrollView(
@@ -50,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                 Text(
+                Text(
                   'Hiro',
                   style: CustomTextStyles.pacifico400style64.copyWith(
                     fontSize: 40,
@@ -101,51 +112,53 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ResendConfirmationScreen(),
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) =>
+                                        const ResendConfirmationScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Resend Confirmation Email?',
+                            style: TextStyle(
+                              color: Color(0xFF013E5D),
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
                         ),
-                        );
-                      },
-                      child: const Text(
-                        'Resend Confirmation Email?',
-                        style: TextStyle(
-                        color: Color(0xFF013E5D),
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      ),
-                    ],
-                    ),                    Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginForgetPass(),
-                        ),
-                        );
-                      },
-                      child: const Text(
-                        'Forget Password?',
-                        style: TextStyle(
-                        color: Color(0xFF013E5D),
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      ),
-                    ],
+                      ],
                     ),
-    
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginForgetPass(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Forget Password?',
+                            style: TextStyle(
+                              color: Color(0xFF013E5D),
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 BlocConsumer<LoginCubit, LoginState>(
