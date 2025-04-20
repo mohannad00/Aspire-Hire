@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final String jobTitle;
   final String company;
   final String jobType;
@@ -17,6 +17,13 @@ class PostCard extends StatelessWidget {
     required this.location,
     required this.description,
   }) : super(key: key);
+
+  @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  bool isLiked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +54,22 @@ class PostCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            Text(description, style: const TextStyle(fontSize: 15)),
+            Text(widget.description, style: const TextStyle(fontSize: 15)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      isLiked = !isLiked;
+                    });
+                  },
                   icon: Image.asset(
                     'assets/like-wrapper.png',
                     width: 24,
                     height: 24,
+                    color: isLiked ? Colors.blue : Colors.grey,
                   ),
                 ),
                 const SizedBox(width: 50),
@@ -133,14 +145,14 @@ class PostCard extends StatelessWidget {
                                                   child: Container(
                                                     padding:
                                                         const EdgeInsets.all(
-                                                          12,
-                                                        ),
+                                                      12,
+                                                    ),
                                                     decoration: BoxDecoration(
                                                       color: Colors.grey[100],
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                            12,
-                                                          ),
+                                                        12,
+                                                      ),
                                                     ),
                                                     child: Column(
                                                       crossAxisAlignment:
@@ -148,19 +160,20 @@ class PostCard extends StatelessWidget {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          comments[index]['name']!,
+                                                          comments[index]
+                                                              ['name']!,
                                                           style:
                                                               const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
                                                         const SizedBox(
                                                           height: 4,
                                                         ),
                                                         Text(
-                                                          comments[index]['comment']!,
+                                                          comments[index]
+                                                              ['comment']!,
                                                         ),
                                                         const SizedBox(
                                                           height: 8,
@@ -170,10 +183,11 @@ class PostCard extends StatelessWidget {
                                                             TextButton(
                                                               child: Text(
                                                                 'Like',
-                                                                style: TextStyle(
-                                                                  color:
-                                                                      Colors
-                                                                          .grey[600],
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      600],
                                                                   fontSize: 12,
                                                                 ),
                                                               ),
@@ -185,10 +199,11 @@ class PostCard extends StatelessWidget {
                                                             TextButton(
                                                               child: Text(
                                                                 'Reply',
-                                                                style: TextStyle(
-                                                                  color:
-                                                                      Colors
-                                                                          .grey[600],
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      600],
                                                                   fontSize: 12,
                                                                 ),
                                                               ),
@@ -228,7 +243,8 @@ class PostCard extends StatelessWidget {
                                             ),
                                             child: TextField(
                                               controller: _controller,
-                                              decoration: const InputDecoration(
+                                              decoration:
+                                                  const InputDecoration(
                                                 hintText: 'Write a comment',
                                                 border: InputBorder.none,
                                               ),
@@ -247,10 +263,9 @@ class PostCard extends StatelessWidget {
                                               setState(() {
                                                 comments.add({
                                                   'name': 'You',
-                                                  'comment':
-                                                      _controller.text.trim(),
-                                                  'avatar':
-                                                      'assets/User.png',
+                                                  'comment': _controller.text
+                                                      .trim(),
+                                                  'avatar': 'assets/User.png',
                                                 });
                                                 _controller.clear();
                                               });
@@ -274,7 +289,6 @@ class PostCard extends StatelessWidget {
                     height: 24,
                   ),
                 ),
-
                 const SizedBox(width: 50),
                 IconButton(
                   onPressed: () {},
