@@ -4,6 +4,7 @@ import 'package:aspirehire/core/utils/app_colors.dart';
 import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
+import '../community/test.dart';
 import '../my_applications/myApplicationScreen.dart';
 
 class HomeNavBar extends StatefulWidget {
@@ -22,7 +23,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
   final List<Widget> _screens =  [
     HomeScreenJobSeeker(),
     JobSearch(),
-    CommunityScreen(),
+    FriendCubitTestScreen(),
     ProfileScreen(),
     Myapplicationscreen(),
   ];
@@ -105,7 +106,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: screenWidth * 0.03,
-                    vertical: screenHeight * 0.015,
+                    vertical: screenHeight * 0.0001,
                   ),
                   child: Container(
                     height: screenHeight * 0.07,
