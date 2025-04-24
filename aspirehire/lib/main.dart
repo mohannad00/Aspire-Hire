@@ -1,4 +1,6 @@
 import 'package:aspirehire/features/auth/company_register/state_management/company_register_cubit.dart';
+import 'package:aspirehire/features/community/state_management/friend_cubit.dart';
+import 'package:aspirehire/features/feed/state_management/feed_cubit.dart';
 import 'package:aspirehire/features/profile/state_management/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +23,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => CompanyRegisterCubit()),
+        BlocProvider(create: (context) => FeedCubit()),
+        BlocProvider(create: (context) => FriendCubit()),
       ],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),
