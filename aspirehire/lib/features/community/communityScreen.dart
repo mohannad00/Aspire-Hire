@@ -10,7 +10,7 @@ class CommunityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3, // عدد التابات
+      length: 3, // 
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
