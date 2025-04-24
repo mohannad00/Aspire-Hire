@@ -18,6 +18,7 @@ class ApiEndpoints {
   static const String updateProfilePicture = '$baseUrl/profile/profile-picture';
   static const String uploadResume = '$baseUrl/profile/resume';
   static const String deleteProfilePicture = '$baseUrl/profile/profile-picture';
+  static const String searchUsers = '$baseUrl/profile/search/?q:query';
 
   // Job Post Endpoints
   static const String createJobPost = '$baseUrl/jobpost';
