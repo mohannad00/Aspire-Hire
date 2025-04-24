@@ -1,52 +1,41 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-
 import '../../../config/datasources/api/end_points.dart';
-import '../../../core/models/Post.dart';
+import '../../../core/models/Feed.dart';
 import 'feed_states.dart';
 
 class FeedCubit extends Cubit<FeedState> {
-  final Dio _dio;
+  FeedCubit() : super(FeedInitial());
 
-  FeedCubit({Dio? dio}) : _dio = dio ?? Dio(), super(const FeedInitial());
+  final Dio _dio = Dio();
 
-  Future<void> fetchFeedPosts(String token) async {
-    emit(const FeedLoading());
-
+  Future<void> getFeed(String token) async {
+    emit(FeedLoading());
     try {
       final response = await _dio.get(
         ApiEndpoints.getFeedPosts,
         options: Options(
-          headers: {'Authorization': token},
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json',
+          },
         ),
       );
 
       if (response.statusCode == 200) {
-        final jsonData = response.data as Map<String, dynamic>;
-        final feedResponse = FeedResponse.fromJson(jsonData);
-
-        if (feedResponse.success) {
-          emit(FeedLoaded(feedResponse: feedResponse));
-        } else {
-          emit(const FeedError(message: 'Failed to load feed posts'));
-        }
+        final feedResponse = FeedResponse.fromJson(response.data);
+        emit(FeedLoaded(feedResponse));
       } else {
-        emit(FeedError(message: 'HTTP Error: ${response.statusCode}'));
+        final message = response.statusCode == 500
+            ? 'Server error'
+            : 'Failed to load feed';
+        emit(FeedError(message));
       }
-    } on DioException catch (e) {
-      String errorMessage;
-      if (e.response != null) {
-        errorMessage = 'HTTP Error: ${e.response?.statusCode} - ${e.response?.data}';
-      } else if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.sendTimeout ||
-          e.type == DioExceptionType.receiveTimeout) {
-        errorMessage = 'Network timeout error';
-      } else {
-        errorMessage = 'Network error: ${e.message}';
-      }
-      emit(FeedError(message: errorMessage));
     } catch (e) {
-      emit(FeedError(message: 'Unexpected error: $e'));
+      final message = e is DioException && e.response?.statusCode == 500
+          ? 'Server error'
+          : 'Error fetching feed';
+      emit(FeedError(message));
     }
   }
 }
