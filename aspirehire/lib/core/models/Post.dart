@@ -1,247 +1,212 @@
-// Root response model for GET /feed
-class FeedResponse {
-  final bool success;
-  final List<FeedPostEntry> data;
+// --- Create Post ---
+class CreatePostRequest {
+  String? content;
+  String? attachment; // File path or URL for form-data
 
-  FeedResponse({
+  Map<String, dynamic> toJson() => {
+        if (content != null) 'content': content,
+        if (attachment != null) 'attachment': attachment,
+      };
+}
+
+class CreatePostResponse {
+  final bool success;
+  final String message;
+  final Map<String, dynamic> data; // Expected: { "post": { "id": string, "content": string, "attachment": string|null, "user": { "id": string, "name": string, ... }, "createdAt": string, "reacts": [], "isArchived": bool } }
+
+  CreatePostResponse({
     required this.success,
+    required this.message,
     required this.data,
   });
 
-  factory FeedResponse.fromJson(Map<String, dynamic> json) => FeedResponse(
+  factory CreatePostResponse.fromJson(Map<String, dynamic> json) =>
+      CreatePostResponse(
         success: json['success'] ?? false,
-        data: (json['data'] as List<dynamic>?)
-                ?.map((item) => FeedPostEntry.fromJson(item as Map<String, dynamic>))
-                .toList() ??
-            [],
+        message: json['message'] ?? '',
+        data: json['data'] ?? {},
       );
-
-  Map<String, dynamic> toJson() => {
-        'success': success,
-        'data': data.map((entry) => entry.toJson()).toList(),
-      };
 }
 
-// Represents a single post entry in the feed with a score
-class FeedPostEntry {
-  final Post post;
-  final double? score;
+// --- Get Post ---
+class GetPostRequest {
+  // No body needed; postId is in the URL
+  Map<String, dynamic> toJson() => {};
+}
 
-  FeedPostEntry({
-    required this.post,
-    this.score,
+class GetPostResponse {
+  final bool success;
+  final String message;
+  final Map<String, dynamic> data; // Expected: { "post": { "id": string, "content": string, ... } }
+
+  GetPostResponse({
+    required this.success,
+    required this.message,
+    required this.data,
   });
 
-  factory FeedPostEntry.fromJson(Map<String, dynamic> json) => FeedPostEntry(
-        post: Post.fromJson(json['post'] as Map<String, dynamic>),
-        score: (json['score'] as num?)?.toDouble(),
+  factory GetPostResponse.fromJson(Map<String, dynamic> json) =>
+      GetPostResponse(
+        success: json['success'] ?? false,
+        message: json['message'] ?? '',
+        data: json['data'] ?? {},
       );
-
-  Map<String, dynamic> toJson() => {
-        'post': post.toJson(),
-        if (score != null) 'score': score,
-      };
 }
 
-// Post model (recursive for sharedFrom)
-class Post {
-  String? id;
+// --- Get All Likes of Post ---
+class GetPostLikesRequest {
+  // No body needed; postId is in the URL
+  Map<String, dynamic> toJson() => {};
+}
+
+class GetPostLikesResponse {
+  final bool success;
+  final String message;
+  final Map<String, dynamic> data; // Expected: { "reacts": [{ "id": string, "type": string, "user": { "id": string, "name": string, ... } }, ...] }
+
+  GetPostLikesResponse({
+    required this.success,
+    required this.message,
+    required this.data,
+  });
+
+  factory GetPostLikesResponse.fromJson(Map<String, dynamic> json) =>
+      GetPostLikesResponse(
+        success: json['success'] ?? false,
+        message: json['message'] ?? '',
+        data: json['data'] ?? {},
+      );
+}
+
+// --- Get Archived Posts ---
+class GetArchivedPostsRequest {
+  // No body needed for GET
+  Map<String, dynamic> toJson() => {};
+}
+
+class GetArchivedPostsResponse {
+  final bool success;
+  final String message;
+  final Map<String, dynamic> data; // Expected: { "posts": [{ "id": string, "content": string, ... }, ...] }
+
+  GetArchivedPostsResponse({
+    required this.success,
+    required this.message,
+    required this.data,
+  });
+
+  factory GetArchivedPostsResponse.fromJson(Map<String, dynamic> json) =>
+      GetArchivedPostsResponse(
+        success: json['success'] ?? false,
+        message: json['message'] ?? '',
+        data: json['data'] ?? {},
+      );
+}
+
+// --- Delete Post ---
+class DeletePostRequest {
+  // No body needed; postId is in the URL
+  Map<String, dynamic> toJson() => {};
+}
+
+class DeletePostResponse {
+  final bool success;
+  final String message;
+  final Map<String, dynamic> data;
+
+  DeletePostResponse({
+    required this.success,
+    required this.message,
+    required this.data,
+  });
+
+  factory DeletePostResponse.fromJson(Map<String, dynamic> json) =>
+      DeletePostResponse(
+        success: json['success'] ?? false,
+        message: json['message'] ?? '',
+        data: json['data'] ?? {},
+      );
+}
+
+// --- Archive Post ---
+class ArchivePostRequest {
+  // No body needed; postId is in the URL
+  Map<String, dynamic> toJson() => {};
+}
+
+class ArchivePostResponse {
+  final bool success;
+  final String message;
+  final Map<String, dynamic> data;
+
+  ArchivePostResponse({
+    required this.success,
+    required this.message,
+    required this.data,
+  });
+
+  factory ArchivePostResponse.fromJson(Map<String, dynamic> json) =>
+      ArchivePostResponse(
+        success: json['success'] ?? false,
+        message: json['message'] ?? '',
+        data: json['data'] ?? {},
+      );
+}
+
+// --- Update Post ---
+class UpdatePostRequest {
   String? content;
-  List<String>? tags;
-  List<Attachment>? attachments;
-  Post? sharedFrom;
-  int? shareCount;
-  String? publisherId;
-  bool? archived;
-  String? createdAt;
-  String? updatedAt;
-  List<Publisher>? publisher;
-  List<React>? reacts;
-  List<Comment>? comments;
-
-  Post({
-    this.id,
-    this.content,
-    this.tags,
-    this.attachments,
-    this.sharedFrom,
-    this.shareCount,
-    this.publisherId,
-    this.archived,
-    this.createdAt,
-    this.updatedAt,
-    this.publisher,
-    this.reacts,
-    this.comments,
-  });
-
-  factory Post.fromJson(Map<String, dynamic> json) => Post(
-        id: json['_id'] as String?,
-        content: json['content'] as String?,
-        tags: (json['tags'] as List<dynamic>?)?.cast<String>(),
-        attachments: (json['attachments'] as List<dynamic>?)
-            ?.map((item) => Attachment.fromJson(item as Map<String, dynamic>))
-            .toList(),
-        sharedFrom: json['sharedFrom'] != null
-            ? Post.fromJson(json['sharedFrom'] as Map<String, dynamic>)
-            : null,
-        shareCount: json['shareCount'] as int?,
-        publisherId: json['publisherId'] as String?,
-        archived: json['archived'] as bool?,
-        createdAt: json['createdAt'] as String?,
-        updatedAt: json['updatedAt'] as String?,
-        publisher: (json['publisher'] as List<dynamic>?)
-            ?.map((item) => Publisher.fromJson(item as Map<String, dynamic>))
-            .toList(),
-        reacts: (json['reacts'] as List<dynamic>?)
-            ?.map((item) => React.fromJson(item as Map<String, dynamic>))
-            .toList(),
-        comments: (json['comments'] as List<dynamic>?)
-            ?.map((item) => Comment.fromJson(item as Map<String, dynamic>))
-            .toList(),
-      );
+  String? attachment; // File path or URL for form-data
 
   Map<String, dynamic> toJson() => {
-        if (id != null) '_id': id,
         if (content != null) 'content': content,
-        if (tags != null) 'tags': tags,
-        if (attachments != null)
-          'attachments': attachments!.map((item) => item.toJson()).toList(),
-        if (sharedFrom != null) 'sharedFrom': sharedFrom!.toJson(),
-        if (shareCount != null) 'shareCount': shareCount,
-        if (publisherId != null) 'publisherId': publisherId,
-        if (archived != null) 'archived': archived,
-        if (createdAt != null) 'createdAt': createdAt,
-        if (updatedAt != null) 'updatedAt': updatedAt,
-        if (publisher != null)
-          'publisher': publisher!.map((item) => item.toJson()).toList(),
-        if (reacts != null)
-          'reacts': reacts!.map((item) => item.toJson()).toList(),
-        if (comments != null)
-          'comments': comments!.map((item) => item.toJson()).toList(),
+        if (attachment != null) 'attachment': attachment,
       };
 }
 
-// Attachment model
-class Attachment {
-  String? secureUrl;
-  String? publicId;
-  String? id;
+class UpdatePostResponse {
+  final bool success;
+  final String message;
+  final Map<String, dynamic> data; // Expected: { "post": { "id": string, "content": string, ... } }
 
-  Attachment({
-    this.secureUrl,
-    this.publicId,
-    this.id,
+  UpdatePostResponse({
+    required this.success,
+    required this.message,
+    required this.data,
   });
 
-  factory Attachment.fromJson(Map<String, dynamic> json) => Attachment(
-        secureUrl: json['secure_url'] as String?,
-        publicId: json['public_id'] as String?,
-        id: json['_id'] as String?,
+  factory UpdatePostResponse.fromJson(Map<String, dynamic> json) =>
+      UpdatePostResponse(
+        success: json['success'] ?? false,
+        message: json['message'] ?? '',
+        data: json['data'] ?? {},
       );
+}
+
+// --- Like or Dislike Post ---
+class LikePostRequest {
+  String? react; // e.g., "Love", "Like"
 
   Map<String, dynamic> toJson() => {
-        if (secureUrl != null) 'secure_url': secureUrl,
-        if (publicId != null) 'public_id': publicId,
-        if (id != null) '_id': id,
+        if (react != null) 'react': react,
       };
 }
 
-// Publisher model
-class Publisher {
-  String? profileId;
-  String? username;
-  ProfilePicture? profilePicture;
-  String? firstName;
-  String? lastName;
-  String? companyName;
+class LikePostResponse {
+  final bool success;
+  final String message;
+  final Map<String, dynamic> data;
 
-  Publisher({
-    this.profileId,
-    this.username,
-    this.profilePicture,
-    this.firstName,
-    this.lastName,
-    this.companyName,
+  LikePostResponse({
+    required this.success,
+    required this.message,
+    required this.data,
   });
 
-  factory Publisher.fromJson(Map<String, dynamic> json) => Publisher(
-        profileId: json['profileId'] as String?,
-        username: json['username'] as String?,
-        profilePicture: json['profilePicture'] != null
-            ? ProfilePicture.fromJson(
-                json['profilePicture'] as Map<String, dynamic>)
-            : null,
-        firstName: json['firstName'] as String?,
-        lastName: json['lastName'] as String?,
-        companyName: json['companyName'] as String?,
+  factory LikePostResponse.fromJson(Map<String, dynamic> json) =>
+      LikePostResponse(
+        success: json['success'] ?? false,
+        message: json['message'] ?? '',
+        data: json['data'] ?? {},
       );
-
-  Map<String, dynamic> toJson() => {
-        if (profileId != null) 'profileId': profileId,
-        if (username != null) 'username': username,
-        if (profilePicture != null) 'profilePicture': profilePicture!.toJson(),
-        if (firstName != null) 'firstName': firstName,
-        if (lastName != null) 'lastName': lastName,
-        if (companyName != null) 'companyName': companyName,
-      };
-}
-
-// ProfilePicture model
-class ProfilePicture {
-  String? secureUrl;
-
-  ProfilePicture({
-    this.secureUrl,
-  });
-
-  factory ProfilePicture.fromJson(Map<String, dynamic> json) => ProfilePicture(
-        secureUrl: json['secure_url'] as String?,
-      );
-
-  Map<String, dynamic> toJson() => {
-        if (secureUrl != null) 'secure_url': secureUrl,
-      };
-}
-
-// React model
-class React {
-  String? id;
-  String? entityId;
-
-  React({
-    this.id,
-    this.entityId,
-  });
-
-  factory React.fromJson(Map<String, dynamic> json) => React(
-        id: json['_id'] as String?,
-        entityId: json['entityId'] as String?,
-      );
-
-  Map<String, dynamic> toJson() => {
-        if (id != null) '_id': id,
-        if (entityId != null) 'entityId': entityId,
-      };
-}
-
-// Comment model
-class Comment {
-  String? id;
-  String? postId;
-
-  Comment({
-    this.id,
-    this.postId,
-  });
-
-  factory Comment.fromJson(Map<String, dynamic> json) => Comment(
-        id: json['_id'] as String?,
-        postId: json['postId'] as String?,
-      );
-
-  Map<String, dynamic> toJson() => {
-        if (id != null) '_id': id,
-        if (postId != null) 'postId': postId,
-      };
 }
