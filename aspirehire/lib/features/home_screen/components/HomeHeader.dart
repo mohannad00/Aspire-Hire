@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../people_search/search_screen.dart';
+
 class HomeHeader extends StatelessWidget {
   final String firstName;
   final String lastName;
@@ -38,12 +40,16 @@ class HomeHeader extends StatelessWidget {
             ],
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/mage_notification-bell.png',
-              width: 24,
-              height: 24,
-            ),
-            onPressed: () {},
+            icon: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ), // Use a default icon for simplicity
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchScreen()),
+              );
+            },
           ),
         ],
       ),
