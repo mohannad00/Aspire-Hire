@@ -1,5 +1,4 @@
-
-import '../../../core/models/Friend.dart';
+import '../../../core/models/Follower.dart';
 
 abstract class FollowerState {}
 
@@ -14,13 +13,13 @@ class FollowerActionSuccess extends FollowerState {
 }
 
 class FollowersLoaded extends FollowerState {
-  final List<User> followers;
+  final List<FollowerUser> followers;
 
   FollowersLoaded(this.followers);
 }
 
 class FollowingLoaded extends FollowerState {
-  final List<User> following;
+  final List<FollowerUser> following;
 
   FollowingLoaded(this.following);
 }

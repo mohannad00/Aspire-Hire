@@ -73,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               radius: 5,
                               backgroundImage: AssetImage('assets/Ellipse.png'),
                             ),
-                            title: Text(skill),
+                            title: Text(skill.skill),
                           )).toList(),
                     ),
                   ),

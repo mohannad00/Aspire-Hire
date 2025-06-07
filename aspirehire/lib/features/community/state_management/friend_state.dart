@@ -25,7 +25,7 @@ class FriendUnfriended extends FriendState {
 }
 
 class FriendsLoaded extends FriendState {
-  final List<User> friends;
+  final List<Friend> friends;
 
   FriendsLoaded(this.friends);
 }

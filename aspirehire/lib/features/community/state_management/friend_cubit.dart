@@ -108,7 +108,9 @@ class FriendCubit extends Cubit<FriendState> {
     print('[getAllFriends] Starting');
     emit(FriendLoading());
     try {
-      print('[getAllFriends] Calling endpoint: ${ApiEndpoints.getAllFriends}');
+      print(
+        '[getAllFriends] Calling endpoint: [38;5;2m${ApiEndpoints.getAllFriends}[0m',
+      );
 
       final response = await _dio.get(
         ApiEndpoints.getAllFriends,
@@ -116,18 +118,21 @@ class FriendCubit extends Cubit<FriendState> {
       );
 
       print('[getAllFriends] Full response: ${response.data}');
-      final friendsList = response.data['data']['friends'] as List;
+      // The API returns a List of friends directly
+      List<dynamic> friendsList = response.data as List;
       print('[getAllFriends] Found ${friendsList.length} friends');
 
-      final friends =
-          friendsList
-              .map((item) => User.fromJson(item as Map<String, dynamic>))
-              .toList();
-
+      // Wrap the list in a map to use GetFriendsResponse.fromJson
+      Map<String, dynamic> responseMap = {
+        'success': true,
+        'message': 'Friends retrieved',
+        'data': friendsList,
+      };
+      GetFriendsResponse resp = GetFriendsResponse.fromJson(responseMap);
       print(
-        '[getAllFriends] First friend: ${friends.isNotEmpty ? friends.first.toJson() : "None"}',
+        '[getAllFriends] First friend: ${resp.data.isNotEmpty ? resp.data.first.toJson() : "None"}',
       );
-      emit(FriendsLoaded(friends));
+      emit(FriendsLoaded(resp.data));
     } on DioException catch (e) {
       print('[getAllFriends] Error: ${e.message}');
       print('[getAllFriends] Error details: ${e.response?.data}');

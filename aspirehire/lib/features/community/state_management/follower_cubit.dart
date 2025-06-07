@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../config/datasources/api/end_points.dart';
 import '../../../core/models/Follower.dart';
-import '../../../core/models/Friend.dart';
 import 'follower_state.dart';
 
 class FollowerCubit extends Cubit<FollowerState> {
@@ -23,7 +22,11 @@ class FollowerCubit extends Cubit<FollowerState> {
       final result = FollowResponse.fromJson(response.data);
       emit(FollowerActionSuccess(result.message));
     } on DioException catch (e) {
-      emit(FollowerError(e.message ?? 'An error occurred'));
+      if (e.response?.statusCode == 404) {
+        emit(FollowerActionSuccess('User not found'));
+      } else {
+        emit(FollowerError(e.message ?? 'An error occurred'));
+      }
     }
   }
 
@@ -35,12 +38,23 @@ class FollowerCubit extends Cubit<FollowerState> {
         ApiEndpoints.getAllFollowers,
         options: Options(headers: {'Authorization': token}),
       );
-      final followers = (response.data['data']['followers'] as List<dynamic>)
-          .map((item) => User.fromJson(item as Map<String, dynamic>))
-          .toList();
+      List<dynamic> followersList = response.data as List;
+      final followers =
+          followersList
+              .map(
+                (item) => FollowerUser.fromJson(item as Map<String, dynamic>),
+              )
+              .toList();
       emit(FollowersLoaded(followers));
     } on DioException catch (e) {
-      emit(FollowerError(e.message ?? 'An error occurred'));
+      if (e.response?.statusCode == 404) {
+        // Return empty list for 404
+        emit(FollowersLoaded([]));
+      } else {
+        emit(FollowerError(e.message ?? 'An error occurred'));
+      }
+    } catch (e) {
+      emit(FollowerError('Failed to parse followers: $e'));
     }
   }
 
@@ -52,12 +66,23 @@ class FollowerCubit extends Cubit<FollowerState> {
         ApiEndpoints.getAllFollowing,
         options: Options(headers: {'Authorization': token}),
       );
-      final following = (response.data['data']['following'] as List<dynamic>)
-          .map((item) => User.fromJson(item as Map<String, dynamic>))
-          .toList();
+      List<dynamic> followingList = response.data as List;
+      final following =
+          followingList
+              .map(
+                (item) => FollowerUser.fromJson(item as Map<String, dynamic>),
+              )
+              .toList();
       emit(FollowingLoaded(following));
     } on DioException catch (e) {
-      emit(FollowerError(e.message ?? 'An error occurred'));
+      if (e.response?.statusCode == 404) {
+        // Return empty list for 404
+        emit(FollowingLoaded([]));
+      } else {
+        emit(FollowerError(e.message ?? 'An error occurred'));
+      }
+    } catch (e) {
+      emit(FollowerError('Failed to parse following: $e'));
     }
   }
 }

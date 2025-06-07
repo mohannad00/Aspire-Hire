@@ -20,6 +20,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         ApiEndpoints.getProfile,
         options: Options(headers: {'Authorization': token}),
       );
+      print(response.data);
       final profile = Profile.fromJson(
         response.data['data']['user'],
       ); // Extract data from response

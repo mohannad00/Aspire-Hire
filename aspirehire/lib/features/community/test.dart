@@ -29,7 +29,7 @@ class FriendCubitTester extends StatefulWidget {
 
 class _FriendCubitTesterState extends State<FriendCubitTester> {
   late String _token;
-  final String testUserId = "680447d71bd878b4abbfecc4"; // Replace with actual test user ID
+  final String testUserId = "6841da7b765a1597bf51f5d6"; // Replace with actual test user ID
 
   @override
   void initState() {
@@ -164,7 +164,7 @@ class _FriendCubitTesterState extends State<FriendCubitTester> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         ...state.requests.map((req) => Text(
-                          '${req.requester?.firstName} ${req.requester?.lastName}',
+                          '${req.requester?.username} ${req.requester?.lastName}',
                         )).toList(),
                       ],
                     ],
