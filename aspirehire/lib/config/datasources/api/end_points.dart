@@ -1,8 +1,8 @@
 class ApiEndpoints {
   // Base URLs
-  static const String baseUrl = 'http://hiro.eu-4.evennode.com';
+  static const String baseUrl = 'http://10.0.2.2:4000';
   static const String localhost = 'http://localhost:3000';
-
+  // todo https://hiro-neon.vercel.app
   // Auth Endpoints
   static const String employeeRegister = '$baseUrl/auth/employee';
   static const String jobseekerRegister = '$baseUrl/auth/employee';
