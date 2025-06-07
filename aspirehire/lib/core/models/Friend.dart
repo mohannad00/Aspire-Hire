@@ -147,15 +147,61 @@ class UnfriendResponse {
       );
 }
 
-// Get All Friends
+// Insert a new Friend class above GetFriendsRequest
+class Friend {
+  final Map<String, dynamic> profilePicture; // (secure_url, public_id)
+  final String profileId;
+  final String username;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String? id;
+
+  Friend({
+    required this.profilePicture,
+    required this.profileId,
+    required this.username,
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    this.id,
+  });
+
+  factory Friend.fromJson(Map<String, dynamic> json) {
+    return Friend(
+      profilePicture: json["profilePicture"] ?? {},
+      profileId: json["profileId"] ?? "",
+      username: json["username"] ?? "",
+      email: json["email"] ?? "",
+      firstName: json["firstName"] ?? "",
+      lastName: json["lastName"] ?? "",
+      id: json["id"],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "profilePicture": profilePicture,
+      "profileId": profileId,
+      "username": username,
+      "email": email,
+      "firstName": firstName,
+      "lastName": lastName,
+      "id": id,
+    };
+  }
+}
+
+// Existing GetFriendsRequest (no change if not needed)
 class GetFriendsRequest {
   Map<String, dynamic> toJson() => {};
 }
 
+// Update GetFriendsResponse to use a List<Friend> for data
 class GetFriendsResponse {
   final bool success;
   final String message;
-  final Map<String, dynamic> data;
+  final List<Friend> data;
 
   GetFriendsResponse({
     required this.success,
@@ -163,12 +209,16 @@ class GetFriendsResponse {
     required this.data,
   });
 
-  factory GetFriendsResponse.fromJson(Map<String, dynamic> json) =>
-      GetFriendsResponse(
-        success: json['success'] ?? false,
-        message: json['message'] ?? '',
-        data: json['data'] ?? {},
-      );
+  factory GetFriendsResponse.fromJson(Map<String, dynamic> json) {
+    List<dynamic> dataList = json["data"] ?? [];
+    List<Friend> friends =
+        dataList.map((item) => Friend.fromJson(item)).toList();
+    return GetFriendsResponse(
+      success: json["success"] ?? false,
+      message: json["message"] ?? "",
+      data: friends,
+    );
+  }
 }
 
 // Get All Friend Requests

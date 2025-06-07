@@ -3,13 +3,18 @@ class Profile {
   final String username;
   final String email;
   final String phone;
-  final String? role; // Optional since it's not in the response
-  final ProfilePicture? profilePicture; // Nullable profile picture object
+  final String? role;
+  final ProfilePicture? profilePicture;
   final String firstName;
   final String lastName;
   final String dob;
   final String gender;
-  final List<String> skills;
+  final List<Skill> skills;
+  final List<String> friendRequestsSentIds; // Added
+  final List<dynamic> education; // Added, using dynamic for flexibility
+  final List<dynamic> experience; // Added, using dynamic for flexibility
+  final List<dynamic> jobApplications; // Added, using dynamic for flexibility
+  final List<dynamic> jobPosts; // Added, using dynamic for flexibility
 
   Profile({
     required this.profileId,
@@ -23,6 +28,11 @@ class Profile {
     required this.dob,
     required this.gender,
     required this.skills,
+    required this.friendRequestsSentIds,
+    required this.education,
+    required this.experience,
+    required this.jobApplications,
+    required this.jobPosts,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -31,7 +41,7 @@ class Profile {
       username: json['username'],
       email: json['email'],
       phone: json['phone'],
-      role: json['role'], // Optional, not in the provided response
+      role: json['role'],
       profilePicture:
           json['profilePicture'] != null
               ? ProfilePicture.fromJson(json['profilePicture'])
@@ -40,7 +50,18 @@ class Profile {
       lastName: json['lastName'],
       dob: json['dob'],
       gender: json['gender'],
-      skills: List<String>.from(json['skills'] ?? []),
+      skills:
+          (json['skills'] as List<dynamic>?)
+              ?.map((skillJson) => Skill.fromJson(skillJson))
+              .toList() ??
+          [],
+      friendRequestsSentIds: List<String>.from(
+        json['friendRequestsSentIds'] ?? [],
+      ),
+      education: json['education'] ?? [],
+      experience: json['experience'] ?? [],
+      jobApplications: json['jobApplications'] ?? [],
+      jobPosts: json['jobPosts'] ?? [],
     );
   }
 }
@@ -55,6 +76,22 @@ class ProfilePicture {
     return ProfilePicture(
       publicId: json['public_id'],
       secureUrl: json['secure_url'],
+    );
+  }
+}
+
+class Skill {
+  final String skill; // Changed from 'name' to 'skill'
+  final bool verified;
+  final String id; // Changed from '_id' to 'id' for Dart naming convention
+
+  Skill({required this.skill, required this.verified, required this.id});
+
+  factory Skill.fromJson(Map<String, dynamic> json) {
+    return Skill(
+      skill: json['skill'],
+      verified: json['verified'],
+      id: json['_id'],
     );
   }
 }
