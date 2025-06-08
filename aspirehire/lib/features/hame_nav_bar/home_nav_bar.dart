@@ -29,7 +29,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
   final List<Widget> _screens = [
     HomeScreenJobSeeker(),
     JobSearch(),
-    FollowerCubitTester(),
+    CommunityScreenWrapper(),
     ProfileScreen(),
     Myapplicationscreen(),
   ];
@@ -46,7 +46,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
 
   void _startHideNavBarTimer() {
     _hideNavBarTimer?.cancel();
-    _hideNavBarTimer = Timer(const Duration(seconds: 2), () {
+    _hideNavBarTimer = Timer(const Duration(seconds: 4), () {
       setState(() {
         _isNavBarVisible = false;
       });

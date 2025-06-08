@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class UserCard extends StatelessWidget {
   final String name;
   final String buttonText;
+  final String? profilePicture;
+  final VoidCallback? onPressed;
 
   const UserCard({
     Key? key,
     required this.name,
     required this.buttonText,
+    this.profilePicture,
+    this.onPressed,
   }) : super(key: key);
 
   @override
@@ -31,16 +35,23 @@ class UserCard extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 30,
-                      child: Text(
-                        name[0],
-                        style: const TextStyle(fontSize: 18),
-                      ),
+                      backgroundImage:
+                          profilePicture != null && profilePicture!.isNotEmpty
+                              ? NetworkImage(profilePicture!)
+                              : null,
+                      child:
+                          profilePicture == null || profilePicture!.isEmpty
+                              ? Text(
+                                name[0],
+                                style: const TextStyle(fontSize: 18),
+                              )
+                              : null,
                     ),
                   ],
                 ),
-      
+
                 const SizedBox(height: 8),
-      
+
                 // Name Text
                 Text(
                   name,
@@ -50,19 +61,20 @@ class UserCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-      
+
                 const SizedBox(height: 12),
-      
+
                 // Action Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: onPressed,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:const Color(0xFF013E5D),
-                      foregroundColor: Colors.white,
+                      backgroundColor: const Color.fromARGB(255, 241, 241, 241),
+                      foregroundColor: Colors.black,
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: Text(buttonText),

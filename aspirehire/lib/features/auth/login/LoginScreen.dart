@@ -24,6 +24,43 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          title: const Text(
+            "Error",
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+          content: Text(message, style: const TextStyle(fontSize: 16)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                "OK",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,215 +92,231 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: BlocProvider(
         create: (context) => LoginCubit(),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                Text(
-                  'Hiro',
-                  style: CustomTextStyles.pacifico400style64.copyWith(
-                    fontSize: 40,
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                const Text(
-                  "Welcome Back!",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                ReusableTextField.build(
-                  hintText: 'Email Address',
-                  hintColor: Colors.grey,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.normal,
-                  borderRadius: 10.0,
-                  borderColor: Colors.grey,
-                  controller: _usernameController, // Add controller
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                ReusableTextField.build(
-                  hintText: 'Password',
-                  hintColor: Colors.grey,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.normal,
-                  borderRadius: 10.0,
-                  borderColor: Colors.grey,
-                  obscureText: _isObscure,
-                  controller: _passwordController, // Add controller
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isObscure ? Icons.visibility : Icons.visibility_off,
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  Text(
+                    'Hiro',
+                    style: CustomTextStyles.pacifico400style64.copyWith(
+                      fontSize: 40,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _isObscure = !_isObscure;
-                      });
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  const Text(
+                    "Welcome Back!",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  ReusableTextField.build(
+                    hintText: 'Email Address',
+                    hintColor: Colors.grey,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.normal,
+                    borderRadius: 10.0,
+                    borderColor: Colors.grey,
+                    controller: _usernameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
                     },
                   ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.001),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) =>
-                                        const ResendConfirmationScreen(),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  ReusableTextField.build(
+                    hintText: 'Password',
+                    hintColor: Colors.grey,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.normal,
+                    borderRadius: 10.0,
+                    borderColor: Colors.grey,
+                    obscureText: _isObscure,
+                    controller: _passwordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isObscure ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.001),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          const ResendConfirmationScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Resend Confirmation Email?',
+                              style: TextStyle(
+                                color: Color(0xFF013E5D),
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
                               ),
-                            );
-                          },
-                          child: const Text(
-                            'Resend Confirmation Email?',
-                            style: TextStyle(
-                              color: Color(0xFF013E5D),
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginForgetPass(),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginForgetPass(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Forget Password?',
+                              style: TextStyle(
+                                color: Color(0xFF013E5D),
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
                               ),
-                            );
-                          },
-                          child: const Text(
-                            'Forget Password?',
-                            style: TextStyle(
-                              color: Color(0xFF013E5D),
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                BlocConsumer<LoginCubit, LoginState>(
-                  listener: (context, state) {
-                    if (state is LoginSuccess) {
-                      // Navigate to the next screen on successful login
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeNavBar(),
+                        ],
+                      ),
+                    ],
+                  ),
+                  BlocConsumer<LoginCubit, LoginState>(
+                    listener: (context, state) {
+                      if (state is LoginSuccess) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomeNavBar(),
+                          ),
+                        );
+                      } else if (state is LoginFailure) {
+                        _showErrorDialog(state.error);
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is LoginLoading) {
+                        return const CircularProgressIndicator();
+                      }
+                      return SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: ReusableButton.build(
+                          title: 'Login',
+                          fontSize: 18,
+                          backgroundColor: const Color(0xFF013E5D),
+                          textColor: Colors.white,
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              final username = _usernameController.text;
+                              final password = _passwordController.text;
+                              context.read<LoginCubit>().login(
+                                username,
+                                password,
+                              );
+                            }
+                          },
                         ),
                       );
-                    } else if (state is LoginFailure) {
-                      // Show error message
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(state.error)));
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is LoginLoading) {
-                      return const CircularProgressIndicator();
-                    }
-                    return SizedBox(
-                      width: double.infinity,
-                      height: 60,
-                      child: ReusableButton.build(
-                        title: 'Login',
-                        fontSize: 18,
-                        backgroundColor: const Color(0xFF013E5D),
-                        textColor: Colors.white,
-                        onPressed: () {
-                          final username = _usernameController.text;
-                          final password = _passwordController.text;
-                          context.read<LoginCubit>().login(username, password);
-                        },
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.07),
-                const Row(
-                  children: [
-                    Expanded(child: Divider(color: Color(0xFF013E5D))),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Text(
-                        'Or login with',
-                        style: TextStyle(
-                          color: Color(0xFF013E5D),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                    },
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+                  const Row(
+                    children: [
+                      Expanded(child: Divider(color: Color(0xFF013E5D))),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'Or login with',
+                          style: TextStyle(
+                            color: Color(0xFF013E5D),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(child: Divider(color: Color(0xFF013E5D))),
-                  ],
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          title: const Text(
-                            "Feature Not Available",
-                            style: TextStyle(
-                              color: Color(0xFF013E5D),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                      Expanded(child: Divider(color: Color(0xFF013E5D))),
+                    ],
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                  GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ),
-                          content: const Text(
-                            "The Google Sign-Up feature has not been implemented yet. Stay tuned for updates!",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text(
-                                "OK",
-                                style: TextStyle(
-                                  color: Color(0xFF013E5D),
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            title: const Text(
+                              "Feature Not Available",
+                              style: TextStyle(
+                                color: Color(0xFF013E5D),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: Image.asset(
-                    'assets/Google.png',
-                    width: MediaQuery.of(context).size.width * 0.2,
-                    height: MediaQuery.of(context).size.height * 0.2,
+                            content: const Text(
+                              "The Google Sign-Up feature has not been implemented yet. Stay tuned for updates!",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  "OK",
+                                  style: TextStyle(
+                                    color: Color(0xFF013E5D),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Image.asset(
+                      'assets/Google.png',
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -1,8 +1,9 @@
 class ApiEndpoints {
   // Base URLs
-  static const String baseUrl = 'http://10.0.2.2:4000';
+  static const String baseUrl = 'https://ad1c-45-241-150-222.ngrok-free.app';
   static const String localhost = 'http://localhost:3000';
   // todo https://hiro-neon.vercel.app
+  // todo http://10.0.2.2:3000
   // Auth Endpoints
   static const String employeeRegister = '$baseUrl/auth/employee';
   static const String jobseekerRegister = '$baseUrl/auth/employee';
