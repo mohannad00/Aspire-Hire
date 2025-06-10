@@ -1,6 +1,6 @@
 class ApiEndpoints {
   // Base URLs
-  static const String baseUrl = 'https://ad1c-45-241-150-222.ngrok-free.app';
+  static const String baseUrl = 'http://10.0.2.2:3000';
   static const String localhost = 'http://localhost:3000';
   // todo https://hiro-neon.vercel.app
   // todo http://10.0.2.2:3000
@@ -10,7 +10,8 @@ class ApiEndpoints {
   static const String companyRegister = '$baseUrl/auth/company';
   static const String login = '$baseUrl/auth/login';
   static const String resendConfirm = '$baseUrl/auth/resend-confirm';
-  static const String requestPasswordReset = '$baseUrl/auth/request-password-reset';
+  static const String requestPasswordReset =
+      '$baseUrl/auth/request-password-reset';
   static const String passwordReset = '$baseUrl/auth/password-reset';
 
   // Profile Endpoints
@@ -20,23 +21,37 @@ class ApiEndpoints {
   static const String uploadResume = '$baseUrl/profile/resume';
   static const String deleteProfilePicture = '$baseUrl/profile/profile-picture';
   static const String searchUsers = '$baseUrl/profile/search/?q:query';
+  static const String updateSkills = '$baseUrl/profile/skills';
+
+  // Skill Test Endpoints
+  static const String getQuiz = '$baseUrl/skill/quiz';
+  static const String submitQuiz = '$baseUrl/skill/quiz';
 
   // Job Post Endpoints
   static const String createJobPost = '$baseUrl/jobpost';
-  static const String updateJobPost = '$baseUrl/jobpost'; // Todo Append /:jobPostId
-  static const String deleteJobPost = '$baseUrl/jobpost'; // Todo Append /:jobPostId
-  static const String getJobPost = '$baseUrl/jobpost'; //  Todo Append ?id=:jobPostId
+  static const String updateJobPost =
+      '$baseUrl/jobpost'; // Todo Append /:jobPostId
+  static const String deleteJobPost =
+      '$baseUrl/jobpost'; // Todo Append /:jobPostId
+  static const String getJobPost =
+      '$baseUrl/jobpost'; //  Todo Append ?id=:jobPostId
   static const String searchJobPosts = '$baseUrl/jobpost/search';
 
   // Job Application Endpoints
-  static const String createJobApplication = '$baseUrl/jobpost/:jobPostId/application';
-  static const String updateJobApplication = '$baseUrl/jobpost/:jobPostId/application/:applicationId';
-  static const String getJobApplication = '$baseUrl/jobpost/:jobPostId/application/:applicationId';
-  static const String getJobApplications = '$baseUrl/jobpost/:jobPostId/application';
-  
+  static const String createJobApplication =
+      '$baseUrl/jobpost/:jobPostId/application';
+  static const String updateJobApplication =
+      '$baseUrl/jobpost/:jobPostId/application/:applicationId';
+  static const String getJobApplication =
+      '$baseUrl/jobpost/:jobPostId/application/:applicationId';
+  static const String getJobApplications =
+      '$baseUrl/jobpost/:jobPostId/application';
+
   // Community - Friend Endpoints
-  static const String sendOrCancelFriendRequest = '$baseUrl/friend/:userId/request';
-  static const String approveOrDeclineFriendRequest = '$baseUrl/friend/:userId/request';
+  static const String sendOrCancelFriendRequest =
+      '$baseUrl/friend/:userId/request';
+  static const String approveOrDeclineFriendRequest =
+      '$baseUrl/friend/:userId/request';
   static const String unfriendUser = '$baseUrl/friend/:userId';
   static const String getAllFriends = '$baseUrl/friend';
   static const String getAllFriendRequests = '$baseUrl/friend/requests';
@@ -58,10 +73,13 @@ class ApiEndpoints {
 
   // Community - Comment Endpoints
   static const String createComment = '$baseUrl/post/:postId/comment';
-  static const String updateComment = '$baseUrl/post/:postId/comment/:commentId';
+  static const String updateComment =
+      '$baseUrl/post/:postId/comment/:commentId';
   static const String getAllComments = '$baseUrl/post/:postId/comment';
-  static const String likeOrDislikeComment = '$baseUrl/post/:postId/comment/:commentId';
-  static const String getAllLikesOfComment = '$baseUrl/post/:postId/comment/:commentId/reacts';
+  static const String likeOrDislikeComment =
+      '$baseUrl/post/:postId/comment/:commentId';
+  static const String getAllLikesOfComment =
+      '$baseUrl/post/:postId/comment/:commentId/reacts';
 
   // Community - Feed Endpoints
   static const String getFeedPosts = '$baseUrl/feed';

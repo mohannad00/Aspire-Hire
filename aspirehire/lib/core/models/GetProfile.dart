@@ -94,4 +94,8 @@ class Skill {
       id: json['_id'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {'skill': skill, 'verified': verified, '_id': id};
+  }
 }

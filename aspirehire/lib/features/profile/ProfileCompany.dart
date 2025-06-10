@@ -35,6 +35,7 @@ class _ProfileCompanyState extends State<ProfileCompany> {
       });
     }
   }
+
   bool isPostsSelected = true;
   @override
   Widget build(BuildContext context) {
@@ -71,9 +72,11 @@ class _ProfileCompanyState extends State<ProfileCompany> {
                     icon: const Icon(Icons.edit, color: Colors.orange),
                     onPressed: () {
                       Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const EditProfile()),
-          );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfile(),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -88,11 +91,7 @@ class _ProfileCompanyState extends State<ProfileCompany> {
                     "Dell Technologies Inc ",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
-                  Container(
-                              height: 1,
-                              width: 220,
-                              color: Colors.orange,
-                            ),
+                  Container(height: 1, width: 220, color: Colors.orange),
                 ],
               ),
             ),
@@ -102,42 +101,40 @@ class _ProfileCompanyState extends State<ProfileCompany> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  
+                  ListTile(
+                    leading: SizedBox(
+                      width: 20, // تحديد عرض الصورة
+                      height: 20, // تحديد ارتفاع الصورة
+                      child: Image.asset(
+                        'assets/phone.png', // مسار الصورة
+                        fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
+                      ),
+                    ),
+                    title: const Text("+201000001100"),
+                  ),
 
                   ListTile(
-  leading: SizedBox(
-    width: 20, // تحديد عرض الصورة
-    height: 20, // تحديد ارتفاع الصورة
-    child: Image.asset(
-      'assets/phone.png', // مسار الصورة
-      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
-    ),
-  ),
-  title: const Text("+201000001100"),
-),
-
-ListTile(
-  leading: SizedBox(
-    width: 20, // تحديد عرض الصورة
-    height: 20, // تحديد ارتفاع الصورة
-    child: Image.asset(
-      'assets/email.png', // مسار الصورة
-      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
-    ),
-  ),
-  title: const Text("delltechnologies@gmail.com"),
-),
-ListTile(
-  leading: SizedBox(
-    width: 20, // تحديد عرض الصورة
-    height: 20, // تحديد ارتفاع الصورة
-    child: Image.asset(
-      'assets/location.png', // مسار الصورة
-      fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
-    ),
-  ),
-  title: const Text("Egypt, Cairo"),
-),
+                    leading: SizedBox(
+                      width: 20, // تحديد عرض الصورة
+                      height: 20, // تحديد ارتفاع الصورة
+                      child: Image.asset(
+                        'assets/email.png', // مسار الصورة
+                        fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
+                      ),
+                    ),
+                    title: const Text("delltechnologies@gmail.com"),
+                  ),
+                  ListTile(
+                    leading: SizedBox(
+                      width: 20, // تحديد عرض الصورة
+                      height: 20, // تحديد ارتفاع الصورة
+                      child: Image.asset(
+                        'assets/location.png', // مسار الصورة
+                        fit: BoxFit.contain, // ضمان ملاءمة الصورة داخل الحاوية
+                      ),
+                    ),
+                    title: const Text("Egypt, Cairo"),
+                  ),
                 ],
               ),
             ),
@@ -153,16 +150,18 @@ ListTile(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("About company ",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Container(
-                      height: 1,
-                      width: 147,
-                      color: Colors.orange,
+                    const Text(
+                      "About company ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const Text("Dell is a global technology leader, providing innovative computers, software, and IT solutions. Committed to excellence, Dell offers a dynamic work environment with opportunities for growth and development.")
+                    const SizedBox(height: 5),
+                    Container(height: 1, width: 147, color: Colors.orange),
+                    const Text(
+                      "Dell is a global technology leader, providing innovative computers, software, and IT solutions. Committed to excellence, Dell offers a dynamic work environment with opportunities for growth and development.",
+                    ),
                   ],
                 ),
               ),
@@ -180,88 +179,95 @@ ListTile(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Details",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 5),
-                    Container(
-                      height: 1,
-                      width: 147,
-                      color: Colors.orange,
+                    const Text(
+                      "Details",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    const SizedBox(height: 5),
+                    Container(height: 1, width: 147, color: Colors.orange),
                     const SizedBox(height: 8),
 
                     const Text(
-              'Website',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              'http://www.delitechnologyinc.com',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.blue,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Company size',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Text(
-              '10,000+ Employee',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
+                      'Website',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text(
+                      'http://www.delitechnologyinc.com',
+                      style: TextStyle(fontSize: 16, color: Colors.blue),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Company size',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text(
+                      '10,000+ Employee',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 20),
             Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  isPostsSelected = true;
-                });
-              },
-              child: Text(
-                'Posts',
-                style: TextStyle(
-                  color: isPostsSelected ? const Color(0xFF013E5D) : Colors.grey,
-                  fontSize: 16,
-                  fontWeight: isPostsSelected ? FontWeight.bold : FontWeight.normal,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        isPostsSelected = true;
+                      });
+                    },
+                    child: Text(
+                      'Posts',
+                      style: TextStyle(
+                        color:
+                            isPostsSelected
+                                ? const Color(0xFF013E5D)
+                                : Colors.grey,
+                        fontSize: 16,
+                        fontWeight:
+                            isPostsSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.21),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        isPostsSelected = false;
+                      });
+                    },
+                    child: Text(
+                      'Jobs',
+                      style: TextStyle(
+                        color:
+                            isPostsSelected
+                                ? Colors.grey
+                                : const Color(0xFF013E5D),
+                        fontSize: 16,
+                        fontWeight:
+                            isPostsSelected
+                                ? FontWeight.normal
+                                : FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(width: MediaQuery.of(context).size.width * 0.21),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  isPostsSelected = false;
-                });
-              },
-              child: Text(
-                'Jobs',
-                style: TextStyle(
-                  color: isPostsSelected ? Colors.grey : const Color(0xFF013E5D),
-                  fontSize: 16,
-                  fontWeight: isPostsSelected ? FontWeight.normal : FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
           ],
         ),
       ),
@@ -291,17 +297,21 @@ ListTile(
       onTap: () => _onItemTapped(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding:
-            EdgeInsets.symmetric(horizontal: isSelected ? 16 : 0, vertical: 10),
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 16 : 0,
+          vertical: 10,
+        ),
         decoration: BoxDecoration(
           color: isSelected ? Colors.white : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Row(
           children: [
-            Icon(icon,
-                color: isSelected ? const Color(0xFF013E5D) : Colors.white,
-                size: 28),
+            Icon(
+              icon,
+              color: isSelected ? const Color(0xFF013E5D) : Colors.white,
+              size: 28,
+            ),
             if (isSelected)
               Padding(
                 padding: const EdgeInsets.only(left: 8),
