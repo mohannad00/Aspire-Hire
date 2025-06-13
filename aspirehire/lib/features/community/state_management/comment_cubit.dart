@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../config/datasources/api/end_points.dart';
-import '../../../core/models/Comment.dart';
 import '../../../core/models/Feed.dart';
+import '../../../core/models/Comment.dart' as comment_models;
 import 'comment_state.dart';
 
 class CommentCubit extends Cubit<CommentState> {
@@ -14,7 +14,7 @@ class CommentCubit extends Cubit<CommentState> {
   Future<void> createComment(
     String token,
     String postId,
-    CreateCommentRequest request,
+    comment_models.CreateCommentRequest request,
   ) async {
     emit(CommentLoading());
     try {
@@ -44,7 +44,7 @@ class CommentCubit extends Cubit<CommentState> {
     String token,
     String postId,
     String commentId,
-    UpdateCommentRequest request,
+    comment_models.UpdateCommentRequest request,
   ) async {
     emit(CommentLoading());
     try {
@@ -79,13 +79,62 @@ class CommentCubit extends Cubit<CommentState> {
         ApiEndpoints.getAllComments.replaceAll(':postId', postId),
         options: Options(headers: {'Authorization': token}),
       );
+      print(
+        "*******************************************************************",
+      );
+      print(response.data);
+      print(
+        "*******************************************************************",
+      );
+
+      // Handle different possible response structures
+      List<dynamic> commentsList = [];
+
+      if (response.data is Map<String, dynamic>) {
+        final data = response.data['data'];
+        if (data is Map<String, dynamic> && data['comments'] is List) {
+          commentsList = data['comments'] as List<dynamic>;
+        } else if (data is List) {
+          // If data is directly a list of comments
+          commentsList = data;
+        } else if (response.data['comments'] is List) {
+          // If comments is at the root level
+          commentsList = response.data['comments'] as List<dynamic>;
+        }
+      } else if (response.data is List) {
+        // If the entire response is a list of comments
+        commentsList = response.data as List<dynamic>;
+      }
+
+      print("Comments list length: ${commentsList.length}");
+
       final comments =
-          (response.data['data']['comments'] as List<dynamic>)
-              .map((item) => Comment.fromJson(item as Map<String, dynamic>))
+          commentsList
+              .map((item) {
+                try {
+                  if (item is Map<String, dynamic>) {
+                    return Comment.fromJson(item);
+                  } else {
+                    print("Invalid comment item: $item");
+                    return null;
+                  }
+                } catch (e) {
+                  print("Error parsing comment: $e");
+                  return null;
+                }
+              })
+              .where((comment) => comment != null)
+              .cast<Comment>()
               .toList();
+
       emit(CommentsLoaded(comments));
     } on DioException catch (e) {
+      print("DioException in getAllComments: ${e.message}");
+      print("Response data: ${e.response?.data}");
       emit(CommentError(e.message ?? 'An error occurred'));
+    } catch (e) {
+      print("Unexpected error in getAllComments: $e");
+      emit(CommentError('An unexpected error occurred: $e'));
     }
   }
 
@@ -98,7 +147,7 @@ class CommentCubit extends Cubit<CommentState> {
   ) async {
     emit(CommentLoading());
     try {
-      final request = LikeCommentRequest()..react = react;
+      final request = comment_models.LikeCommentRequest()..react = react;
       final response = await _dio.post(
         ApiEndpoints.likeOrDislikeComment
             .replaceAll(':postId', postId)
@@ -106,7 +155,8 @@ class CommentCubit extends Cubit<CommentState> {
         data: request.toJson(),
         options: Options(headers: {'Authorization': token}),
       );
-      final message = LikeCommentResponse.fromJson(response.data).message;
+      final message =
+          comment_models.LikeCommentResponse.fromJson(response.data).message;
       emit(CommentLiked(message));
     } on DioException catch (e) {
       emit(CommentError(e.message ?? 'An error occurred'));

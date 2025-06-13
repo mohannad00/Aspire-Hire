@@ -1,4 +1,5 @@
 import 'package:aspirehire/features/community/test_follower_cubit.dart';
+import 'package:aspirehire/features/job_application/JobApply.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/community/communityScreen.dart';
 import 'package:aspirehire/core/utils/app_colors.dart';
@@ -31,7 +32,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
     JobSearch(),
     CommunityScreenWrapper(),
     ProfileScreen(),
-    Myapplicationscreen(),
+    ApplyJob(),
   ];
 
   @override
@@ -164,14 +165,14 @@ class _HomeNavBarState extends State<HomeNavBar> {
                                   bool isSelected = _selectedIndex == index;
                                   List<String> labels = [
                                     "Home",
-                                    "Search",
+                                    "Jobs",
                                     "Community",
                                     "Profile",
                                     "My Apps",
                                   ];
                                   List<IconData> icons = [
                                     Icons.home,
-                                    Icons.search,
+                                    Icons.work_outline,
                                     Icons.people,
                                     Icons.person,
                                     Icons.menu,

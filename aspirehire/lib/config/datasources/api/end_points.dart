@@ -36,6 +36,7 @@ class ApiEndpoints {
   static const String getJobPost =
       '$baseUrl/jobpost'; //  Todo Append ?id=:jobPostId
   static const String searchJobPosts = '$baseUrl/jobpost/search';
+  static const String getRecommendedJobPosts = '$baseUrl/jobpost/recommended';
 
   // Job Application Endpoints
   static const String createJobApplication =

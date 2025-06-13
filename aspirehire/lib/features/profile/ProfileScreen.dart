@@ -235,11 +235,33 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 children:
                                     _skillsExpanded
                                         ? profile.skills
+                                            .toList()
+                                            .where((skill) => skill.verified)
+                                            .toList()
+                                            .followedBy(
+                                              profile.skills
+                                                  .toList()
+                                                  .where(
+                                                    (skill) => !skill.verified,
+                                                  )
+                                                  .toList(),
+                                            )
                                             .map(
                                               (skill) => _buildSkillChip(skill),
                                             )
                                             .toList()
                                         : profile.skills
+                                            .toList()
+                                            .where((skill) => skill.verified)
+                                            .toList()
+                                            .followedBy(
+                                              profile.skills
+                                                  .toList()
+                                                  .where(
+                                                    (skill) => !skill.verified,
+                                                  )
+                                                  .toList(),
+                                            )
                                             .take(5)
                                             .map(
                                               (skill) => _buildSkillChip(skill),

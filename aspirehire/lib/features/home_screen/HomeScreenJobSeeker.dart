@@ -8,6 +8,12 @@ import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';
 import '../../config/datasources/cache/shared_pref.dart';
 import '../profile/state_management/profile_cubit.dart';
 import '../profile/state_management/profile_state.dart';
+import '../feed/state_management/feed_cubit.dart';
+import '../feed/state_management/feed_states.dart';
+import '../feed/components/PostCard.dart' as feed_post;
+import '../feed/components/CommentBottomSheet.dart';
+import '../community/state_management/comment_cubit.dart';
+import '../home_screen/components/PostCard.dart' hide PostCard;
 
 class HomeScreenJobSeeker extends StatefulWidget {
   const HomeScreenJobSeeker({super.key});
@@ -17,24 +23,114 @@ class HomeScreenJobSeeker extends StatefulWidget {
 }
 
 class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
+  String? token;
+  late FeedCubit feedCubit;
+  late CommentCubit commentCubit;
+
   @override
   void initState() {
     super.initState();
-    _fetchProfile();
+    feedCubit = FeedCubit();
+    commentCubit = CommentCubit();
+    _fetchTokenAndFeed();
   }
 
-  Future<void> _fetchProfile() async {
-    final token = await CacheHelper.getData('token');
-    if (token != null) {
-      context.read<ProfileCubit>().getProfile(token);
+  Future<void> _fetchTokenAndFeed() async {
+    print('🔍 [HomeScreenJobSeeker] Fetching token...');
+    final t = await CacheHelper.getData('token');
+    print(
+      '🔍 [HomeScreenJobSeeker] Token retrieved: ${t != null ? '${t.substring(0, 20)}...' : 'null'}',
+    );
+    if (t != null) {
+      setState(() => token = t);
+      print('🔍 [HomeScreenJobSeeker] Calling getFeed with token...');
+      feedCubit.getFeed(t);
+    } else {
+      print('🔍 [HomeScreenJobSeeker] No token found!');
     }
   }
 
   @override
+  void dispose() {
+    feedCubit.close();
+    commentCubit.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(child: HomePage()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: feedCubit),
+        BlocProvider.value(value: commentCubit),
+      ],
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: BlocBuilder<FeedCubit, FeedState>(
+            builder: (context, state) {
+              if (state is FeedLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is FeedLoaded) {
+                final posts = state.feedResponse.data;
+                if (posts.isEmpty) {
+                  return const Center(child: Text('No posts found.'));
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    final post = posts[index].post;
+                    final likeCount = post.reacts?.length ?? 0;
+                    final commentCount = post.comments?.length ?? 0;
+                    final isLiked =
+                        post.reacts?.any((r) => r.react == 'Love') ?? false;
+                    return feed_post.PostCard(
+                      post: post,
+                      isLiked: isLiked,
+                      likeCount: likeCount,
+                      commentCount: commentCount,
+                      onLike: () {
+                        if (token != null && post.id != null) {
+                          feedCubit.likeOrDislikePost(
+                            token!,
+                            post.id!,
+                            isLiked ? 'None' : 'Love',
+                          );
+                        }
+                      },
+                      onComment: () {
+                        if (token != null && post.id != null) {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20),
+                              ),
+                            ),
+                            builder:
+                                (context) => BlocProvider.value(
+                                  value: commentCubit,
+                                  child: CommentBottomSheet(
+                                    postId: post.id!,
+                                    token: token!,
+                                  ),
+                                ),
+                          );
+                        }
+                      },
+                    );
+                  },
+                );
+              } else if (state is FeedError) {
+                return Center(child: Text(state.message));
+              }
+              return const Center(child: Text('No feed data.'));
+            },
+          ),
+        ),
+      ),
     );
   }
 }
@@ -110,36 +206,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
         const PostCard(
           jobTitle: 'Mohannad Hossam',
           company: 'Dell',
