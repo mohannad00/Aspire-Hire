@@ -8,6 +8,7 @@ environment:
   sdk: ">=3.7.0 <4.0.0"
 
 dependencies:
+  cached_network_image: ^3.4.1
   carousel_slider: ^4.2.1
   cupertino_icons: ^1.0.6
   dio: ^5.4.2+1
@@ -18,11 +19,13 @@ dependencies:
   flutter_bloc: ^8.1.6
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.0.17
+  image_picker: ^1.0.7
   percent_indicator: ^4.2.3
   persistent_bottom_nav_bar: ^6.2.1
   shared_preferences: ^2.2.2
   shimmer: ^2.0.0
   smooth_page_indicator: ^1.1.0
+  custom_refresh_indicator: ^3.1.0
 
 dev_dependencies:
   flutter_lints: ^3.0.1
