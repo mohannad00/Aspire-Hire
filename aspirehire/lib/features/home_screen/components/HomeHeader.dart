@@ -18,9 +18,10 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 62,
+      width: 390,
       decoration: const BoxDecoration(
         color: Color(0xFF013E5D),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

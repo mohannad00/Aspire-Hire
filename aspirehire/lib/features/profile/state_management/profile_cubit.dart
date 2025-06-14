@@ -91,8 +91,19 @@ class ProfileCubit extends Cubit<ProfileState> {
 
       print('Uploading profile picture: $filePath, size: ${fileSize} bytes');
 
+      // Debug: Get file extension and MIME type
+      final String extension = filePath.split('.').last.toLowerCase();
+      final String mimeType = 'image/$extension';
+
+      print('🔍 [ProfileCubit] File extension: $extension');
+      print('🔍 [ProfileCubit] MIME type being sent: $mimeType');
+
       final formData = FormData.fromMap({
-        'attachment': await MultipartFile.fromFile(filePath),
+        'attachment': await MultipartFile.fromFile(
+          filePath,
+          filename: 'image.$extension',
+          contentType: DioMediaType.parse(mimeType),
+        ),
       });
 
       print(
@@ -103,7 +114,12 @@ class ProfileCubit extends Cubit<ProfileState> {
       final response = await _dio.patch(
         ApiEndpoints.updateProfilePicture,
         data: formData,
-        options: Options(headers: {'Authorization': token}),
+        options: Options(
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
       );
 
       print('Update Profile Picture Response: ${response.data}');

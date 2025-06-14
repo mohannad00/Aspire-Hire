@@ -6,11 +6,7 @@ class CommentInitial extends CommentState {}
 
 class CommentLoading extends CommentState {}
 
-class CommentCreated extends CommentState {
-  final Comment comment;
-
-  CommentCreated(this.comment);
-}
+class CommentCreated extends CommentState {}
 
 class CommentUpdated extends CommentState {
   final Comment comment;

@@ -355,7 +355,31 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               Icons.school,
                                               color: AppColors.primary,
                                             ),
-                                            title: Text(edu.toString()),
+                                            title: Text(
+                                              edu.degree ?? 'No degree',
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                if (edu.institution != null)
+                                                  Text(
+                                                    edu.institution!,
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                if (edu.location != null)
+                                                  Text(
+                                                    edu.location!,
+                                                    style: const TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
                                             contentPadding: EdgeInsets.zero,
                                           ),
                                         )
@@ -448,7 +472,33 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               Icons.work,
                                               color: AppColors.primary,
                                             ),
-                                            title: Text(exp.toString()),
+                                            title: Text(
+                                              exp.title ?? 'No title',
+                                            ),
+                                            subtitle: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                if (exp.company != null)
+                                                  Text(
+                                                    exp.company!,
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                if (exp.duration != null)
+                                                  Text(
+                                                    _formatDuration(
+                                                      exp.duration!,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                              ],
+                                            ),
                                             contentPadding: EdgeInsets.zero,
                                           ),
                                         )
@@ -792,4 +842,36 @@ Widget _buildSkillChip(Skill skill) {
         ),
     ],
   );
+}
+
+String _formatDuration(ExperienceDuration duration) {
+  try {
+    final fromDate = DateTime.parse(duration.from);
+    final toDate = DateTime.parse(duration.to);
+
+    final fromMonth = _getMonthName(fromDate.month);
+    final toMonth = _getMonthName(toDate.month);
+
+    return '$fromMonth ${fromDate.year} - $toMonth ${toDate.year}';
+  } catch (e) {
+    return 'Duration not specified';
+  }
+}
+
+String _getMonthName(int month) {
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  return months[month - 1];
 }

@@ -32,10 +32,39 @@ class CommentCubit extends Cubit<CommentState> {
         data: formData,
         options: Options(headers: {'Authorization': token}),
       );
-      final comment = Comment.fromJson(response.data['data']['comment']);
-      emit(CommentCreated(comment));
+
+      print('🔍 [CommentCubit] Create comment response: ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = response.data;
+        if (responseData['success'] == true) {
+          print('🔍 [CommentCubit] Comment created successfully');
+          emit(CommentCreated());
+        } else {
+          final error = responseData['message'] ?? 'Failed to create comment';
+          print('🔍 [CommentCubit] API Error: $error');
+          emit(CommentError(error));
+        }
+      } else {
+        final error = response.data['message'] ?? 'Failed to create comment';
+        print('🔍 [CommentCubit] HTTP Error: $error');
+        emit(CommentError(error));
+      }
     } on DioException catch (e) {
-      emit(CommentError(e.message ?? 'An error occurred'));
+      print('🔍 [CommentCubit] DioException: ${e.message}');
+      print('🔍 [CommentCubit] Response data: ${e.response?.data}');
+
+      String errorMessage = 'Failed to create comment. Please try again.';
+      if (e.response?.data != null && e.response!.data['message'] != null) {
+        errorMessage = e.response!.data['message'];
+      } else if (e.message != null) {
+        errorMessage = e.message!;
+      }
+
+      emit(CommentError(errorMessage));
+    } catch (e) {
+      print('🔍 [CommentCubit] Unexpected error: $e');
+      emit(CommentError('An unexpected error occurred. Please try again.'));
     }
   }
 
@@ -131,7 +160,15 @@ class CommentCubit extends Cubit<CommentState> {
     } on DioException catch (e) {
       print("DioException in getAllComments: ${e.message}");
       print("Response data: ${e.response?.data}");
-      emit(CommentError(e.message ?? 'An error occurred'));
+      print("Status code: ${e.response?.statusCode}");
+
+      // Handle 500 status code - show no comments yet
+      if (e.response?.statusCode == 500) {
+        print("Server error (500) - treating as no comments yet");
+        emit(CommentsLoaded([])); // Empty list means no comments
+      } else {
+        emit(CommentError(e.message ?? 'An error occurred'));
+      }
     } catch (e) {
       print("Unexpected error in getAllComments: $e");
       emit(CommentError('An unexpected error occurred: $e'));

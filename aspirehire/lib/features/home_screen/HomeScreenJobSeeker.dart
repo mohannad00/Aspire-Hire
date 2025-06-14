@@ -1,19 +1,21 @@
+import 'package:aspirehire/features/create_post/CreatePost.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/home_screen/components/HomeHeader.dart';
-import 'package:aspirehire/features/home_screen/components/JobCard.dart';
-import 'package:aspirehire/features/home_screen/components/MediaButtons.dart';
-import 'package:aspirehire/features/home_screen/components/PostCard.dart';
-import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';
+import 'package:aspirehire/features/home_screen/components/HomeHeaderSkeleton.dart';
+import 'package:aspirehire/features/home_screen/components/WritePostSkeleton.dart';
 import '../../config/datasources/cache/shared_pref.dart';
 import '../profile/state_management/profile_cubit.dart';
 import '../profile/state_management/profile_state.dart';
 import '../feed/state_management/feed_cubit.dart';
 import '../feed/state_management/feed_states.dart';
+import '../feed/state_management/like_cubit.dart';
+import '../feed/state_management/like_state.dart';
 import '../feed/components/PostCard.dart' as feed_post;
+import '../feed/components/PostCardSkeleton.dart';
 import '../feed/components/CommentBottomSheet.dart';
 import '../community/state_management/comment_cubit.dart';
-import '../home_screen/components/PostCard.dart' hide PostCard;
+import '../../core/models/Feed.dart';
 
 class HomeScreenJobSeeker extends StatefulWidget {
   const HomeScreenJobSeeker({super.key});
@@ -26,16 +28,31 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
   String? token;
   late FeedCubit feedCubit;
   late CommentCubit commentCubit;
+  late LikeCubit likeCubit;
+  late ProfileCubit profileCubit;
+
+  // Local state to track like status for each post
+  final Map<String, bool> _postLikeStatus = {};
+
+  // Local state to track like counts for each post
+  final Map<String, int> _postLikeCounts = {};
+
+  // Track current like operation for error handling
+  String? _currentLikeOperationPostId;
+  bool? _previousLikeStatus;
+  int? _previousLikeCount;
 
   @override
   void initState() {
     super.initState();
     feedCubit = FeedCubit();
     commentCubit = CommentCubit();
-    _fetchTokenAndFeed();
+    likeCubit = LikeCubit();
+    profileCubit = ProfileCubit();
+    _fetchTokenAndData();
   }
 
-  Future<void> _fetchTokenAndFeed() async {
+  Future<void> _fetchTokenAndData() async {
     print('🔍 [HomeScreenJobSeeker] Fetching token...');
     final t = await CacheHelper.getData('token');
     print(
@@ -45,15 +62,63 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
       setState(() => token = t);
       print('🔍 [HomeScreenJobSeeker] Calling getFeed with token...');
       feedCubit.getFeed(t);
+      print('🔍 [HomeScreenJobSeeker] Calling getProfile with token...');
+      profileCubit.getProfile(t);
     } else {
       print('🔍 [HomeScreenJobSeeker] No token found!');
     }
+  }
+
+  // Helper method to get like status for a post
+  bool _getPostLikeStatus(Post post) {
+    if (post.id == null) return false;
+
+    // If we have a local status, use it
+    if (_postLikeStatus.containsKey(post.id)) {
+      return _postLikeStatus[post.id]!;
+    }
+
+    // Otherwise, calculate from API data
+    final apiLikeStatus = post.reacts?.any((r) => r.react == 'Love') ?? false;
+    _postLikeStatus[post.id!] = apiLikeStatus; // Cache the initial status
+    return apiLikeStatus;
+  }
+
+  // Helper method to update like status for a post
+  void _updatePostLikeStatus(String postId, bool isLiked) {
+    setState(() {
+      _postLikeStatus[postId] = isLiked;
+    });
+  }
+
+  // Helper method to get like count for a post
+  int _getPostLikeCount(Post post) {
+    if (post.id == null) return 0;
+
+    // If we have a local count, use it
+    if (_postLikeCounts.containsKey(post.id)) {
+      return _postLikeCounts[post.id]!;
+    }
+
+    // Otherwise, use the API data
+    final apiLikeCount = post.reacts?.length ?? 0;
+    _postLikeCounts[post.id!] = apiLikeCount; // Cache the initial count
+    return apiLikeCount;
+  }
+
+  // Helper method to update like count for a post
+  void _updatePostLikeCount(String postId, int newCount) {
+    setState(() {
+      _postLikeCounts[postId] = newCount;
+    });
   }
 
   @override
   void dispose() {
     feedCubit.close();
     commentCubit.close();
+    likeCubit.close();
+    profileCubit.close();
     super.dispose();
   }
 
@@ -63,523 +128,327 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
       providers: [
         BlocProvider.value(value: feedCubit),
         BlocProvider.value(value: commentCubit),
+        BlocProvider.value(value: likeCubit),
+        BlocProvider.value(value: profileCubit),
       ],
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: BlocBuilder<FeedCubit, FeedState>(
-            builder: (context, state) {
-              if (state is FeedLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is FeedLoaded) {
-                final posts = state.feedResponse.data;
-                if (posts.isEmpty) {
-                  return const Center(child: Text('No posts found.'));
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    final post = posts[index].post;
-                    final likeCount = post.reacts?.length ?? 0;
-                    final commentCount = post.comments?.length ?? 0;
-                    final isLiked =
-                        post.reacts?.any((r) => r.react == 'Love') ?? false;
-                    return feed_post.PostCard(
-                      post: post,
-                      isLiked: isLiked,
-                      likeCount: likeCount,
-                      commentCount: commentCount,
-                      onLike: () {
-                        if (token != null && post.id != null) {
-                          feedCubit.likeOrDislikePost(
-                            token!,
-                            post.id!,
-                            isLiked ? 'None' : 'Love',
-                          );
-                        }
-                      },
-                      onComment: () {
-                        if (token != null && post.id != null) {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20),
-                              ),
+          child: Column(
+            children: [
+              // Home Header
+              BlocBuilder<ProfileCubit, ProfileState>(
+                builder: (context, profileState) {
+                  if (profileState is ProfileLoading) {
+                    return const HomeHeaderSkeleton();
+                  } else if (profileState is ProfileLoaded) {
+                    return HomeHeader(
+                      firstName: profileState.profile.firstName,
+                      lastName: profileState.profile.lastName,
+                      profilePicture:
+                          profileState.profile.profilePicture!.secureUrl,
+                    );
+                  } else if (profileState is ProfileError) {
+                    return Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        'Error loading profile: ${profileState.message}',
+                      ),
+                    );
+                  }
+                  return const HomeHeaderSkeleton();
+                },
+              ),
+              const SizedBox(height: 10),
+
+              // Write Post Text Field
+
+              // ListView of Posts
+              Expanded(
+                child: BlocListener<LikeCubit, LikeState>(
+                  listener: (context, likeState) {
+                    if (likeState is LikeSuccess) {
+                      // API call succeeded, clear tracking variables
+                      _currentLikeOperationPostId = null;
+                      _previousLikeStatus = null;
+                      _previousLikeCount = null;
+                    } else if (likeState is LikeError) {
+                      // If the API call failed, revert the local state
+                      if (_currentLikeOperationPostId != null &&
+                          _previousLikeStatus != null &&
+                          _previousLikeCount != null) {
+                        // Revert the like status and count
+                        _updatePostLikeStatus(
+                          _currentLikeOperationPostId!,
+                          _previousLikeStatus!,
+                        );
+                        _updatePostLikeCount(
+                          _currentLikeOperationPostId!,
+                          _previousLikeCount!,
+                        );
+
+                        // Clear tracking variables
+                        _currentLikeOperationPostId = null;
+                        _previousLikeStatus = null;
+                        _previousLikeCount = null;
+                      }
+
+                      // Show error message
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error: ${likeState.message}'),
+                          backgroundColor: Colors.red,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                  child: BlocBuilder<FeedCubit, FeedState>(
+                    builder: (context, state) {
+                      if (state is FeedLoading) {
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            if (token != null) {
+                              feedCubit.getFeed(token!);
+                              profileCubit.getProfile(token!);
+                            }
+                          },
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
                             ),
-                            builder:
-                                (context) => BlocProvider.value(
-                                  value: commentCubit,
-                                  child: CommentBottomSheet(
-                                    postId: post.id!,
-                                    token: token!,
+                            itemCount:
+                                6, // +1 for write post skeleton, +5 for post skeletons
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return const WritePostSkeleton();
+                              }
+                              return const PostCardSkeleton();
+                            },
+                          ),
+                        );
+                      } else if (state is FeedLoaded) {
+                        final posts = state.feedResponse.data;
+
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            if (token != null) {
+                              feedCubit.getFeed(token!);
+                              profileCubit.getProfile(token!);
+                            }
+                          },
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
+                            itemCount:
+                                posts.length + 1, // +1 for the write post item
+                            itemBuilder: (context, index) {
+                              // First item is the write post GestureDetector
+                              if (index == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 20.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => const CreatePost(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: Colors.black,
+                                          width: 0.5,
+                                        ),
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      child: Text(
+                                        "Write a post",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              // Regular posts (index - 1 because we added the write post item)
+                              final post = posts[index - 1].post;
+                              final likeCount = _getPostLikeCount(post);
+                              final commentCount = post.comments?.length ?? 0;
+                              final isLiked = _getPostLikeStatus(post);
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: feed_post.PostCard(
+                                  post: post,
+                                  isLiked: isLiked,
+                                  likeCount: likeCount,
+                                  commentCount: commentCount,
+                                  onLike: () {
+                                    if (token != null && post.id != null) {
+                                      final currentLikeStatus =
+                                          _getPostLikeStatus(post);
+                                      final newLikeStatus = !currentLikeStatus;
+                                      final currentLikeCount =
+                                          _getPostLikeCount(post);
+
+                                      // Store previous state for error handling
+                                      final previousLikeStatus =
+                                          currentLikeStatus;
+                                      final previousLikeCount =
+                                          currentLikeCount;
+
+                                      // Track current operation
+                                      _currentLikeOperationPostId = post.id;
+                                      _previousLikeStatus = previousLikeStatus;
+                                      _previousLikeCount = previousLikeCount;
+
+                                      // Update local state immediately for instant UI feedback
+                                      _updatePostLikeStatus(
+                                        post.id!,
+                                        newLikeStatus,
+                                      );
+
+                                      // Update like count
+                                      final newLikeCount =
+                                          newLikeStatus
+                                              ? currentLikeCount + 1
+                                              : currentLikeCount - 1;
+                                      _updatePostLikeCount(
+                                        post.id!,
+                                        newLikeCount,
+                                      );
+
+                                      // Call the API
+                                      likeCubit.likeOrDislikePost(
+                                        token!,
+                                        post.id!,
+                                        newLikeStatus ? 'Love' : 'Like',
+                                      );
+                                    }
+                                  },
+                                  onComment: () {
+                                    if (token != null && post.id != null) {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(50),
+                                          ),
+                                        ),
+                                        builder:
+                                            (context) => BlocProvider.value(
+                                              value: commentCubit,
+                                              child: CommentBottomSheet(
+                                                postId: post.id!,
+                                                token: token!,
+                                              ),
+                                            ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      } else if (state is FeedError) {
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            if (token != null) {
+                              feedCubit.getFeed(token!);
+                              profileCubit.getProfile(token!);
+                            }
+                          },
+                          child: ListView(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.error_outline,
+                                        size: 64,
+                                        color: Colors.grey[400],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Error loading feed',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.grey[600],
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        state.message,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[500],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Pull down to refresh',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[400],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                          );
-                        }
-                      },
-                    );
-                  },
-                );
-              } else if (state is FeedError) {
-                return Center(child: Text(state.message));
-              }
-              return const Center(child: Text('No feed data.'));
-            },
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProfileCubit, ProfileState>(
-      builder: (context, state) {
-        if (state is ProfileLoading) {
-          return _buildSkeletonLoading();
-        } else if (state is ProfileLoaded) {
-          return _buildContent(state);
-        } else if (state is ProfileError) {
-          return Center(child: Text(state.message));
-        } else {
-          return const Center(child: Text('Initial State'));
-        }
-      },
-    );
-  }
-
-  Widget _buildContent(ProfileLoaded state) {
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
-      children: [
-        HomeHeader(
-          firstName: state.profile.firstName,
-          lastName: state.profile.lastName,
-          profilePicture: state.profile.profilePicture!.secureUrl,
-        ),
-        const SizedBox(height: 10),
-        const PostJobButton(),
-        const SizedBox(height: 10),
-        const MediaButtons(),
-        const SizedBox(height: 20),
-        Container(height: 1, width: double.infinity, color: Color(0xFFFF804B)),
-        const SizedBox(height: 20),
-        SizedBox(
-          height: 97,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: const [
-              JobCard(
-                jobTitle: 'Web Designer',
-                company: 'hp',
-                jobType: 'Part-time',
-                location: 'Egypt, Cairo',
-                logoPath: 'assets/logo.png',
-                onClosePressed: null,
-              ),
-              SizedBox(width: 10),
-              JobCard(
-                jobTitle: 'Graphic Designer',
-                company: 'Dell',
-                jobType: 'Full-time',
-                location: 'Egypt, Alexandria',
-                logoPath: 'assets/logo.png',
-                onClosePressed: null,
-              ),
-              SizedBox(width: 10),
-              JobCard(
-                jobTitle: 'UI/UX Designer',
-                company: 'Google',
-                jobType: 'Contract',
-                location: 'Egypt, Giza',
-                logoPath: 'assets/logo.png',
-                onClosePressed: null,
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      // Show skeletons for initial state
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          if (token != null) {
+                            feedCubit.getFeed(token!);
+                            profileCubit.getProfile(token!);
+                          }
+                        },
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          itemCount:
+                              6, // +1 for write post skeleton, +5 for post skeletons
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              return const WritePostSkeleton();
+                            }
+                            return const PostCardSkeleton();
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-        const PostCard(
-          jobTitle: 'Mohannad Hossam',
-          company: 'Dell',
-          jobType: 'Full-time',
-          location: 'Egypt, Cairo',
-          description: """SOLID PRINCIPLES IN SOFTWARE DEVELOPMENT 
-
-These principles establish practices for developing software with considerations for maintaining and extending it as the project grows. Adopting these practices can also help avoid code smells, refactor code, and develop Agile or Adaptive software.
-
-SOLID stands for:
-
-S - Single-responsibility Principle
-O - Open-closed Principle
-L - Liskov Substitution Principle
-I - Interface Segregation Principle
-D - Dependency Inversion Principle
-In this article, you will be introduced to each principle individually to understand how SOLID can help make you a better developer.
-
-Single-Responsibility Principle
-Single-responsibility Principle (SRP) states:
-
-A class should have one and only one reason to change, meaning that a class should have only one job.
-
-For example, consider an application that takes a collection of shapes—circles and squares—and calculates the sum of the area of all the shapes in the collection.
-
-First, create the shape classes and have the constructors set up the required parameters.
-
-For squares, you will need to know the length of a side:
-""",
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSkeletonLoading() {
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
-      children: [
-        _buildShimmerEffect(height: 100),
-        const SizedBox(height: 10),
-        _buildShimmerEffect(height: 50),
-        const SizedBox(height: 10),
-        _buildShimmerEffect(height: 50),
-        const SizedBox(height: 20),
-        _buildShimmerEffect(height: 1),
-        const SizedBox(height: 20),
-        SizedBox(
-          height: 97,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: List.generate(
-              3,
-              (index) => Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: _buildShimmerEffect(width: 150, height: 97),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        _buildShimmerEffect(height: 200),
-        const SizedBox(height: 20),
-        _buildShimmerEffect(height: 200),
-      ],
-    );
-  }
-
-  Widget _buildShimmerEffect({double? width, double? height}) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(8),
       ),
     );
   }

@@ -2,7 +2,9 @@ import 'package:aspirehire/features/auth/company_register/state_management/compa
 import 'package:aspirehire/features/community/state_management/comment_cubit.dart';
 import 'package:aspirehire/features/community/state_management/follower_cubit.dart';
 import 'package:aspirehire/features/community/state_management/friend_cubit.dart';
+import 'package:aspirehire/features/create_post/state_management/create_post_cubit.dart';
 import 'package:aspirehire/features/feed/state_management/feed_cubit.dart';
+import 'package:aspirehire/features/feed/state_management/like_cubit.dart';
 import 'package:aspirehire/features/people_search/state_management/search_users_cubit.dart';
 import 'package:aspirehire/features/profile/state_management/profile_cubit.dart';
 import 'package:aspirehire/features/skill_test/state_management/skill_test_cubit.dart';
@@ -34,6 +36,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => SkillTestCubit()),
         BlocProvider(create: (context) => FeedCubit()),
         BlocProvider(create: (context) => CommentCubit()),
+        BlocProvider(create: (context) => LikeCubit()),
+        BlocProvider(create: (context) => ProfileCubit()),
+        BlocProvider(create: (context) => CreatePostCubit()),
       ],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),

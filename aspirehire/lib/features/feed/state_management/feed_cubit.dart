@@ -66,27 +66,4 @@ class FeedCubit extends Cubit<FeedState> {
       emit(FeedError(message));
     }
   }
-
-  Future<void> likeOrDislikePost(
-    String token,
-    String postId,
-    String react,
-  ) async {
-    print('🔍 [FeedCubit] Like/Dislike post: $postId with react: $react');
-    emit(FeedLoading());
-    try {
-      final request = {'react': react};
-      final response = await _dio.post(
-        ApiEndpoints.likeOrDislikePost.replaceAll(':postId', postId),
-        data: request,
-        options: Options(headers: {'Authorization': token}),
-      );
-      print('🔍 [FeedCubit] Like/Dislike response: ${response.data}');
-      // Optionally, refetch the feed to update UI
-      await getFeed(token);
-    } on DioException catch (e) {
-      print('🔍 [FeedCubit] Like/Dislike error: ${e.message}');
-      emit(FeedError(e.message ?? 'An error occurred'));
-    }
-  }
 }

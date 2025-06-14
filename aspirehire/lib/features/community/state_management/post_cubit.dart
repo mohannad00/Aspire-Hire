@@ -16,10 +16,12 @@ class PostCubit extends Cubit<PostState> {
     try {
       FormData formData = FormData.fromMap(request.toJson());
       if (request.attachment != null) {
-        formData.files.add(MapEntry(
-          'attachment',
-          await MultipartFile.fromFile(request.attachment!),
-        ));
+        formData.files.add(
+          MapEntry(
+            'attachment',
+            await MultipartFile.fromFile(request.attachment!),
+          ),
+        );
       }
       final response = await _dio.post(
         ApiEndpoints.createPost,
@@ -56,9 +58,10 @@ class PostCubit extends Cubit<PostState> {
         ApiEndpoints.getAllLikesOfPost.replaceAll(':postId', postId),
         options: Options(headers: {'Authorization': token}),
       );
-      final reacts = (response.data['data']['reacts'] as List<dynamic>)
-          .map((item) => React.fromJson(item as Map<String, dynamic>))
-          .toList();
+      final reacts =
+          (response.data['data']['reacts'] as List<dynamic>)
+              .map((item) => React.fromJson(item as Map<String, dynamic>))
+              .toList();
       emit(PostLikesLoaded(reacts));
     } on DioException catch (e) {
       emit(PostError(e.message ?? 'An error occurred'));
@@ -73,9 +76,10 @@ class PostCubit extends Cubit<PostState> {
         ApiEndpoints.getArchivedPosts,
         options: Options(headers: {'Authorization': token}),
       );
-      final posts = (response.data['data']['posts'] as List<dynamic>)
-          .map((item) => Post.fromJson(item as Map<String, dynamic>))
-          .toList();
+      final posts =
+          (response.data['data']['posts'] as List<dynamic>)
+              .map((item) => Post.fromJson(item as Map<String, dynamic>))
+              .toList();
       emit(ArchivedPostsLoaded(posts));
     } on DioException catch (e) {
       emit(PostError(e.message ?? 'An error occurred'));
@@ -113,15 +117,21 @@ class PostCubit extends Cubit<PostState> {
   }
 
   // Update Post
-  Future<void> updatePost(String token, String postId, UpdatePostRequest request) async {
+  Future<void> updatePost(
+    String token,
+    String postId,
+    UpdatePostRequest request,
+  ) async {
     emit(PostLoading());
     try {
       FormData formData = FormData.fromMap(request.toJson());
       if (request.attachment != null) {
-        formData.files.add(MapEntry(
-          'attachment',
-          await MultipartFile.fromFile(request.attachment!),
-        ));
+        formData.files.add(
+          MapEntry(
+            'attachment',
+            await MultipartFile.fromFile(request.attachment!),
+          ),
+        );
       }
       final response = await _dio.put(
         ApiEndpoints.updatePost.replaceAll(':postId', postId),
@@ -136,7 +146,11 @@ class PostCubit extends Cubit<PostState> {
   }
 
   // Like or Dislike Post
-  Future<void> likeOrDislikePost(String token, String postId, String react) async {
+  Future<void> likeOrDislikePost(
+    String token,
+    String postId,
+    String react,
+  ) async {
     emit(PostLoading());
     try {
       final request = LikePostRequest()..react = react;

@@ -83,32 +83,89 @@ class _EditProfileState extends State<EditProfile> {
 
   Future<void> _pickImage() async {
     try {
-      print('Starting image picker...');
-      final XFile? image = await _picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
-        maxWidth: 512,
-        maxHeight: 512,
-      );
+      // Try using pickMedia first to preserve original format
+      final XFile? media = await _picker.pickMedia(imageQuality: 100);
 
-      if (image != null) {
-        print('Image selected: ${image.path}');
-        print('Image name: ${image.name}');
-        print('Image size: ${await File(image.path).length()} bytes');
+      if (media != null && mounted) {
+        // Check if the image format is allowed
+        final String filePath = media.path;
+        final String extension = filePath.split('.').last.toLowerCase();
+
+        // Debug: Print file information
+        // ignore: avoid_print
+        print('🟢 [EditProfile] Original file path: $filePath');
+        // ignore: avoid_print
+        print('🟢 [EditProfile] Detected extension: $extension');
+
+        // List of allowed image formats
+        const List<String> allowedFormats = [
+          'jpg',
+          'jpeg',
+          'png',
+          'gif',
+          'webp',
+        ];
+
+        if (!allowedFormats.contains(extension)) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Image format not supported. Please select a JPG, PNG, GIF, or WebP image.',
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+          return;
+        }
+
+        // Check file size (max 10MB)
+        final File file = File(filePath);
+        final int fileSizeInBytes = await file.length();
+        final double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+
+        // Debug: Print file size
+        // ignore: avoid_print
+        print(
+          '🟢 [EditProfile] File size: ${fileSizeInMB.toStringAsFixed(2)} MB',
+        );
+
+        if (fileSizeInMB > 10) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Image file is too large. Please select an image smaller than 10MB.',
+                ),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+          return;
+        }
 
         setState(() {
-          _selectedImage = File(image.path);
+          _selectedImage = File(media.path);
         });
+
+        // Debug: Print final file path
+        // ignore: avoid_print
+        print(
+          '🟢 [EditProfile] Final selected image path: ${_selectedImage!.path}',
+        );
 
         // Automatically upload the selected image
         if (_token != null) {
-          print('Token available, calling updateProfilePicture...');
+          print(
+            '🟢 [EditProfile] Token available, calling updateProfilePicture...',
+          );
           context.read<ProfileCubit>().updateProfilePicture(
             _token!,
-            image.path,
+            media.path,
           );
         } else {
-          print('Token is null!');
+          print('🔴 [EditProfile] Token is null!');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -118,46 +175,13 @@ class _EditProfileState extends State<EditProfile> {
             ),
           );
         }
-      } else {
-        print('No image selected');
       }
-    } on PlatformException catch (e) {
-      print('PlatformException: ${e.code} - ${e.message}');
-      String errorMessage = 'Failed to pick image';
-
-      switch (e.code) {
-        case 'channel-error':
-          errorMessage =
-              'Image picker is not available. Please try again or restart the app.';
-          break;
-        case 'permission-denied':
-          errorMessage =
-              'Permission denied. Please grant photo library access in settings.';
-          break;
-        case 'camera-access-denied':
-          errorMessage =
-              'Camera access denied. Please grant camera access in settings.';
-          break;
-        default:
-          errorMessage = 'Error picking image: ${e.message}';
-      }
-
-      print(errorMessage);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 5),
-        ),
-      );
     } catch (e) {
-      print('Error picking image: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error picking image: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
+      }
     }
   }
 

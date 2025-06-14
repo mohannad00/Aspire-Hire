@@ -221,7 +221,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
 
   Widget _buildSkillCard(BuildContext context, Skill skill) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 100),
       curve: Curves.easeInOut,
       child: Material(
         color: Colors.transparent,

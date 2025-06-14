@@ -10,11 +10,11 @@ class Profile {
   final String dob;
   final String gender;
   final List<Skill> skills;
-  final List<String> friendRequestsSentIds; // Added
-  final List<dynamic> education; // Added, using dynamic for flexibility
-  final List<dynamic> experience; // Added, using dynamic for flexibility
-  final List<dynamic> jobApplications; // Added, using dynamic for flexibility
-  final List<dynamic> jobPosts; // Added, using dynamic for flexibility
+  final List<String> friendRequestsSentIds;
+  final List<Education> education;
+  final List<Experience> experience;
+  final List<dynamic> jobApplications;
+  final List<dynamic> jobPosts;
 
   Profile({
     required this.profileId,
@@ -58,8 +58,14 @@ class Profile {
       friendRequestsSentIds: List<String>.from(
         json['friendRequestsSentIds'] ?? [],
       ),
-      education: json['education'] ?? [],
-      experience: json['experience'] ?? [],
+      education: (json['education'] as List<dynamic>?)
+              ?.map((eduJson) => Education.fromJson(eduJson))
+              .toList() ??
+          [],
+      experience: (json['experience'] as List<dynamic>?)
+              ?.map((expJson) => Experience.fromJson(expJson))
+              .toList() ??
+          [],
       jobApplications: json['jobApplications'] ?? [],
       jobPosts: json['jobPosts'] ?? [],
     );
@@ -97,5 +103,90 @@ class Skill {
 
   Map<String, dynamic> toJson() {
     return {'skill': skill, 'verified': verified, '_id': id};
+  }
+}
+
+class Education {
+  final String? degree;
+  final String? institution;
+  final String? location;
+  final String? id;
+
+  Education({
+    this.degree,
+    this.institution,
+    this.location,
+    this.id,
+  });
+
+  factory Education.fromJson(Map<String, dynamic> json) {
+    return Education(
+      degree: json['degree'],
+      institution: json['institution'],
+      location: json['location'],
+      id: json['_id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (degree != null) 'degree': degree,
+      if (institution != null) 'institution': institution,
+      if (location != null) 'location': location,
+      if (id != null) '_id': id,
+    };
+  }
+}
+
+class Experience {
+  final String? title;
+  final String? company;
+  final ExperienceDuration? duration;
+  final String? id;
+
+  Experience({
+    this.title,
+    this.company,
+    this.duration,
+    this.id,
+  });
+
+  factory Experience.fromJson(Map<String, dynamic> json) {
+    return Experience(
+      title: json['title'],
+      company: json['company'],
+      duration: json['duration'] != null ? ExperienceDuration.fromJson(json['duration']) : null,
+      id: json['_id'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (title != null) 'title': title,
+      if (company != null) 'company': company,
+      if (duration != null) 'duration': duration!.toJson(),
+      if (id != null) '_id': id,
+    };
+  }
+}
+
+class ExperienceDuration {
+  final String from;
+  final String to;
+
+  ExperienceDuration({required this.from, required this.to});
+
+  factory ExperienceDuration.fromJson(Map<String, dynamic> json) {
+    return ExperienceDuration(
+      from: json['from'],
+      to: json['to'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'from': from,
+      'to': to,
+    };
   }
 }
