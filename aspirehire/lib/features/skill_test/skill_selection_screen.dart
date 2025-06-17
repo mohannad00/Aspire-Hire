@@ -68,7 +68,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
             ),
             child: Column(
               children: [
-                Icon(
+                const Icon(
                   CupertinoIcons.checkmark_seal_fill,
                   size: 60,
                   color: AppColors.primary,
@@ -237,15 +237,15 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        title: Row(
+                        title: const Row(
                           children: [
                             Icon(
                               CupertinoIcons.checkmark_seal_fill,
                               color: Colors.green,
                               size: 32,
                             ),
-                            const SizedBox(width: 12),
-                            const Text(
+                            SizedBox(width: 12),
+                            Text(
                               'Already Verified!',
                               style: TextStyle(
                                 color: Colors.green,
@@ -268,7 +268,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                                 color: Colors.green.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: Row(
+                              child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(
@@ -276,7 +276,7 @@ class _SkillSelectionScreenState extends State<SkillSelectionScreen> {
                                     color: Colors.green,
                                     size: 20,
                                   ),
-                                  const SizedBox(width: 8),
+                                  SizedBox(width: 8),
                                   Text(
                                     'Skill Verified',
                                     style: TextStyle(

@@ -16,8 +16,9 @@ class EditExperience extends StatefulWidget {
 }
 
 class _EditExperienceState extends State<EditExperience> {
-  List<String> _experience = [];
+  List<Experience> _experience = [];
   String? _token;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -27,8 +28,6 @@ class _EditExperienceState extends State<EditExperience> {
 
   Future<void> _loadTokenAndInitializeData() async {
     _token = await CacheHelper.getData('token');
-
-    // Initialize with current profile data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final profileState = context.read<ProfileCubit>().state;
       if (profileState is ProfileLoaded ||
@@ -43,16 +42,33 @@ class _EditExperienceState extends State<EditExperience> {
                 : profileState is ProfilePictureUpdated
                 ? profileState.profile
                 : (profileState as ResumeUploaded).profile);
-
-        _experience = List.from(profile.experience.map((e) => e.toString()));
+        setState(() {
+          _experience = List<Experience>.from(profile.experience);
+        });
       }
     });
   }
 
-  void _saveExperience() {
+  void _saveExperience() async {
     if (_token != null) {
-      final request = UpdateProfileRequest(experience: _experience);
-      context.read<ProfileCubit>().updateProfile(_token!, request);
+      setState(() => _loading = true);
+      final request = UpdateProfileRequest(
+        experience:
+            _experience
+                .map(
+                  (e) => {
+                    'title': e.title,
+                    'company': e.company,
+                    'duration': {
+                      'from': e.duration?.from,
+                      'to': e.duration?.to,
+                    },
+                  },
+                )
+                .toList(),
+      );
+      await context.read<ProfileCubit>().updateProfile(_token!, request);
+      setState(() => _loading = false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -62,66 +78,244 @@ class _EditExperienceState extends State<EditExperience> {
     }
   }
 
-  void _addExperience() {
-    final experienceController = TextEditingController();
-    showDialog(
+  void _showExperienceForm({Experience? initial, int? index}) {
+    final titleOptions = [
+      'AI Engineer',
+      'Backend Engineer',
+      'Frontend Engineer',
+      'FullStack Engineer',
+      'Data Scientist',
+      'DevOps Engineer',
+      'Software Architect',
+      'QA Engineer',
+      'System Administrator',
+      'Network Engineer',
+      'Security Engineer',
+      'Cloud Engineer',
+    ];
+    String? selectedTitle =
+        initial?.title != null && titleOptions.contains(initial!.title)
+            ? initial!.title
+            : null;
+    final companyController = TextEditingController(
+      text: initial?.company ?? '',
+    );
+    DateTime? fromDate =
+        initial?.duration?.from != null
+            ? DateTime.parse(initial!.duration!.from)
+            : null;
+    DateTime? toDate =
+        initial?.duration?.to != null
+            ? DateTime.parse(initial!.duration!.to)
+            : null;
+    final formKey = GlobalKey<FormState>();
+    showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       builder:
-          (context) => AlertDialog(
-            title: const Text('Add Experience'),
-            content: TextField(
-              controller: experienceController,
-              decoration: const InputDecoration(
-                hintText:
-                    'Enter experience details (e.g., Senior Developer - Company Name)',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-              autofocus: true,
+          (context) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: 24,
+              right: 24,
+              top: 24,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () {
-                  if (experienceController.text.isNotEmpty) {
-                    setState(() {
-                      _experience.add(experienceController.text);
-                    });
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Add'),
-              ),
-            ],
+            child: StatefulBuilder(
+              builder:
+                  (context, setModalState) => Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          initial == null
+                              ? 'Add Experience'
+                              : 'Edit Experience',
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        DropdownButtonFormField<String>(
+                          value: selectedTitle,
+                          items:
+                              titleOptions
+                                  .map(
+                                    (title) => DropdownMenuItem(
+                                      value: title,
+                                      child: Text(title),
+                                    ),
+                                  )
+                                  .toList(),
+                          onChanged:
+                              (val) => setModalState(() => selectedTitle = val),
+                          decoration: const InputDecoration(
+                            labelText: 'Title',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator:
+                              (v) =>
+                                  v == null || v.trim().isEmpty
+                                      ? 'Title required'
+                                      : null,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: companyController,
+                          decoration: const InputDecoration(
+                            labelText: 'Company',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator:
+                              (v) =>
+                                  v == null || v.trim().isEmpty
+                                      ? 'Company required'
+                                      : null,
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: fromDate ?? DateTime.now(),
+                                    firstDate: DateTime(1970),
+                                    lastDate: DateTime(2100),
+                                  );
+                                  if (picked != null)
+                                    setModalState(() => fromDate = picked);
+                                },
+                                child: AbsorbPointer(
+                                  child: TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: 'From',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    controller: TextEditingController(
+                                      text:
+                                          fromDate != null
+                                              ? fromDate!
+                                                  .toIso8601String()
+                                                  .split('T')
+                                                  .first
+                                              : '',
+                                    ),
+                                    validator:
+                                        (v) =>
+                                            v == null || v.isEmpty
+                                                ? 'Required'
+                                                : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  final picked = await showDatePicker(
+                                    context: context,
+                                    initialDate: toDate ?? DateTime.now(),
+                                    firstDate: DateTime(1970),
+                                    lastDate: DateTime(2100),
+                                  );
+                                  if (picked != null)
+                                    setModalState(() => toDate = picked);
+                                },
+                                child: AbsorbPointer(
+                                  child: TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: 'To',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    controller: TextEditingController(
+                                      text:
+                                          toDate != null
+                                              ? toDate!
+                                                  .toIso8601String()
+                                                  .split('T')
+                                                  .first
+                                              : '',
+                                    ),
+                                    validator:
+                                        (v) =>
+                                            v == null || v.isEmpty
+                                                ? 'Required'
+                                                : null,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate() &&
+                                  fromDate != null &&
+                                  toDate != null) {
+                                final newExp = Experience(
+                                  title: selectedTitle,
+                                  company: companyController.text.trim(),
+                                  duration: ExperienceDuration(
+                                    from:
+                                        fromDate!
+                                            .toIso8601String()
+                                            .split('T')
+                                            .first,
+                                    to:
+                                        toDate!
+                                            .toIso8601String()
+                                            .split('T')
+                                            .first,
+                                  ),
+                                  id: initial?.id,
+                                );
+                                setState(() {
+                                  if (index != null) {
+                                    _experience[index] = newExp;
+                                  } else {
+                                    _experience.add(newExp);
+                                  }
+                                });
+                                Navigator.pop(context);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(initial == null ? 'Add' : 'Save'),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                      ],
+                    ),
+                  ),
+            ),
           ),
     );
   }
 
-  void _removeExperience(String experience) {
-    setState(() {
-      _experience.remove(experience);
-    });
-  }
-
-  void _editExperience(String oldExperience) {
-    final experienceController = TextEditingController(text: oldExperience);
+  void _removeExperience(int index) {
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Edit Experience'),
-            content: TextField(
-              controller: experienceController,
-              decoration: const InputDecoration(
-                hintText: 'Enter experience details',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-              autofocus: true,
-            ),
+            title: const Text('Remove Experience'),
+            content: const Text('Are you sure you want to remove this entry?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -129,17 +323,15 @@ class _EditExperienceState extends State<EditExperience> {
               ),
               TextButton(
                 onPressed: () {
-                  if (experienceController.text.isNotEmpty) {
-                    setState(() {
-                      final index = _experience.indexOf(oldExperience);
-                      if (index != -1) {
-                        _experience[index] = experienceController.text;
-                      }
-                    });
-                    Navigator.pop(context);
-                  }
+                  setState(() {
+                    _experience.removeAt(index);
+                  });
+                  Navigator.pop(context);
                 },
-                child: const Text('Save'),
+                child: const Text(
+                  'Remove',
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
             ],
           ),
@@ -161,7 +353,10 @@ class _EditExperienceState extends State<EditExperience> {
         ),
         title: const Text(
           'Edit Experience',
-          style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: BlocListener<ProfileCubit, ProfileState>(
@@ -185,117 +380,112 @@ class _EditExperienceState extends State<EditExperience> {
         },
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header
-                  const Text(
-                    'Manage your work experience and professional background',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  // Experience Section
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            return Stack(
+              children: [
+                ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _experience.length,
+                  itemBuilder: (context, index) {
+                    final exp = _experience[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ListTile(
+                        title: Text(exp.title ?? ''),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Work Experience',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            if (exp.company != null)
+                              Text(
+                                exp.company!,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            if (exp.duration != null)
+                              Text(
+                                '${exp.duration!.from} - ${exp.duration!.to}',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.edit,
+                                color: AppColors.primary,
+                              ),
+                              onPressed:
+                                  () => _showExperienceForm(
+                                    initial: exp,
+                                    index: index,
+                                  ),
                             ),
                             IconButton(
-                              onPressed: _addExperience,
-                              icon: const Icon(Icons.add_circle, color: AppColors.primary, size: 28),
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _removeExperience(index),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        
-                        if (_experience.isEmpty)
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(32.0),
-                              child: Text(
-                                'No experience entries yet. Tap the + button to add your work experience.',
-                                style: TextStyle(color: Colors.grey, fontSize: 16),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          )
-                        else
-                          ListView.separated(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: _experience.length,
-                            separatorBuilder: (context, index) => const Divider(),
-                            itemBuilder: (context, index) {
-                              final experience = _experience[index];
-                              return ListTile(
-                                leading: const Icon(Icons.work, color: AppColors.primary),
-                                title: Text(
-                                  experience,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit, color: Colors.blue),
-                                      onPressed: () => _editExperience(experience),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red),
-                                      onPressed: () => _removeExperience(experience),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                      ],
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Save Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: state is ProfileLoading ? null : _saveExperience,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
                       ),
-                      child: state is ProfileLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              'Save Experience',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                    ),
+                    );
+                  },
+                ),
+                if (_loading)
+                  Container(
+                    color: Colors.black.withOpacity(0.2),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
-                ],
-              ),
+              ],
             );
           },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showExperienceForm(),
+        backgroundColor: AppColors.primary,
+        icon: const Icon(Icons.add, color: Colors.white),
+        label: const Text(
+          'Add Experience',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _loading ? null : _saveExperience,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child:
+                _loading
+                    ? const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                    : const Text(
+                      'Save Changes',
+                      style: TextStyle(fontSize: 18),
+                    ),
+          ),
         ),
       ),
     );

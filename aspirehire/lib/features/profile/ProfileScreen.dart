@@ -1,9 +1,9 @@
 import 'package:aspirehire/config/datasources/cache/shared_pref.dart';
 import 'package:aspirehire/core/utils/app_colors.dart';
-import 'package:aspirehire/core/models/GetProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'components/AddLinksScreen.dart';
 import 'state_management/profile_cubit.dart';
 import 'state_management/profile_state.dart';
 import 'EditProfile.dart';
@@ -11,6 +11,8 @@ import 'EditSkills.dart';
 import 'EditEducation.dart';
 import 'EditExperience.dart';
 import '../skill_test/skill_selection_screen.dart';
+import '../../core/models/GetProfile.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -95,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ? state.profile
                         : (state as ResumeUploaded).profile);
                 return ListView(
-                  padding: const EdgeInsets.only(bottom: 20),
+                  padding: const EdgeInsets.only(bottom: 10),
                   children: [
                     ProfileHeader(
                       avatarImage:
@@ -124,11 +126,21 @@ class _ProfileScreenState extends State<ProfileScreen>
                     const SizedBox(height: 20),
                     Center(
                       child: WebLinks(
-                        onAddLinkPressed: () {
-                          // Handle add link logic
+                        github: profile.github,
+                        twitter: profile.twitter,
+                        onAddLinkPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => AddLinksScreen(
+                                    github: profile.github,
+                                    twitter: profile.twitter,
+                                  ),
+                            ),
+                          );
+                          if (result == true) _loadProfile();
                         },
-                        links:
-                            [], // No socialLinks in Profile model; adjust if added later
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -699,77 +711,138 @@ class ProfileInfo extends StatelessWidget {
 }
 
 class WebLinks extends StatelessWidget {
+  final String? github;
+  final String? twitter;
   final VoidCallback onAddLinkPressed;
-  final List<String> links;
 
   const WebLinks({
     super.key,
+    this.github,
+    this.twitter,
     required this.onAddLinkPressed,
-    required this.links,
   });
+
+  void _openWebView(BuildContext context, String url, String title) {
+    final controller =
+        WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..loadRequest(Uri.parse(url));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => Scaffold(
+              backgroundColor: Colors.white,
+              body: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        "We are now on Hiro App",
+                        style: TextStyle(color: Colors.black , fontSize: 16),
+                      ),
+                    ),
+                    Expanded(child: WebViewWidget(controller: controller)),
+                  ],
+                ),
+              ),
+            ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 400,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
+      child: Card(
         color: Colors.white,
-        border: Border.all(color: Colors.black, width: 0.5),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        elevation: 2,
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "On the web",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'On the web',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Container(height: 2, width: 110, color: Colors.orange),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 5),
-                  Container(height: 1, width: 105, color: Colors.orange),
+                  ElevatedButton.icon(
+                    onPressed: onAddLinkPressed,
+                    icon: const Icon(Icons.add_link),
+                    label: const Text('Add Link'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF013E5D),
+                      foregroundColor: Colors.white,
+                      shape: StadiumBorder(),
+                    ),
+                  ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: onAddLinkPressed,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 236, 246, 251),
-                  foregroundColor: const Color(0xFF013E5D),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                ),
-                child: const Text("+ Add Link"),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  if (github?.isNotEmpty == true)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: ElevatedButton.icon(
+                        onPressed:
+                            () => _openWebView(context, github!, 'GitHub'),
+                        icon: const Icon(Icons.code, color: Colors.white),
+                        label: const Text('GitHub'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF24292F),
+                          foregroundColor: Colors.white,
+                          shape: StadiumBorder(),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (twitter?.isNotEmpty == true)
+                    ElevatedButton.icon(
+                      onPressed: () => _openWebView(context, twitter!, 'X'),
+                      icon: const Icon(
+                        Icons.alternate_email,
+                        color: Colors.white,
+                      ),
+                      label: const Text('X'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1DA1F2),
+                        foregroundColor: Colors.white,
+                        shape: StadiumBorder(),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
-          if (links.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children:
-                  links.map((link) {
-                    String iconPath = 'assets/world.png';
-                    if (link.contains('linkedin')) {
-                      iconPath = 'assets/Clip path group.png';
-                    } else if (link.contains('twitter') ||
-                        link.contains('x.com')) {
-                      iconPath = 'assets/twitter.png';
-                    }
-                    return IconButton(
-                      icon: Image.asset(iconPath, width: 24, height: 24),
-                      onPressed: () {
-                        // Open link (use url_launcher package)
-                      },
-                    );
-                  }).toList(),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }

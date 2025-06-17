@@ -6,9 +6,12 @@ import 'package:aspirehire/core/utils/app_colors.dart';
 import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 import 'package:aspirehire/features/profile/ProfileScreen.dart';
+import '../applications/ui/applications_screen.dart';
 import '../community/test.dart';
 import '../my_applications/myApplicationScreen.dart';
 import 'dart:async';
+
+import '../profile/components/MenuScreen.dart';
 
 class HomeNavBar extends StatefulWidget {
   const HomeNavBar({super.key});
@@ -32,7 +35,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
     JobSearch(),
     CommunityScreenWrapper(),
     ProfileScreen(),
-    ApplyJob(),
+    MenuScreen(),
   ];
 
   @override

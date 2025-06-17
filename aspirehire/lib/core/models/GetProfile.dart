@@ -15,6 +15,8 @@ class Profile {
   final List<Experience> experience;
   final List<dynamic> jobApplications;
   final List<dynamic> jobPosts;
+  final String? github;
+  final String? twitter;
 
   Profile({
     required this.profileId,
@@ -33,6 +35,8 @@ class Profile {
     required this.experience,
     required this.jobApplications,
     required this.jobPosts,
+    this.github,
+    this.twitter,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -58,16 +62,20 @@ class Profile {
       friendRequestsSentIds: List<String>.from(
         json['friendRequestsSentIds'] ?? [],
       ),
-      education: (json['education'] as List<dynamic>?)
+      education:
+          (json['education'] as List<dynamic>?)
               ?.map((eduJson) => Education.fromJson(eduJson))
               .toList() ??
           [],
-      experience: (json['experience'] as List<dynamic>?)
+      experience:
+          (json['experience'] as List<dynamic>?)
               ?.map((expJson) => Experience.fromJson(expJson))
               .toList() ??
           [],
       jobApplications: json['jobApplications'] ?? [],
       jobPosts: json['jobPosts'] ?? [],
+      github: json['github'],
+      twitter: json['twitter'] ?? json['x'],
     );
   }
 }
@@ -112,12 +120,7 @@ class Education {
   final String? location;
   final String? id;
 
-  Education({
-    this.degree,
-    this.institution,
-    this.location,
-    this.id,
-  });
+  Education({this.degree, this.institution, this.location, this.id});
 
   factory Education.fromJson(Map<String, dynamic> json) {
     return Education(
@@ -144,18 +147,16 @@ class Experience {
   final ExperienceDuration? duration;
   final String? id;
 
-  Experience({
-    this.title,
-    this.company,
-    this.duration,
-    this.id,
-  });
+  Experience({this.title, this.company, this.duration, this.id});
 
   factory Experience.fromJson(Map<String, dynamic> json) {
     return Experience(
       title: json['title'],
       company: json['company'],
-      duration: json['duration'] != null ? ExperienceDuration.fromJson(json['duration']) : null,
+      duration:
+          json['duration'] != null
+              ? ExperienceDuration.fromJson(json['duration'])
+              : null,
       id: json['_id'],
     );
   }
@@ -177,16 +178,10 @@ class ExperienceDuration {
   ExperienceDuration({required this.from, required this.to});
 
   factory ExperienceDuration.fromJson(Map<String, dynamic> json) {
-    return ExperienceDuration(
-      from: json['from'],
-      to: json['to'],
-    );
+    return ExperienceDuration(from: json['from'], to: json['to']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'from': from,
-      'to': to,
-    };
+    return {'from': from, 'to': to};
   }
 }

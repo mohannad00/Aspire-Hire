@@ -15,6 +15,7 @@ import '../feed/components/PostCard.dart' as feed_post;
 import '../feed/components/PostCardSkeleton.dart';
 import '../feed/components/CommentBottomSheet.dart';
 import '../community/state_management/comment_cubit.dart';
+import '../community/state_management/comment_state.dart';
 import '../../core/models/Feed.dart';
 
 class HomeScreenJobSeeker extends StatefulWidget {
@@ -203,9 +204,243 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
                       );
                     }
                   },
-                  child: BlocBuilder<FeedCubit, FeedState>(
-                    builder: (context, state) {
-                      if (state is FeedLoading) {
+                  child: BlocListener<CommentCubit, CommentState>(
+                    listener: (context, commentState) {
+                      if (commentState is CommentCreated) {
+                        // Refresh feed data to update comment counts
+                        if (token != null) {
+                          feedCubit.getFeed(token!);
+                        }
+                      }
+                    },
+                    child: BlocBuilder<FeedCubit, FeedState>(
+                      builder: (context, state) {
+                        if (state is FeedLoading) {
+                          return RefreshIndicator(
+                            onRefresh: () async {
+                              if (token != null) {
+                                feedCubit.getFeed(token!);
+                                profileCubit.getProfile(token!);
+                              }
+                            },
+                            child: ListView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              itemCount:
+                                  6, // +1 for write post skeleton, +5 for post skeletons
+                              itemBuilder: (context, index) {
+                                if (index == 0) {
+                                  return const WritePostSkeleton();
+                                }
+                                return const PostCardSkeleton();
+                              },
+                            ),
+                          );
+                        } else if (state is FeedLoaded) {
+                          final posts = state.feedResponse.data;
+
+                          return RefreshIndicator(
+                            onRefresh: () async {
+                              if (token != null) {
+                                feedCubit.getFeed(token!);
+                                profileCubit.getProfile(token!);
+                              }
+                            },
+                            child: ListView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              itemCount:
+                                  posts.length +
+                                  1, // +1 for the write post item
+                              itemBuilder: (context, index) {
+                                // First item is the write post GestureDetector
+                                if (index == 0) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 20.0,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => const CreatePost(),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        height: 50,
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.black,
+                                            width: 0.5,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            25,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "Write a post",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                // Regular posts (index - 1 because we added the write post item)
+                                final post = posts[index - 1].post;
+                                final likeCount = _getPostLikeCount(post);
+                                final commentCount = post.comments?.length ?? 0;
+                                final isLiked = _getPostLikeStatus(post);
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 16.0),
+                                  child: feed_post.PostCard(
+                                    post: post,
+                                    isLiked: isLiked,
+                                    likeCount: likeCount,
+                                    commentCount: commentCount,
+                                    onLike: () {
+                                      if (token != null && post.id != null) {
+                                        final currentLikeStatus =
+                                            _getPostLikeStatus(post);
+                                        final newLikeStatus =
+                                            !currentLikeStatus;
+                                        final currentLikeCount =
+                                            _getPostLikeCount(post);
+
+                                        // Store previous state for error handling
+                                        final previousLikeStatus =
+                                            currentLikeStatus;
+                                        final previousLikeCount =
+                                            currentLikeCount;
+
+                                        // Track current operation
+                                        _currentLikeOperationPostId = post.id;
+                                        _previousLikeStatus =
+                                            previousLikeStatus;
+                                        _previousLikeCount = previousLikeCount;
+
+                                        // Update local state immediately for instant UI feedback
+                                        _updatePostLikeStatus(
+                                          post.id!,
+                                          newLikeStatus,
+                                        );
+
+                                        // Update like count
+                                        final newLikeCount =
+                                            newLikeStatus
+                                                ? currentLikeCount + 1
+                                                : currentLikeCount - 1;
+                                        _updatePostLikeCount(
+                                          post.id!,
+                                          newLikeCount,
+                                        );
+
+                                        // Call the API
+                                        likeCubit.likeOrDislikePost(
+                                          token!,
+                                          post.id!,
+                                          newLikeStatus ? 'Love' : 'Like',
+                                        );
+                                      }
+                                    },
+                                    onComment: () {
+                                      if (token != null && post.id != null) {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(50),
+                                            ),
+                                          ),
+                                          builder:
+                                              (context) => BlocProvider.value(
+                                                value: commentCubit,
+                                                child: CommentBottomSheet(
+                                                  postId: post.id!,
+                                                  token: token!,
+                                                ),
+                                              ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        } else if (state is FeedError) {
+                          return RefreshIndicator(
+                            onRefresh: () async {
+                              if (token != null) {
+                                feedCubit.getFeed(token!);
+                                profileCubit.getProfile(token!);
+                              }
+                            },
+                            child: ListView(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              children: [
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.3,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.error_outline,
+                                          size: 64,
+                                          color: Colors.grey[400],
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'Error loading feed',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey[600],
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          state.message,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[500],
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'Pull down to refresh',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey[400],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        // Show skeletons for initial state
                         return RefreshIndicator(
                           onRefresh: () async {
                             if (token != null) {
@@ -227,222 +462,8 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
                             },
                           ),
                         );
-                      } else if (state is FeedLoaded) {
-                        final posts = state.feedResponse.data;
-
-                        return RefreshIndicator(
-                          onRefresh: () async {
-                            if (token != null) {
-                              feedCubit.getFeed(token!);
-                              profileCubit.getProfile(token!);
-                            }
-                          },
-                          child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                            ),
-                            itemCount:
-                                posts.length + 1, // +1 for the write post item
-                            itemBuilder: (context, index) {
-                              // First item is the write post GestureDetector
-                              if (index == 0) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 20.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) => const CreatePost(),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      width: double.infinity,
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: Colors.black,
-                                          width: 0.5,
-                                        ),
-                                        borderRadius: BorderRadius.circular(25),
-                                      ),
-                                      child: Text(
-                                        "Write a post",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }
-
-                              // Regular posts (index - 1 because we added the write post item)
-                              final post = posts[index - 1].post;
-                              final likeCount = _getPostLikeCount(post);
-                              final commentCount = post.comments?.length ?? 0;
-                              final isLiked = _getPostLikeStatus(post);
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 16.0),
-                                child: feed_post.PostCard(
-                                  post: post,
-                                  isLiked: isLiked,
-                                  likeCount: likeCount,
-                                  commentCount: commentCount,
-                                  onLike: () {
-                                    if (token != null && post.id != null) {
-                                      final currentLikeStatus =
-                                          _getPostLikeStatus(post);
-                                      final newLikeStatus = !currentLikeStatus;
-                                      final currentLikeCount =
-                                          _getPostLikeCount(post);
-
-                                      // Store previous state for error handling
-                                      final previousLikeStatus =
-                                          currentLikeStatus;
-                                      final previousLikeCount =
-                                          currentLikeCount;
-
-                                      // Track current operation
-                                      _currentLikeOperationPostId = post.id;
-                                      _previousLikeStatus = previousLikeStatus;
-                                      _previousLikeCount = previousLikeCount;
-
-                                      // Update local state immediately for instant UI feedback
-                                      _updatePostLikeStatus(
-                                        post.id!,
-                                        newLikeStatus,
-                                      );
-
-                                      // Update like count
-                                      final newLikeCount =
-                                          newLikeStatus
-                                              ? currentLikeCount + 1
-                                              : currentLikeCount - 1;
-                                      _updatePostLikeCount(
-                                        post.id!,
-                                        newLikeCount,
-                                      );
-
-                                      // Call the API
-                                      likeCubit.likeOrDislikePost(
-                                        token!,
-                                        post.id!,
-                                        newLikeStatus ? 'Love' : 'Like',
-                                      );
-                                    }
-                                  },
-                                  onComment: () {
-                                    if (token != null && post.id != null) {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true,
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(50),
-                                          ),
-                                        ),
-                                        builder:
-                                            (context) => BlocProvider.value(
-                                              value: commentCubit,
-                                              child: CommentBottomSheet(
-                                                postId: post.id!,
-                                                token: token!,
-                                              ),
-                                            ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      } else if (state is FeedError) {
-                        return RefreshIndicator(
-                          onRefresh: () async {
-                            if (token != null) {
-                              feedCubit.getFeed(token!);
-                              profileCubit.getProfile(token!);
-                            }
-                          },
-                          child: ListView(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                            ),
-                            children: [
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.error_outline,
-                                        size: 64,
-                                        color: Colors.grey[400],
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        'Error loading feed',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.grey[600],
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        state.message,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[500],
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        'Pull down to refresh',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[400],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      // Show skeletons for initial state
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          if (token != null) {
-                            feedCubit.getFeed(token!);
-                            profileCubit.getProfile(token!);
-                          }
-                        },
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          itemCount:
-                              6, // +1 for write post skeleton, +5 for post skeletons
-                          itemBuilder: (context, index) {
-                            if (index == 0) {
-                              return const WritePostSkeleton();
-                            }
-                            return const PostCardSkeleton();
-                          },
-                        ),
-                      );
-                    },
+                      },
+                    ),
                   ),
                 ),
               ),

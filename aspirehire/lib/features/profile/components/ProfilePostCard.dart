@@ -2,29 +2,16 @@ import 'package:flutter/material.dart';
 import '../../../core/models/Feed.dart';
 import '../../profile/screens/UserProfileScreen.dart';
 
-class PostCard extends StatefulWidget {
+class ProfilePostCard extends StatefulWidget {
   final Post post;
-  final VoidCallback? onLike;
-  final VoidCallback? onComment;
-  final bool isLiked;
-  final int likeCount;
-  final int commentCount;
 
-  const PostCard({
-    Key? key,
-    required this.post,
-    this.onLike,
-    this.onComment,
-    this.isLiked = false,
-    this.likeCount = 0,
-    this.commentCount = 0,
-  }) : super(key: key);
+  const ProfilePostCard({Key? key, required this.post}) : super(key: key);
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  State<ProfilePostCard> createState() => _ProfilePostCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _ProfilePostCardState extends State<ProfilePostCard> {
   bool _isExpanded = false;
   static const int _maxLines = 6;
 
@@ -153,28 +140,6 @@ class _PostCardState extends State<PostCard> {
               const SizedBox(height: 10),
               _buildAttachmentsSection(attachments),
             ],
-
-            const SizedBox(height: 10),
-
-            // Action buttons
-            Row(
-              children: [
-                IconButton(
-                  onPressed: widget.onLike,
-                  icon: Icon(
-                    Icons.favorite,
-                    color: widget.isLiked ? Colors.red : Colors.grey,
-                  ),
-                ),
-                Text('${widget.likeCount}'),
-                const SizedBox(width: 24),
-                IconButton(
-                  onPressed: widget.onComment,
-                  icon: const Icon(Icons.comment, color: Colors.grey),
-                ),
-                Text('${widget.commentCount}'),
-              ],
-            ),
           ],
         ),
       ),
@@ -186,10 +151,13 @@ class _PostCardState extends State<PostCard> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => UserProfileScreen(
-            userId: publisher!.profileId!,
-            userName: '${publisher.firstName ?? ''} ${publisher.lastName ?? ''}'.trim(),
-          ),
+          builder:
+              (context) => UserProfileScreen(
+                userId: publisher!.profileId!,
+                userName:
+                    '${publisher.firstName ?? ''} ${publisher.lastName ?? ''}'
+                        .trim(),
+              ),
         ),
       );
     }
@@ -198,98 +166,50 @@ class _PostCardState extends State<PostCard> {
   Widget _buildAttachmentsSection(List<Attachment> attachments) {
     if (attachments.isEmpty) return const SizedBox.shrink();
 
-    // If only one attachment, show it as a single image
+    // Handle different attachment types
     if (attachments.length == 1) {
-      return _buildSingleAttachment(attachments.first);
-    }
-
-    // If multiple attachments, show them in a grid
-    return _buildMultipleAttachments(attachments);
-  }
-
-  Widget _buildSingleAttachment(Attachment attachment) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        width: double.infinity,
-        height: 250,
+      final attachment = attachments.first;
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
         child: Image.network(
           attachment.secureUrl ?? '',
+          width: double.infinity,
+          height: 200,
           fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Container(
-              width: double.infinity,
-              height: 250,
-              color: Colors.grey[200],
-              child: Center(
-                child: CircularProgressIndicator(
-                  value:
-                      loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                ),
-              ),
-            );
-          },
           errorBuilder: (context, error, stackTrace) {
             return Container(
               width: double.infinity,
-              height: 250,
-              color: Colors.grey[200],
-              child: const Center(
-                child: Icon(Icons.broken_image, size: 50, color: Colors.grey),
-              ),
+              height: 200,
+              color: Colors.grey[300],
+              child: const Icon(Icons.error, color: Colors.grey),
             );
           },
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  Widget _buildMultipleAttachments(List<Attachment> attachments) {
-    // Show first 4 attachments in a 2x2 grid
-    final displayAttachments = attachments.take(4).toList();
-
+    // For multiple attachments, show a grid
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 4,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
         childAspectRatio: 1,
       ),
-      itemCount: displayAttachments.length,
+      itemCount: attachments.length,
       itemBuilder: (context, index) {
-        final attachment = displayAttachments[index];
+        final attachment = attachments[index];
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
             attachment.secureUrl ?? '',
             fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                color: Colors.grey[200],
-                child: Center(
-                  child: CircularProgressIndicator(
-                    value:
-                        loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                  ),
-                ),
-              );
-            },
             errorBuilder: (context, error, stackTrace) {
               return Container(
-                color: Colors.grey[200],
-                child: const Center(
-                  child: Icon(Icons.broken_image, color: Colors.grey),
-                ),
+                color: Colors.grey[300],
+                child: const Icon(Icons.error, color: Colors.grey),
               );
             },
           ),

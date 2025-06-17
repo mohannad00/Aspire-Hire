@@ -4,6 +4,7 @@ import '../../config/datasources/cache/shared_pref.dart';
 import '../../core/models/SearchProfileDTO.dart';
 import 'state_management/search_users_cubit.dart';
 import 'state_management/search_users_state.dart';
+import '../profile/screens/UserProfileScreen.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -44,7 +45,8 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
 
   void _removeUser(String profileId) {
     setState(() {
-      _displayedUsers = _displayedUsers.where((user) => user.profileId != profileId).toList();
+      _displayedUsers =
+          _displayedUsers.where((user) => user.profileId != profileId).toList();
     });
   }
 
@@ -66,7 +68,10 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
               onSearchChanged: (query) {
                 if (_token != null) {
                   if (query.isNotEmpty) {
-                    context.read<SearchUsersCubit>().searchUsers(_token!, query);
+                    context.read<SearchUsersCubit>().searchUsers(
+                      _token!,
+                      query,
+                    );
                   } else {
                     context.read<SearchUsersCubit>().clearSearch();
                     setState(() {
@@ -75,7 +80,9 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
                   }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please log in to search users')),
+                    const SnackBar(
+                      content: Text('Please log in to search users'),
+                    ),
                   );
                 }
               },
@@ -136,7 +143,10 @@ class Header extends StatelessWidget {
                 decoration: const InputDecoration(
                   hintText: 'Search',
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 10,
+                  ),
                 ),
               ),
             ),
@@ -160,43 +170,66 @@ class SearchResultItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: user.profilePicture != null
-                ? NetworkImage(user.profilePicture!.secureUrl)
-                : null,
-            backgroundColor: Colors.grey[300],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => UserProfileScreen(
+                  userId: user.profileId,
+                  userName:
+                      user.role == 'Company'
+                          ? user.companyName ?? user.username
+                          : '${user.firstName ?? ''} ${user.lastName ?? ''}'
+                              .trim(),
+                ),
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.role == 'Company'
-                      ? user.companyName ?? user.username
-                      : '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim(),
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  user.role == 'Company' ? 'Company' : 'Job Seeker',
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ],
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundImage:
+                  user.profilePicture != null
+                      ? NetworkImage(user.profilePicture!.secureUrl)
+                      : null,
+              backgroundColor: Colors.grey[300],
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.grey),
-            onPressed: () => onRemove(user.profileId),
-          ),
-        ],
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.role == 'Company'
+                        ? user.companyName ?? user.username
+                        : '${user.firstName ?? ''} ${user.lastName ?? ''}'
+                            .trim(),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    user.role == 'Company' ? 'Company' : 'Job Seeker',
+                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.grey),
+              onPressed: () => onRemove(user.profileId),
+            ),
+          ],
+        ),
       ),
     );
   }

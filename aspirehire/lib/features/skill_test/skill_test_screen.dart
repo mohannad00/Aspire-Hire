@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../hame_nav_bar/home_nav_bar.dart';
+
 class SkillTestScreen extends StatefulWidget {
   final String skill;
 
@@ -534,9 +536,7 @@ class _SkillTestScreenState extends State<SkillTestScreen>
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => const HomeNavBar()),
                     (route) => false,
                   );
                 },

@@ -7,6 +7,7 @@ import 'package:aspirehire/features/feed/state_management/feed_cubit.dart';
 import 'package:aspirehire/features/feed/state_management/like_cubit.dart';
 import 'package:aspirehire/features/people_search/state_management/search_users_cubit.dart';
 import 'package:aspirehire/features/profile/state_management/profile_cubit.dart';
+import 'package:aspirehire/features/profile/state_management/user_profile_cubit.dart';
 import 'package:aspirehire/features/skill_test/state_management/skill_test_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => LikeCubit()),
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => CreatePostCubit()),
+        BlocProvider(create: (context) => UserProfileCubit()),
       ],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),

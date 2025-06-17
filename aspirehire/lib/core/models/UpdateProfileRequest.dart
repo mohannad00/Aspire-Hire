@@ -10,6 +10,8 @@ class UpdateProfileRequest {
   final List<Skill>? skills;
   final List<dynamic>? education;
   final List<dynamic>? experience;
+  final String? github;
+  final String? twitter;
 
   UpdateProfileRequest({
     this.firstName,
@@ -21,6 +23,8 @@ class UpdateProfileRequest {
     this.skills,
     this.education,
     this.experience,
+    this.github,
+    this.twitter,
   });
 
   Map<String, dynamic> toJson() {
@@ -36,6 +40,8 @@ class UpdateProfileRequest {
       json['skills'] = skills!.map((skill) => skill.toJson()).toList();
     if (education != null) json['education'] = education;
     if (experience != null) json['experience'] = experience;
+    if (github != null) json['github'] = github;
+    if (twitter != null) json['twitter'] = twitter;
 
     return json;
   }
