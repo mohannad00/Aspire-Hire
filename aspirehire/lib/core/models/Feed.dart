@@ -227,21 +227,48 @@ class ProfilePicture {
 // React model
 class React {
   String? id;
+  String? userId;
   String? entityId;
+  String? entityType;
   String? react;
+  String? createdAt;
+  String? updatedAt;
+  List<Publisher>? user;
 
-  React({this.id, this.entityId, this.react});
+  React({
+    this.id,
+    this.userId,
+    this.entityId,
+    this.entityType,
+    this.react,
+    this.createdAt,
+    this.updatedAt,
+    this.user,
+  });
 
   factory React.fromJson(Map<String, dynamic> json) => React(
     id: json['_id'] as String?,
+    userId: json['userId'] as String?,
     entityId: json['entityId'] as String?,
+    entityType: json['entityType'] as String?,
     react: json['react'] as String?,
+    createdAt: json['createdAt'] as String?,
+    updatedAt: json['updatedAt'] as String?,
+    user:
+        (json['user'] as List<dynamic>?)
+            ?.map((item) => Publisher.fromJson(item as Map<String, dynamic>))
+            .toList(),
   );
 
   Map<String, dynamic> toJson() => {
     if (id != null) '_id': id,
+    if (userId != null) 'userId': userId,
     if (entityId != null) 'entityId': entityId,
+    if (entityType != null) 'entityType': entityType,
     if (react != null) 'react': react,
+    if (createdAt != null) 'createdAt': createdAt,
+    if (updatedAt != null) 'updatedAt': updatedAt,
+    if (user != null) 'user': user!.map((item) => item.toJson()).toList(),
   };
 }
 

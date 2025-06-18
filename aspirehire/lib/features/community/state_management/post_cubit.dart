@@ -58,8 +58,10 @@ class PostCubit extends Cubit<PostState> {
         ApiEndpoints.getAllLikesOfPost.replaceAll(':postId', postId),
         options: Options(headers: {'Authorization': token}),
       );
+
+      // Based on the API response structure: { "success": true, "data": [...] }
       final reacts =
-          (response.data['data']['reacts'] as List<dynamic>)
+          (response.data['data'] as List<dynamic>)
               .map((item) => React.fromJson(item as Map<String, dynamic>))
               .toList();
       emit(PostLikesLoaded(reacts));

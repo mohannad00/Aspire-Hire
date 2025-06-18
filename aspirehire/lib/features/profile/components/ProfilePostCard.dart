@@ -1,11 +1,28 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/Feed.dart';
+import '../../../core/utils/reaction_types.dart';
 import '../../profile/screens/UserProfileScreen.dart';
+import '../../feed/components/ReactionPicker.dart';
+import '../../feed/components/ReactionCounter.dart';
+import '../../feed/components/ReactionsBottomSheet.dart';
 
 class ProfilePostCard extends StatefulWidget {
   final Post post;
+  final Future<void> Function(ReactionType)? onReaction;
+  final VoidCallback? onComment;
+  final ReactionType? currentReaction;
+  final int commentCount;
+  final String? token;
 
-  const ProfilePostCard({Key? key, required this.post}) : super(key: key);
+  const ProfilePostCard({
+    Key? key,
+    required this.post,
+    this.onReaction,
+    this.onComment,
+    this.currentReaction,
+    this.commentCount = 0,
+    this.token,
+  }) : super(key: key);
 
   @override
   State<ProfilePostCard> createState() => _ProfilePostCardState();
@@ -14,6 +31,7 @@ class ProfilePostCard extends StatefulWidget {
 class _ProfilePostCardState extends State<ProfilePostCard> {
   bool _isExpanded = false;
   static const int _maxLines = 6;
+  final GlobalKey _reactButtonKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +158,129 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
               const SizedBox(height: 10),
               _buildAttachmentsSection(attachments),
             ],
+
+            const SizedBox(height: 10),
+
+            // Reaction counter
+            if (widget.post.reacts != null &&
+                widget.post.reacts!.isNotEmpty) ...[
+              ReactionCounter(
+                reacts: widget.post.reacts,
+                onTap: () => _showReactionsBottomSheet(context),
+              ),
+              const SizedBox(height: 8),
+            ],
+
+            // Action buttons
+            Row(
+              children: [
+                // React button
+                GestureDetector(
+                  key: _reactButtonKey,
+                  onTap: () async {
+                    if (widget.onReaction != null) {
+                      final currentReaction = widget.currentReaction;
+                      if (currentReaction != null) {
+                        // If already reacted, remove reaction
+                        await widget.onReaction!(currentReaction);
+                      } else {
+                        // If no reaction, show picker
+                        _showReactionPicker(context);
+                      }
+                    }
+                  },
+                  onLongPress: () => _showReactionPicker(context),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color:
+                          widget.currentReaction != null
+                              ? ReactionUtils.getReactionData(
+                                widget.currentReaction!,
+                              ).color.withOpacity(0.1)
+                              : Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          widget.currentReaction != null
+                              ? ReactionUtils.getReactionData(
+                                widget.currentReaction!,
+                              ).icon
+                              : Icons.thumb_up_outlined,
+                          color:
+                              widget.currentReaction != null
+                                  ? ReactionUtils.getReactionData(
+                                    widget.currentReaction!,
+                                  ).color
+                                  : Colors.grey,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          widget.currentReaction != null
+                              ? ReactionUtils.getReactionData(
+                                widget.currentReaction!,
+                              ).name
+                              : 'React',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                widget.currentReaction != null
+                                    ? ReactionUtils.getReactionData(
+                                      widget.currentReaction!,
+                                    ).color
+                                    : Colors.grey,
+                            fontWeight:
+                                widget.currentReaction != null
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 24),
+                // Comment button
+                GestureDetector(
+                  onTap: widget.onComment,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.comment_outlined,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Comment${widget.commentCount > 0 ? ' (${widget.commentCount})' : ''}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -159,6 +300,96 @@ class _ProfilePostCardState extends State<ProfilePostCard> {
                         .trim(),
               ),
         ),
+      );
+    }
+  }
+
+  void _showReactionPicker(BuildContext context) {
+    // Get the position of the react button using GlobalKey
+    final RenderBox? renderBox =
+        _reactButtonKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final position = renderBox.localToGlobal(Offset.zero);
+    final size = renderBox.size;
+
+    // Get screen size to ensure picker stays within bounds
+    final screenSize = MediaQuery.of(context).size;
+    final pickerWidth = 280.0; // Approximate width of the reaction picker
+    final pickerHeight = 80.0; // Approximate height of the reaction picker
+
+    // Calculate horizontal position to center the picker
+    double leftPosition = position.dx + (size.width / 2) - (pickerWidth / 2);
+
+    // Ensure the picker doesn't go off-screen
+    if (leftPosition < 16) {
+      leftPosition = 16; // Minimum margin from left edge
+    } else if (leftPosition + pickerWidth > screenSize.width - 16) {
+      leftPosition =
+          screenSize.width - pickerWidth - 16; // Minimum margin from right edge
+    }
+
+    // Calculate vertical position
+    double topPosition =
+        position.dy - pickerHeight - 20; // 20px gap above button
+
+    // If there's not enough space above, show below the button
+    if (topPosition < 16) {
+      topPosition = position.dy + size.height + 20; // 20px gap below button
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.transparent,
+      builder:
+          (context) => GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Material(
+              color: Colors.transparent,
+              child: Stack(
+                children: [
+                  // Full screen transparent overlay to catch taps
+                  Positioned.fill(child: Container(color: Colors.transparent)),
+                  // Reaction picker positioned above the react button
+                  Positioned(
+                    top: topPosition,
+                    left: leftPosition,
+                    child: GestureDetector(
+                      onTap:
+                          () {}, // Prevent closing when tapping the picker itself
+                      child: ReactionPicker(
+                        currentReaction: widget.currentReaction,
+                        onReactionSelected: (reactionType) async {
+                          if (widget.onReaction != null) {
+                            await widget.onReaction!(reactionType);
+                          }
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+    );
+  }
+
+  void _showReactionsBottomSheet(BuildContext context) {
+    if (widget.post.id != null && widget.token != null) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        builder:
+            (context) => ReactionsBottomSheet(
+              postId: widget.post.id!,
+              token: widget.token!,
+            ),
       );
     }
   }

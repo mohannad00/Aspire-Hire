@@ -109,28 +109,20 @@ class ApplicationCard extends StatelessWidget {
     Color color;
     String label = status;
     switch (status) {
+      case 'Accepted':
+        color = Colors.green;
+        label = 'Accepted';
+        break;
       case 'Pending':
         color = Colors.orange;
         label = 'Pending';
-        break;
-      case 'In Review':
-        color = const Color(0xFFFFB800);
-        label = 'In Review';
-        break;
-      case 'Shortlisted':
-        color = Colors.green;
-        label = 'Shortlisted';
-        break;
-      case 'Interviewing':
-        color = Colors.blue;
-        label = 'Interviewing';
         break;
       case 'Rejected':
         color = Colors.red;
         label = 'Rejected';
         break;
       default:
-        color = Colors.grey;
+        color = const Color.fromARGB(255, 183, 206, 193);
         break;
     }
     return Container(

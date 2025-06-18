@@ -1,5 +1,4 @@
 import 'package:aspirehire/features/community/test_follower_cubit.dart';
-import 'package:aspirehire/features/job_application/JobApply.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/community/communityScreen.dart';
 import 'package:aspirehire/core/utils/app_colors.dart';

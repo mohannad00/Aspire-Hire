@@ -12,12 +12,10 @@ class CreateJobApplicationInitial extends CreateJobApplicationState {}
 class CreateJobApplicationLoading extends CreateJobApplicationState {}
 
 class CreateJobApplicationSuccess extends CreateJobApplicationState {
-  final CreateJobApplicationResponse response;
-
-  const CreateJobApplicationSuccess(this.response);
+  const CreateJobApplicationSuccess();
 
   @override
-  List<Object> get props => [response];
+  List<Object> get props => [];
 }
 
 class CreateJobApplicationFailure extends CreateJobApplicationState {

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../state_management/get_job_post/get_job_post_cubit.dart';
 import '../state_management/get_job_post/get_job_post_state.dart';
 import '../../../config/datasources/cache/shared_pref.dart';
+import '../../job_application/create_job_application/ui.dart';
+import '../../job_application/create_job_application/state_management/create_job_application_cubit.dart';
 
 class JobPostDetailScreen extends StatefulWidget {
   final String jobPostId;
@@ -38,7 +40,12 @@ class _JobPostDetailScreenState extends State<JobPostDetailScreen> {
               return const Center(child: CircularProgressIndicator());
             } else if (state is GetJobPostSuccess) {
               final jobData = state.jobPost['data'][0];
-              return _buildJobDetailContent(context, jobData);
+              return Column(
+                children: [
+                  Expanded(child: _buildJobDetailContent(context, jobData)),
+                  _buildApplyButton(context, jobData),
+                ],
+              );
             } else if (state is GetJobPostFailure) {
               return SafeArea(
                 child: Center(
@@ -61,28 +68,6 @@ class _JobPostDetailScreenState extends State<JobPostDetailScreen> {
             }
             return const Center(child: Text('No job details available'));
           },
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        child: SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF013E5D),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              elevation: 0,
-            ),
-            child: const Text(
-              'Apply for this job',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
         ),
       ),
     );
@@ -536,6 +521,54 @@ class _JobPostDetailScreenState extends State<JobPostDetailScreen> {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildApplyButton(BuildContext context, Map<String, dynamic> jobData) {
+    final company = jobData['company']?[0];
+    final companyName = company?['companyName'] ?? 'Unknown Company';
+    final jobTitle = jobData['jobTitle'] ?? 'Unknown Title';
+    final location = jobData['location'] ?? 'N/A';
+    final jobType = jobData['jobType'] ?? 'N/A';
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => BlocProvider(
+                      create: (context) => CreateJobApplicationCubit(),
+                      child: CreateJobApplicationScreen(
+                        jobPostId: widget.jobPostId,
+                        jobTitle: jobTitle,
+                        companyName: companyName,
+                        location: location,
+                        jobType: jobType,
+                      ),
+                    ),
+              ),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF013E5D),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            elevation: 0,
+          ),
+          child: const Text(
+            'Apply for this job',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
     );
   }

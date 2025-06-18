@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/components/ReusableButton.dart';
-import '../../../../core/models/RecommendedJobPost.dart';
+import '../../../core/models/RecommendedJobPost.dart';
 import '../../job_post/screens/JobPostDetailScreen.dart';
 import '../../job_post/state_management/get_job_post/get_job_post_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

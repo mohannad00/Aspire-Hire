@@ -17,6 +17,13 @@ import '../feed/components/CommentBottomSheet.dart';
 import '../community/state_management/comment_cubit.dart';
 import '../community/state_management/comment_state.dart';
 import '../../core/models/Feed.dart';
+import '../../core/utils/reaction_types.dart';
+import 'package:dio/dio.dart';
+import '../../config/datasources/api/end_points.dart';
+import '../../core/models/Post.dart';
+import '../home_screen/components/HomeHeader.dart';
+import '../home_screen/components/HomeHeaderSkeleton.dart';
+import '../home_screen/components/WritePostSkeleton.dart';
 
 class HomeScreenJobSeeker extends StatefulWidget {
   const HomeScreenJobSeeker({super.key});
@@ -32,16 +39,15 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
   late LikeCubit likeCubit;
   late ProfileCubit profileCubit;
 
-  // Local state to track like status for each post
-  final Map<String, bool> _postLikeStatus = {};
+  // Current user ID for reaction tracking
+  String? _currentUserId;
 
-  // Local state to track like counts for each post
-  final Map<String, int> _postLikeCounts = {};
+  // Local state to track current reaction for each post
+  final Map<String, ReactionType?> _postReactions = {};
 
-  // Track current like operation for error handling
-  String? _currentLikeOperationPostId;
-  bool? _previousLikeStatus;
-  int? _previousLikeCount;
+  // Track current reaction operation for error handling
+  String? _currentReactionOperationPostId;
+  ReactionType? _previousReaction;
 
   @override
   void initState() {
@@ -70,47 +76,83 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
     }
   }
 
-  // Helper method to get like status for a post
-  bool _getPostLikeStatus(Post post) {
-    if (post.id == null) return false;
+  // Helper method to get current reaction for a post
+  ReactionType? _getPostReaction(Post post) {
+    if (post.id == null) return null;
 
-    // If we have a local status, use it
-    if (_postLikeStatus.containsKey(post.id)) {
-      return _postLikeStatus[post.id]!;
+    // If we have a local reaction, use it (for immediate UI feedback)
+    if (_postReactions.containsKey(post.id)) {
+      return _postReactions[post.id];
     }
 
-    // Otherwise, calculate from API data
-    final apiLikeStatus = post.reacts?.any((r) => r.react == 'Love') ?? false;
-    _postLikeStatus[post.id!] = apiLikeStatus; // Cache the initial status
-    return apiLikeStatus;
+    // Check actual reactions from the post data to see if current user has reacted
+    if (post.reacts != null && post.reacts!.isNotEmpty) {
+      // Get current user ID from profile data
+      final currentUserId = _getCurrentUserId();
+      if (currentUserId != null) {
+        // Find if current user has reacted to this post
+        for (final react in post.reacts!) {
+          if (react.userId == currentUserId) {
+            final reactionType = ReactionUtils.getReactionTypeFromString(
+              react.react,
+            );
+            if (reactionType != null) {
+              // Store this reaction locally for future reference
+              _postReactions[post.id!] = reactionType;
+              return reactionType;
+            }
+          }
+        }
+      }
+    }
+
+    // No reaction found
+    _postReactions[post.id!] = null;
+    return null;
   }
 
-  // Helper method to update like status for a post
-  void _updatePostLikeStatus(String postId, bool isLiked) {
+  // Helper method to get current user ID
+  String? _getCurrentUserId() {
+    return _currentUserId;
+  }
+
+  // Helper method to refresh reactions after getting user ID
+  void _refreshReactions() {
+    // Clear existing reactions and rebuild to check actual reactions
     setState(() {
-      _postLikeStatus[postId] = isLiked;
+      _postReactions.clear();
     });
   }
 
-  // Helper method to get like count for a post
-  int _getPostLikeCount(Post post) {
-    if (post.id == null) return 0;
+  // Helper method to cancel a reaction
+  Future<void> _cancelReaction(
+    String token,
+    String postId,
+    ReactionType reactionType,
+  ) async {
+    final dio = Dio();
+    try {
+      final request =
+          LikePostRequest()
+            ..react = ReactionUtils.getReactionString(reactionType);
 
-    // If we have a local count, use it
-    if (_postLikeCounts.containsKey(post.id)) {
-      return _postLikeCounts[post.id]!;
+      await dio.post(
+        ApiEndpoints.likeOrDislikePost.replaceAll(':postId', postId),
+        data: request.toJson(),
+        options: Options(
+          headers: {'Authorization': token, 'Content-Type': 'application/json'},
+        ),
+      );
+    } on DioException catch (e) {
+      print('🔍 [HomeScreenJobSeeker] Cancel reaction error: ${e.message}');
+      throw e;
     }
-
-    // Otherwise, use the API data
-    final apiLikeCount = post.reacts?.length ?? 0;
-    _postLikeCounts[post.id!] = apiLikeCount; // Cache the initial count
-    return apiLikeCount;
   }
 
-  // Helper method to update like count for a post
-  void _updatePostLikeCount(String postId, int newCount) {
+  // Helper method to update reaction for a post
+  void _updatePostReaction(String postId, ReactionType? reaction) {
     setState(() {
-      _postLikeCounts[postId] = newCount;
+      _postReactions[postId] = reaction;
     });
   }
 
@@ -170,28 +212,21 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
                   listener: (context, likeState) {
                     if (likeState is LikeSuccess) {
                       // API call succeeded, clear tracking variables
-                      _currentLikeOperationPostId = null;
-                      _previousLikeStatus = null;
-                      _previousLikeCount = null;
+                      _currentReactionOperationPostId = null;
+                      _previousReaction = null;
                     } else if (likeState is LikeError) {
                       // If the API call failed, revert the local state
-                      if (_currentLikeOperationPostId != null &&
-                          _previousLikeStatus != null &&
-                          _previousLikeCount != null) {
-                        // Revert the like status and count
-                        _updatePostLikeStatus(
-                          _currentLikeOperationPostId!,
-                          _previousLikeStatus!,
-                        );
-                        _updatePostLikeCount(
-                          _currentLikeOperationPostId!,
-                          _previousLikeCount!,
+                      if (_currentReactionOperationPostId != null &&
+                          _previousReaction != null) {
+                        // Revert the reaction
+                        _updatePostReaction(
+                          _currentReactionOperationPostId!,
+                          _previousReaction,
                         );
 
                         // Clear tracking variables
-                        _currentLikeOperationPostId = null;
-                        _previousLikeStatus = null;
-                        _previousLikeCount = null;
+                        _currentReactionOperationPostId = null;
+                        _previousReaction = null;
                       }
 
                       // Show error message
@@ -213,9 +248,311 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
                         }
                       }
                     },
-                    child: BlocBuilder<FeedCubit, FeedState>(
-                      builder: (context, state) {
-                        if (state is FeedLoading) {
+                    child: BlocListener<ProfileCubit, ProfileState>(
+                      listener: (context, profileState) {
+                        if (profileState is ProfileLoaded) {
+                          setState(() {
+                            _currentUserId = profileState.profile.profileId;
+                          });
+                          // Refresh reactions after getting user ID
+                          _refreshReactions();
+                        }
+                      },
+                      child: BlocBuilder<FeedCubit, FeedState>(
+                        builder: (context, state) {
+                          if (state is FeedLoading) {
+                            return RefreshIndicator(
+                              onRefresh: () async {
+                                if (token != null) {
+                                  feedCubit.getFeed(token!);
+                                  profileCubit.getProfile(token!);
+                                }
+                              },
+                              child: ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                itemCount:
+                                    6, // +1 for write post skeleton, +5 for post skeletons
+                                itemBuilder: (context, index) {
+                                  if (index == 0) {
+                                    return const WritePostSkeleton();
+                                  }
+                                  return const PostCardSkeleton();
+                                },
+                              ),
+                            );
+                          } else if (state is FeedLoaded) {
+                            final posts = state.feedResponse.data;
+
+                            return RefreshIndicator(
+                              onRefresh: () async {
+                                if (token != null) {
+                                  feedCubit.getFeed(token!);
+                                  profileCubit.getProfile(token!);
+                                }
+                              },
+                              child: ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                itemCount:
+                                    posts.length +
+                                    1, // +1 for the write post item
+                                itemBuilder: (context, index) {
+                                  // First item is the write post GestureDetector
+                                  if (index == 0) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 20.0,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) =>
+                                                      const CreatePost(),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: Colors.black,
+                                              width: 0.5,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              25,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "Write a post",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }
+
+                                  // Regular posts (index - 1 because we added the write post item)
+                                  final post = posts[index - 1].post;
+                                  final commentCount =
+                                      post.comments?.length ?? 0;
+                                  final currentReaction = _getPostReaction(
+                                    post,
+                                  );
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 16.0,
+                                    ),
+                                    child: feed_post.PostCard(
+                                      post: post,
+                                      currentReaction: currentReaction,
+                                      commentCount: commentCount,
+                                      token: token,
+                                      onReaction: (reactionType) async {
+                                        if (token != null && post.id != null) {
+                                          final currentReaction =
+                                              _getPostReaction(post);
+                                          final currentUserId =
+                                              _getCurrentUserId();
+
+                                          // Helper to update the local reacts list
+                                          void updateLocalReacts({
+                                            ReactionType? newReaction,
+                                          }) {
+                                            setState(() {
+                                              post.reacts ??= [];
+                                              // Remove any previous reaction by this user
+                                              post.reacts!.removeWhere(
+                                                (r) =>
+                                                    r.userId == currentUserId,
+                                              );
+                                              if (newReaction != null) {
+                                                // Add the new reaction
+                                                post.reacts!.add(
+                                                  React(
+                                                    userId: currentUserId,
+                                                    react:
+                                                        ReactionUtils.getReactionString(
+                                                          newReaction,
+                                                        ),
+                                                  ),
+                                                );
+                                              }
+                                            });
+                                          }
+
+                                          // If user is selecting the same reaction, remove it
+                                          if (currentReaction == reactionType) {
+                                            final previousReaction =
+                                                currentReaction;
+                                            _currentReactionOperationPostId =
+                                                post.id;
+                                            _previousReaction =
+                                                previousReaction;
+                                            _updatePostReaction(post.id!, null);
+                                            updateLocalReacts(
+                                              newReaction: null,
+                                            );
+                                            await likeCubit.likeOrDislikePost(
+                                              token!,
+                                              post.id!,
+                                              ReactionUtils.getReactionString(
+                                                reactionType,
+                                              ),
+                                            );
+                                          } else {
+                                            final previousReaction =
+                                                currentReaction;
+                                            _currentReactionOperationPostId =
+                                                post.id;
+                                            _previousReaction =
+                                                previousReaction;
+                                            _updatePostReaction(
+                                              post.id!,
+                                              reactionType,
+                                            );
+                                            updateLocalReacts(
+                                              newReaction: reactionType,
+                                            );
+                                            if (previousReaction != null) {
+                                              try {
+                                                await _cancelReaction(
+                                                  token!,
+                                                  post.id!,
+                                                  previousReaction,
+                                                );
+                                                await likeCubit.likeOrDislikePost(
+                                                  token!,
+                                                  post.id!,
+                                                  ReactionUtils.getReactionString(
+                                                    reactionType,
+                                                  ),
+                                                );
+                                              } catch (e) {
+                                                _updatePostReaction(
+                                                  post.id!,
+                                                  previousReaction,
+                                                );
+                                                updateLocalReacts(
+                                                  newReaction: previousReaction,
+                                                );
+                                                _currentReactionOperationPostId =
+                                                    null;
+                                                _previousReaction = null;
+                                              }
+                                            } else {
+                                              await likeCubit.likeOrDislikePost(
+                                                token!,
+                                                post.id!,
+                                                ReactionUtils.getReactionString(
+                                                  reactionType,
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        }
+                                      },
+                                      onComment: () {
+                                        if (token != null && post.id != null) {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            isScrollControlled: true,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                    top: Radius.circular(50),
+                                                  ),
+                                            ),
+                                            builder:
+                                                (context) => BlocProvider.value(
+                                                  value: commentCubit,
+                                                  child: CommentBottomSheet(
+                                                    postId: post.id!,
+                                                    token: token!,
+                                                  ),
+                                                ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          } else if (state is FeedError) {
+                            return RefreshIndicator(
+                              onRefresh: () async {
+                                if (token != null) {
+                                  feedCubit.getFeed(token!);
+                                  profileCubit.getProfile(token!);
+                                }
+                              },
+                              child: ListView(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                ),
+                                children: [
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height *
+                                        0.3,
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.error_outline,
+                                            size: 64,
+                                            color: Colors.grey[400],
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Text(
+                                            'Error loading feed',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.grey[600],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            state.message,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[500],
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 16),
+                                          Text(
+                                            'Pull down to refresh',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[400],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          // Show skeletons for initial state
                           return RefreshIndicator(
                             onRefresh: () async {
                               if (token != null) {
@@ -237,232 +574,8 @@ class _HomeScreenJobSeekerState extends State<HomeScreenJobSeeker> {
                               },
                             ),
                           );
-                        } else if (state is FeedLoaded) {
-                          final posts = state.feedResponse.data;
-
-                          return RefreshIndicator(
-                            onRefresh: () async {
-                              if (token != null) {
-                                feedCubit.getFeed(token!);
-                                profileCubit.getProfile(token!);
-                              }
-                            },
-                            child: ListView.builder(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                              ),
-                              itemCount:
-                                  posts.length +
-                                  1, // +1 for the write post item
-                              itemBuilder: (context, index) {
-                                // First item is the write post GestureDetector
-                                if (index == 0) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 20.0,
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) => const CreatePost(),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        height: 50,
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(16),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                            color: Colors.black,
-                                            width: 0.5,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            25,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          "Write a post",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-
-                                // Regular posts (index - 1 because we added the write post item)
-                                final post = posts[index - 1].post;
-                                final likeCount = _getPostLikeCount(post);
-                                final commentCount = post.comments?.length ?? 0;
-                                final isLiked = _getPostLikeStatus(post);
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16.0),
-                                  child: feed_post.PostCard(
-                                    post: post,
-                                    isLiked: isLiked,
-                                    likeCount: likeCount,
-                                    commentCount: commentCount,
-                                    onLike: () {
-                                      if (token != null && post.id != null) {
-                                        final currentLikeStatus =
-                                            _getPostLikeStatus(post);
-                                        final newLikeStatus =
-                                            !currentLikeStatus;
-                                        final currentLikeCount =
-                                            _getPostLikeCount(post);
-
-                                        // Store previous state for error handling
-                                        final previousLikeStatus =
-                                            currentLikeStatus;
-                                        final previousLikeCount =
-                                            currentLikeCount;
-
-                                        // Track current operation
-                                        _currentLikeOperationPostId = post.id;
-                                        _previousLikeStatus =
-                                            previousLikeStatus;
-                                        _previousLikeCount = previousLikeCount;
-
-                                        // Update local state immediately for instant UI feedback
-                                        _updatePostLikeStatus(
-                                          post.id!,
-                                          newLikeStatus,
-                                        );
-
-                                        // Update like count
-                                        final newLikeCount =
-                                            newLikeStatus
-                                                ? currentLikeCount + 1
-                                                : currentLikeCount - 1;
-                                        _updatePostLikeCount(
-                                          post.id!,
-                                          newLikeCount,
-                                        );
-
-                                        // Call the API
-                                        likeCubit.likeOrDislikePost(
-                                          token!,
-                                          post.id!,
-                                          newLikeStatus ? 'Love' : 'Like',
-                                        );
-                                      }
-                                    },
-                                    onComment: () {
-                                      if (token != null && post.id != null) {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          isScrollControlled: true,
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(50),
-                                            ),
-                                          ),
-                                          builder:
-                                              (context) => BlocProvider.value(
-                                                value: commentCubit,
-                                                child: CommentBottomSheet(
-                                                  postId: post.id!,
-                                                  token: token!,
-                                                ),
-                                              ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        } else if (state is FeedError) {
-                          return RefreshIndicator(
-                            onRefresh: () async {
-                              if (token != null) {
-                                feedCubit.getFeed(token!);
-                                profileCubit.getProfile(token!);
-                              }
-                            },
-                            child: ListView(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                              ),
-                              children: [
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.3,
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.error_outline,
-                                          size: 64,
-                                          color: Colors.grey[400],
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          'Error loading feed',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.grey[600],
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          state.message,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[500],
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          'Pull down to refresh',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey[400],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                        // Show skeletons for initial state
-                        return RefreshIndicator(
-                          onRefresh: () async {
-                            if (token != null) {
-                              feedCubit.getFeed(token!);
-                              profileCubit.getProfile(token!);
-                            }
-                          },
-                          child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                            ),
-                            itemCount:
-                                6, // +1 for write post skeleton, +5 for post skeletons
-                            itemBuilder: (context, index) {
-                              if (index == 0) {
-                                return const WritePostSkeleton();
-                              }
-                              return const PostCardSkeleton();
-                            },
-                          ),
-                        );
-                      },
+                        },
+                      ),
                     ),
                   ),
                 ),

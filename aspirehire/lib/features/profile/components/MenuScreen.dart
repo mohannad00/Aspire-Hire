@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:aspirehire/config/datasources/cache/shared_pref.dart';
 import '../../applications/ui/applications_screen.dart';
 import '../../auth/login/LoginScreen.dart';
+import '../../job_search/JobSearch.dart';
 
 class MenuScreen extends StatelessWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -41,20 +42,32 @@ class MenuScreen extends StatelessWidget {
     ).push(MaterialPageRoute(builder: (_) => const ApplicationsScreen()));
   }
 
+  void _viewJobSearch(BuildContext context) {
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const JobSearch()));
+  }
+
   @override
   Widget build(BuildContext context) {
     final items = [
       _MenuItem(
-        icon: Icons.logout,
-        label: 'Log out',
-        color: Colors.red,
-        onTap: () => _logout(context),
+        icon: Icons.search,
+        label: 'Job Search',
+        color: Color(0xFF1976D2),
+        onTap: () => _viewJobSearch(context),
       ),
       _MenuItem(
         icon: Icons.assignment_turned_in,
         label: 'View my job applications',
         color: const Color(0xFF013E5D),
         onTap: () => _viewApplications(context),
+      ),
+      _MenuItem(
+        icon: Icons.logout,
+        label: 'Log out',
+        color: Colors.red,
+        onTap: () => _logout(context),
       ),
     ];
     return Scaffold(
