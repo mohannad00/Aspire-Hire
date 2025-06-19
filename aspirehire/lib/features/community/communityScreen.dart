@@ -161,6 +161,36 @@ class _CommunityScreenState extends State<CommunityScreen> {
       length: 3,
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(90),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  color: const Color(0xFF044463),
+                  child: const Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            'Community',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
         body: RefreshIndicator(
           onRefresh: _loadToken,
           child: SafeArea(

@@ -86,4 +86,10 @@ class ApiEndpoints {
 
   // Community - Feed Endpoints
   static const String getFeedPosts = '$baseUrl/feed';
+
+  // Ai Endpoints
+  static const String evaluateResume = 'https://mohannad00.pythonanywhere.com/evaluate' ;
+  static const String generateSummary = 'https://belalsafy0101.pythonanywhere.com/generate-summary' ;
+  static const String generateCV = 'https://belalsafy0101.pythonanywhere.com/generate-pdf' ;
+
 }

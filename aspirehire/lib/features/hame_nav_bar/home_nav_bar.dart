@@ -10,7 +10,7 @@ import '../community/test.dart';
 import '../my_applications/myApplicationScreen.dart';
 import 'dart:async';
 
-import '../profile/components/MenuScreen.dart';
+import '../menu_screen/MenuScreen.dart';
 
 class HomeNavBar extends StatefulWidget {
   const HomeNavBar({super.key});

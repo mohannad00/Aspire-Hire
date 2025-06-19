@@ -12,8 +12,11 @@ import 'package:aspirehire/features/skill_test/state_management/skill_test_cubit
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:aspirehire/features/splash_screen/splash_screen.dart';
+import 'features/ats_evaluate/state_management/ats_evaluate_cubit.dart';
 import 'features/auth/jobseeker_register/state_management/jobseeker_register_cubit.dart';
 import 'features/auth/login/state_management/login_cubit.dart';
+import 'features/generate_summary/state_management/generate_summary_cubit.dart';
+import 'features/generate_cv/state_management/generate_cv_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,6 +44,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => CreatePostCubit()),
         BlocProvider(create: (context) => UserProfileCubit()),
+        BlocProvider(create: (context) => ATSEvaluateCubit()),
+        BlocProvider(create: (context) => GenerateSummaryCubit()),
+        BlocProvider(create: (context) => GenerateCvCubit()),
       ],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),
