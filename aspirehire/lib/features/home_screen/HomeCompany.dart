@@ -3,7 +3,7 @@ import 'package:aspirehire/features/home_screen/components/PostCard.dart';
 import 'package:aspirehire/features/home_screen/components/PostJobButton.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
-import 'package:aspirehire/features/profile/ProfileCompany.dart';
+import 'package:aspirehire/features/seeker_profile/ProfileCompany.dart';
 
 class HomeCompany extends StatefulWidget {
   const HomeCompany({super.key});

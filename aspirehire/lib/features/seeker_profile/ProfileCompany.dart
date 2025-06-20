@@ -2,7 +2,7 @@
 
 //import 'package:aspirehire/ReusableComponent.dart';
 import 'package:aspirehire/features/home_screen/HomeCompany.dart';
-import 'package:aspirehire/features/profile/EditProfile.dart';
+import 'package:aspirehire/features/seeker_profile/EditProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:aspirehire/features/job_search/JobSearch.dart';
 

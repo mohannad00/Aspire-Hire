@@ -10,8 +10,8 @@ import '../generate_summary/screens/generate_summary_selection_screen.dart';
 import '../generate_summary/state_management/generate_summary_cubit.dart';
 import '../generate_cv/screens/generate_cv_selection_screen.dart';
 import '../generate_cv/state_management/generate_cv_cubit.dart';
-import 'package:aspirehire/features/profile/state_management/profile_cubit.dart';
-import 'package:aspirehire/features/profile/state_management/profile_state.dart';
+import 'package:aspirehire/features/seeker_profile/state_management/profile_cubit.dart';
+import 'package:aspirehire/features/seeker_profile/state_management/profile_state.dart';
 import 'package:aspirehire/core/models/GetProfile.dart';
 import 'package:aspirehire/core/utils/app_colors.dart';
 

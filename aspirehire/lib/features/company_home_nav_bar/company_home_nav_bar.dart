@@ -1,39 +1,30 @@
-import 'package:aspirehire/features/community/test_follower_cubit.dart';
-import 'package:flutter/material.dart';
-import 'package:aspirehire/features/community/communityScreen.dart';
-import 'package:aspirehire/core/utils/app_colors.dart';
-import 'package:aspirehire/features/home_screen/HomeScreenJobSeeker.dart';
-import 'package:aspirehire/features/job_search/JobSearch.dart';
-import 'package:aspirehire/features/seeker_profile/ProfileScreen.dart';
-import '../applications/ui/applications_screen.dart';
-import '../community/test.dart';
-import '../my_applications/myApplicationScreen.dart';
 import 'dart:async';
-
+import 'package:flutter/material.dart';
+import 'package:aspirehire/core/utils/app_colors.dart';
+// Import your actual screens here
+import '../../config/datasources/cache/shared_pref.dart';
+import '../company_home_screen/company_home_screen.dart';
+import '../company_profile/company_profile_screen.dart';
+import '../seeker_profile/ProfileScreen.dart';
 import '../menu_screen/MenuScreen.dart';
 
-class HomeNavBar extends StatefulWidget {
-  const HomeNavBar({super.key});
+class CompanyHomeNavBar extends StatefulWidget {
+  const CompanyHomeNavBar({super.key});
 
   @override
-  _HomeNavBarState createState() => _HomeNavBarState();
+  _CompanyHomeNavBarState createState() => _CompanyHomeNavBarState();
 }
 
-class _HomeNavBarState extends State<HomeNavBar> {
+class _CompanyHomeNavBarState extends State<CompanyHomeNavBar> {
   int _selectedIndex = 0;
   late PageController _pageController;
   final _animationDuration = const Duration(milliseconds: 250);
-
-  // Add for nav bar visibility
   bool _isNavBarVisible = true;
   Timer? _hideNavBarTimer;
-
-  // List of screens for the bottom navigation bar
+  final String token = CacheHelper.getData('token') ?? '';
   final List<Widget> _screens = [
-    HomeScreenJobSeeker(),
-    JobSearch(),
-    CommunityScreenWrapper(),
-    ProfileScreen(),
+    CompanyHomeScreen(),
+    CompanyProfileScreen(),
     MenuScreen(),
   ];
 
@@ -65,18 +56,15 @@ class _HomeNavBarState extends State<HomeNavBar> {
     _startHideNavBarTimer();
   }
 
-  // Handle bottom navigation bar item tap
   void _onItemTapped(int index) {
     if (_selectedIndex != index) {
       setState(() {
         _selectedIndex = index;
       });
-      // Use jumpToPage for immediate response with smooth transition
       _pageController.jumpToPage(index);
     }
   }
 
-  // Handle page change when swiping
   void _onPageChanged(int index) {
     if (_selectedIndex != index) {
       setState(() {
@@ -85,16 +73,11 @@ class _HomeNavBarState extends State<HomeNavBar> {
     }
   }
 
-  // Function to calculate responsive font size
   double getResponsiveFontSize(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    // Base font size for small screens (320px width)
     const double baseFontSize = 12.0;
-    // Maximum font size for large screens
     const double maxFontSize = 16.0;
-    // Calculate font size based on screen width
     double fontSize = baseFontSize + (screenWidth - 320) * 0.01;
-    // Clamp the value between base and max
     return fontSize.clamp(baseFontSize, maxFontSize);
   }
 
@@ -116,18 +99,15 @@ class _HomeNavBarState extends State<HomeNavBar> {
           height: double.infinity,
           child: Stack(
             children: [
-              // Optimized PageView with keepAlive
               PageView.builder(
                 controller: _pageController,
                 onPageChanged: _onPageChanged,
                 itemCount: _screens.length,
                 itemBuilder: (context, index) {
-                  return KeepAliveWrapper(child: _screens[index]);
+                  return _screens[index];
                 },
-                physics: const ClampingScrollPhysics(), // Smoother scrolling
+                physics: const ClampingScrollPhysics(),
               ),
-
-              // Bottom navigation bar
               Positioned(
                 left: 0,
                 right: 0,
@@ -163,23 +143,18 @@ class _HomeNavBarState extends State<HomeNavBar> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: List.generate(5, (index) {
+                                children: List.generate(3, (index) {
                                   bool isSelected = _selectedIndex == index;
                                   List<String> labels = [
                                     "Home",
-                                    "Jobs",
-                                    "Community",
                                     "Profile",
-                                    "My Apps",
+                                    "Menu",
                                   ];
                                   List<IconData> icons = [
                                     Icons.home,
-                                    Icons.work_outline,
-                                    Icons.people,
                                     Icons.person,
                                     Icons.menu,
                                   ];
-
                                   return GestureDetector(
                                     onTap: () {
                                       _onUserInteraction();
@@ -192,9 +167,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
                                       child: Center(
                                         child: AnimatedContainer(
                                           duration: _animationDuration,
-                                          curve:
-                                              Curves
-                                                  .easeOutQuad, // Smoother animation
+                                          curve: Curves.easeOutQuad,
                                           padding: EdgeInsets.symmetric(
                                             horizontal:
                                                 isSelected
@@ -280,27 +253,5 @@ class _HomeNavBarState extends State<HomeNavBar> {
     _pageController.dispose();
     _hideNavBarTimer?.cancel();
     super.dispose();
-  }
-}
-
-// Helper widget to maintain state of pages
-class KeepAliveWrapper extends StatefulWidget {
-  final Widget child;
-
-  const KeepAliveWrapper({super.key, required this.child});
-
-  @override
-  State<KeepAliveWrapper> createState() => _KeepAliveWrapperState();
-}
-
-class _KeepAliveWrapperState extends State<KeepAliveWrapper>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return widget.child;
   }
 }

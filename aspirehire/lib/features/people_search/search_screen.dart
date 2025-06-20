@@ -4,7 +4,7 @@ import '../../config/datasources/cache/shared_pref.dart';
 import '../../core/models/SearchProfileDTO.dart';
 import 'state_management/search_users_cubit.dart';
 import 'state_management/search_users_state.dart';
-import '../profile/screens/UserProfileScreen.dart';
+import '../seeker_profile/screens/UserProfileScreen.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});

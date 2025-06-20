@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/Feed.dart';
 import '../../../core/utils/reaction_types.dart';
-import '../../profile/screens/UserProfileScreen.dart';
+import '../../seeker_profile/screens/UserProfileScreen.dart';
 import 'ReactionPicker.dart';
 import 'ReactionCounter.dart';
 import 'ReactionsBottomSheet.dart';

@@ -356,8 +356,6 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                       PostsTab(
                         basicPosts: data.posts,
                         isRefreshing: _isRefreshing,
-                        token: token,
-                        currentUserId: _currentUserId,
                       ),
                     ],
                   ),

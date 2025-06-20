@@ -12,6 +12,8 @@ import 'package:aspirehire/features/choosing_role/ChoosingRole.dart';
 import 'package:aspirehire/features/auth/reset_password/forget_password_screen.dart';
 import 'state_management/login_cubit.dart'; // Import the LoginCubit
 import 'state_management/login_state.dart'; // Import the LoginState
+import 'dart:convert';
+import 'package:aspirehire/features/company_home_nav_bar/company_home_nav_bar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -60,6 +62,17 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     );
+  }
+
+  Map<String, dynamic> decodeJwtPayload(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw Exception('Invalid token');
+    }
+    final payload = parts[1];
+    var normalized = base64Url.normalize(payload);
+    var resp = utf8.decode(base64Url.decode(normalized));
+    return json.decode(resp);
   }
 
   @override
@@ -215,12 +228,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   BlocConsumer<LoginCubit, LoginState>(
                     listener: (context, state) {
                       if (state is LoginSuccess) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeNavBar(),
-                          ),
-                        );
+                        try {
+                          final payload = decodeJwtPayload(state.token);
+                          final role = payload['role'];
+                          if (role == 'Company') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const CompanyHomeNavBar(),
+                              ),
+                            );
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeNavBar(),
+                              ),
+                            );
+                          }
+                        } catch (e) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeNavBar(),
+                            ),
+                          );
+                        }
                       } else if (state is LoginFailure) {
                         _showErrorDialog(state.error);
                       }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/UserProfile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../features/profile/state_management/profile_cubit.dart';
+import '../state_management/profile_cubit.dart';
 import '../../../core/models/UpdateProfileRequest.dart';
 import 'package:aspirehire/config/datasources/cache/shared_pref.dart';
 

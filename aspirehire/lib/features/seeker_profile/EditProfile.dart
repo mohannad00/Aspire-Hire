@@ -2,8 +2,8 @@
 import 'package:aspirehire/config/datasources/cache/shared_pref.dart';
 import 'package:aspirehire/core/models/UpdateProfileRequest.dart';
 import 'package:aspirehire/core/utils/app_colors.dart';
-import 'package:aspirehire/features/profile/state_management/profile_cubit.dart';
-import 'package:aspirehire/features/profile/state_management/profile_state.dart';
+import 'package:aspirehire/features/seeker_profile/state_management/profile_cubit.dart';
+import 'package:aspirehire/features/seeker_profile/state_management/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';

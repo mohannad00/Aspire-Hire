@@ -1,7 +1,7 @@
 import 'package:aspirehire/config/datasources/cache/shared_pref.dart';
 import 'package:aspirehire/core/models/SkillTest.dart';
 import 'package:aspirehire/core/utils/app_colors.dart';
-import 'package:aspirehire/features/profile/ProfileScreen.dart';
+import 'package:aspirehire/features/seeker_profile/ProfileScreen.dart';
 import 'package:aspirehire/features/skill_test/state_management/skill_test_cubit.dart';
 import 'package:aspirehire/features/skill_test/state_management/skill_test_state.dart';
 import 'package:flutter/material.dart';
