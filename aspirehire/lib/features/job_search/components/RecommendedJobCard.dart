@@ -72,7 +72,7 @@ class RecommendedJobCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: getPercentageColor().withOpacity(0.05),
+              color: Colors.grey[100],
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
                 topRight: Radius.circular(16),
@@ -95,18 +95,18 @@ class RecommendedJobCard extends StatelessWidget {
                 // Match percentage
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
+                    horizontal: 12,
+                    vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: getPercentageColor(),
-                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFF013E5D),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Text(
-                    recommendedJob.matchPercentage,
-                    style: const TextStyle(
+                  child: const Text(
+                    '',
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -50,8 +50,6 @@ class _JobSearchBodyState extends State<JobSearchBody> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const JobSearchContainer(), // Search bar and filter button
-              const SizedBox(height: 25),
 
               // Recommended Jobs Section
               const Text(

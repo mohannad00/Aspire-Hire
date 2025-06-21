@@ -18,9 +18,12 @@ import 'features/auth/login/state_management/login_cubit.dart';
 import 'features/company_feed/state_management/company_comment_cubit.dart';
 import 'features/company_feed/state_management/company_feed_cubit.dart';
 import 'features/company_feed/state_management/company_like_cubit.dart';
+import 'features/company_job_posts/state_management/company_job_posts_cubit.dart';
 import 'features/company_profile/company_profile_cubit.dart';
 import 'features/generate_summary/state_management/generate_summary_cubit.dart';
 import 'features/generate_cv/state_management/generate_cv_cubit.dart';
+import 'features/job_applications/state_management/job_applications_cubit.dart';
+import 'features/job_applications/state_management/application_details_cubit.dart';
 import 'features/job_post/state_management/creat_job_post/create_job_post_cubit.dart';
 
 void main() {
@@ -57,6 +60,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => CompanyLikeCubit()),
         BlocProvider(create: (context) => CompanyProfileCubit()),
         BlocProvider(create: (context) => CreateJobPostCubit()),
+        BlocProvider(create: (context) => CompanyJobPostsCubit()),
+        BlocProvider(create: (context) => JobApplicationsCubit()),
+        BlocProvider(create: (context) => ApplicationDetailsCubit()),
       ],
       child: MaterialApp(
         theme: ThemeData(useMaterial3: true),

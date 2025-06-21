@@ -184,7 +184,7 @@ class CreateJobApplicationCubit extends Cubit<CreateJobApplicationState> {
         }
       }
 
-      emit(CreateJobApplicationFailure('Network error: $e'));
+      emit(CreateJobApplicationFailure('You have already applied for this job'));
     }
   }
 }

@@ -13,7 +13,7 @@ class UpdateJobApplicationCubit extends Cubit<UpdateJobApplicationState> {
   Future<void> updateJobApplication({
     required String jobPostId,
     required String applicationId,
-    required String respond,
+    required bool respond,
     required String token,
   }) async {
     emit(UpdateJobApplicationLoading());
@@ -29,7 +29,9 @@ class UpdateJobApplicationCubit extends Cubit<UpdateJobApplicationState> {
       );
 
       if (response.statusCode == 200) {
-        final responseModel = UpdateJobApplicationResponse.fromJson(response.data);
+        final responseModel = UpdateJobApplicationResponse.fromJson(
+          response.data,
+        );
         emit(UpdateJobApplicationSuccess(responseModel));
       } else {
         emit(UpdateJobApplicationFailure('Failed to update job application'));

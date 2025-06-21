@@ -63,7 +63,7 @@ class CreateJobPostResponse {
 }
 
 class JobPostData {
-  final String company;
+  final String? companyId;
   final String jobTitle;
   final String jobCategory;
   final String jobDescription;
@@ -80,9 +80,10 @@ class JobPostData {
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? fullAddress;
 
   JobPostData({
-    required this.company,
+    this.companyId,
     required this.jobTitle,
     required this.jobCategory,
     required this.jobDescription,
@@ -99,27 +100,41 @@ class JobPostData {
     required this.id,
     required this.createdAt,
     required this.updatedAt,
+    this.fullAddress,
   });
 
   factory JobPostData.fromJson(Map<String, dynamic> json) {
     return JobPostData(
-      company: json['company'],
-      jobTitle: json['jobTitle'],
-      jobCategory: json['jobCategory'],
-      jobDescription: json['jobDescription'],
-      requiredSkills: List<String>.from(json['requiredSkills']),
-      location: json['location'],
-      country: json['country'],
-      city: json['city'],
-      salary: json['salary'],
-      jobPeriod: json['jobPeriod'],
-      experience: json['experience'],
-      applicationDeadline: DateTime.parse(json['applicationDeadline']),
-      jobType: json['jobType'],
-      archived: json['archived'],
-      id: json['_id'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      companyId: json['companyId'],
+      jobTitle: json['jobTitle'] ?? '',
+      jobCategory: json['jobCategory'] ?? '',
+      jobDescription: json['jobDescription'] ?? '',
+      requiredSkills:
+          json['requiredSkills'] != null
+              ? List<String>.from(json['requiredSkills'])
+              : [],
+      location: json['location'] ?? '',
+      country: json['country'] ?? '',
+      city: json['city'] ?? '',
+      salary: json['salary'] ?? 0,
+      jobPeriod: json['jobPeriod'] ?? '',
+      experience: json['experience'] ?? '',
+      applicationDeadline:
+          json['applicationDeadline'] != null
+              ? DateTime.parse(json['applicationDeadline'])
+              : DateTime.now(),
+      jobType: json['jobType'] ?? '',
+      archived: json['archived'] ?? false,
+      id: json['_id'] ?? '',
+      createdAt:
+          json['createdAt'] != null
+              ? DateTime.parse(json['createdAt'])
+              : DateTime.now(),
+      updatedAt:
+          json['updatedAt'] != null
+              ? DateTime.parse(json['updatedAt'])
+              : DateTime.now(),
+      fullAddress: json['fullAddress'],
     );
   }
 }

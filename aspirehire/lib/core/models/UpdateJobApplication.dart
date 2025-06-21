@@ -1,7 +1,7 @@
 class UpdateJobApplicationRequest {
   final String jobPostId;
   final String applicationId;
-  final String respond;
+  final bool respond;
 
   UpdateJobApplicationRequest({
     required this.jobPostId,
@@ -10,26 +10,20 @@ class UpdateJobApplicationRequest {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'respond': respond,
-    };
+    return {'respond': respond};
   }
 }
 
-
 class UpdateJobApplicationResponse {
   final String id;
-  final String respond;
+  final bool respond;
 
-  UpdateJobApplicationResponse({
-    required this.id,
-    required this.respond,
-  });
+  UpdateJobApplicationResponse({required this.id, required this.respond});
 
   factory UpdateJobApplicationResponse.fromJson(Map<String, dynamic> json) {
     return UpdateJobApplicationResponse(
       id: json['id'],
-      respond: json['respond'],
+      respond: json['respond'] ?? false,
     );
   }
 }

@@ -6,7 +6,8 @@ import '../../config/datasources/cache/shared_pref.dart';
 import '../company_home_screen/company_home_screen.dart';
 import '../company_profile/company_profile_screen.dart';
 import '../job_post/PostJob.dart';
-import '../menu_screen/MenuScreen.dart';
+import '../company_menu_screen/company_menu_screen.dart';
+import '../company_job_posts/company_job_posts_screen.dart';
 
 class CompanyHomeNavBar extends StatefulWidget {
   const CompanyHomeNavBar({super.key});
@@ -30,8 +31,9 @@ class _CompanyHomeNavBarState extends State<CompanyHomeNavBar> {
     _screens = [
       CompanyHomeScreen(),
       PostJob(onNavigateToHome: () => _onItemTapped(0)),
+      const CompanyJobPostsScreen(),
       CompanyProfileScreen(),
-      MenuScreen(),
+      const CompanyMenuScreen(),
     ];
     _pageController = PageController(
       initialPage: _selectedIndex,
@@ -145,17 +147,19 @@ class _CompanyHomeNavBarState extends State<CompanyHomeNavBar> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: List.generate(4, (index) {
+                                children: List.generate(5, (index) {
                                   bool isSelected = _selectedIndex == index;
                                   List<String> labels = [
                                     "Home",
                                     "Post Job",
+                                    "My Jobs",
                                     "Profile",
                                     "Menu",
                                   ];
                                   List<IconData> icons = [
                                     Icons.home,
                                     Icons.post_add,
+                                    Icons.work,
                                     Icons.person,
                                     Icons.menu,
                                   ];

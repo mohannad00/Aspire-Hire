@@ -1,10 +1,12 @@
+import 'package:aspirehire/core/utils/app_colors.dart';
+import 'package:aspirehire/core/models/Company.dart';
+import 'package:aspirehire/core/models/CreateJobPost.dart';
+import 'package:aspirehire/features/company_profile/company_profile_cubit.dart';
+import 'package:aspirehire/features/company_profile/company_profile_state.dart';
+import 'package:aspirehire/features/job_applications/job_applications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../core/models/Company.dart';
 import '../../config/datasources/cache/shared_pref.dart';
-import 'company_profile_cubit.dart';
-import 'company_profile_state.dart';
-import '../../core/utils/app_colors.dart';
 
 class CompanyProfileScreen extends StatefulWidget {
   const CompanyProfileScreen({Key? key}) : super(key: key);
@@ -358,131 +360,184 @@ class CompanyJobPostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withOpacity(0.08),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+    return GestureDetector(
+      onTap: () {
+        // Convert CompanyJobPost to JobPostData for navigation
+        final jobPostData = JobPostData(
+          companyId: job.companyId,
+          jobTitle: job.jobTitle,
+          jobDescription: job.jobDescription,
+          jobCategory: job.jobCategory,
+          jobType: job.jobType,
+          jobPeriod: job.jobPeriod,
+          experience: job.experience,
+          salary: job.salary,
+          city: job.city,
+          country: job.country,
+          location: job.location,
+          fullAddress: job.fullAddress,
+          requiredSkills: job.requiredSkills,
+          applicationDeadline: DateTime.parse(job.applicationDeadline),
+          archived: job.archived,
+          id: job.id,
+          createdAt: DateTime.parse(job.createdAt),
+          updatedAt: DateTime.parse(job.updatedAt),
+        );
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => JobApplicationsScreen(jobPost: jobPostData),
           ),
-        ],
-        border: Border(left: BorderSide(color: AppColors.primary, width: 5)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.work, color: AppColors.primary, size: 22),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    job.jobTitle,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    job.jobCategory,
-                    style: const TextStyle(
-                      color: Colors.orange,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.location_on, size: 18, color: AppColors.primary),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    '${job.location}, ${job.country}',
-                    style: const TextStyle(color: Colors.black87),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.attach_money, size: 18, color: AppColors.primary),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    '${job.salary} EGP',
-                    style: const TextStyle(color: Colors.black87),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.timer, size: 18, color: AppColors.primary),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    'Type: ${job.jobType} | Period: ${job.jobPeriod} | Exp: ${job.experience}',
-                    style: const TextStyle(color: Colors.black54),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.event, size: 18, color: AppColors.primary),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    'Deadline: ${job.applicationDeadline.split("T").first}',
-                    style: const TextStyle(color: Colors.redAccent),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              job.jobDescription,
-              style: const TextStyle(color: Colors.black87),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              children:
-                  job.requiredSkills
-                      .map((skill) => Chip(label: Text(skill)))
-                      .toList(),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.blue.withOpacity(0.08),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
+          border: Border(left: BorderSide(color: AppColors.primary, width: 5)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.work, color: AppColors.primary, size: 22),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      job.jobTitle,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      job.jobCategory,
+                      style: const TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.location_on, size: 18, color: AppColors.primary),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      '${job.location}, ${job.country}',
+                      style: const TextStyle(color: Colors.black87),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.attach_money, size: 18, color: AppColors.primary),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      '${job.salary} EGP',
+                      style: const TextStyle(color: Colors.black87),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.timer, size: 18, color: AppColors.primary),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      'Type: ${job.jobType} | Period: ${job.jobPeriod} | Exp: ${job.experience}',
+                      style: const TextStyle(color: Colors.black54),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(Icons.event, size: 18, color: AppColors.primary),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      'Deadline: ${job.applicationDeadline.split("T").first}',
+                      style: const TextStyle(color: Colors.redAccent),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                job.jobDescription,
+                style: const TextStyle(color: Colors.black87),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children:
+                    job.requiredSkills
+                        .map((skill) => Chip(label: Text(skill)))
+                        .toList(),
+              ),
+              const SizedBox(height: 8),
+              // Add a subtle indicator that the card is clickable
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Tap to view applicants',
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColors.primary,
+                    size: 12,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
