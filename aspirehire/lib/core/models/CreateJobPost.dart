@@ -1,37 +1,45 @@
 class CreateJobPostRequest {
   final String jobTitle;
+  final String jobCategory;
   final String jobDescription;
   final List<String> requiredSkills;
   final String location;
   final String country;
+  final String city;
   final int salary;
   final String jobPeriod;
   final String experience;
   final String applicationDeadline;
-
+  final String jobType;
 
   CreateJobPostRequest({
     required this.jobTitle,
+    required this.jobCategory,
     required this.jobDescription,
     required this.requiredSkills,
     required this.location,
     required this.country,
+    required this.city,
     required this.salary,
     required this.jobPeriod,
     required this.experience,
     required this.applicationDeadline,
+    required this.jobType,
   });
 
   Map<String, dynamic> toJson() => {
     "jobTitle": jobTitle,
+    "jobCategory": jobCategory,
     "jobDescription": jobDescription,
     "requiredSkills": requiredSkills,
     "location": location,
     "country": country,
+    "city": city,
     "salary": salary,
     "jobPeriod": jobPeriod,
     "experience": experience,
     "applicationDeadline": applicationDeadline,
+    "jobType": jobType,
   };
 }
 
@@ -46,24 +54,28 @@ class CreateJobPostResponse {
     required this.data,
   });
 
-  factory CreateJobPostResponse.fromJson(Map<String, dynamic> json) => CreateJobPostResponse(
-    success: json["success"],
-    message: json["message"],
-    data: json["data"],
-  );
+  factory CreateJobPostResponse.fromJson(Map<String, dynamic> json) =>
+      CreateJobPostResponse(
+        success: json["success"],
+        message: json["message"],
+        data: json["data"],
+      );
 }
 
 class JobPostData {
   final String company;
   final String jobTitle;
+  final String jobCategory;
   final String jobDescription;
   final List<String> requiredSkills;
   final String location;
   final String country;
+  final String city;
   final int salary;
   final String jobPeriod;
   final String experience;
   final DateTime applicationDeadline;
+  final String jobType;
   final bool archived;
   final String id;
   final DateTime createdAt;
@@ -72,14 +84,17 @@ class JobPostData {
   JobPostData({
     required this.company,
     required this.jobTitle,
+    required this.jobCategory,
     required this.jobDescription,
     required this.requiredSkills,
     required this.location,
     required this.country,
+    required this.city,
     required this.salary,
     required this.jobPeriod,
     required this.experience,
     required this.applicationDeadline,
+    required this.jobType,
     required this.archived,
     required this.id,
     required this.createdAt,
@@ -90,14 +105,17 @@ class JobPostData {
     return JobPostData(
       company: json['company'],
       jobTitle: json['jobTitle'],
+      jobCategory: json['jobCategory'],
       jobDescription: json['jobDescription'],
       requiredSkills: List<String>.from(json['requiredSkills']),
       location: json['location'],
       country: json['country'],
+      city: json['city'],
       salary: json['salary'],
       jobPeriod: json['jobPeriod'],
       experience: json['experience'],
       applicationDeadline: DateTime.parse(json['applicationDeadline']),
+      jobType: json['jobType'],
       archived: json['archived'],
       id: json['_id'],
       createdAt: DateTime.parse(json['createdAt']),

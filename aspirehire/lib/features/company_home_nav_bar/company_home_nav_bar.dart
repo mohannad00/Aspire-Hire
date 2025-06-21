@@ -5,7 +5,7 @@ import 'package:aspirehire/core/utils/app_colors.dart';
 import '../../config/datasources/cache/shared_pref.dart';
 import '../company_home_screen/company_home_screen.dart';
 import '../company_profile/company_profile_screen.dart';
-import '../seeker_profile/ProfileScreen.dart';
+import '../job_post/PostJob.dart';
 import '../menu_screen/MenuScreen.dart';
 
 class CompanyHomeNavBar extends StatefulWidget {
@@ -22,15 +22,17 @@ class _CompanyHomeNavBarState extends State<CompanyHomeNavBar> {
   bool _isNavBarVisible = true;
   Timer? _hideNavBarTimer;
   final String token = CacheHelper.getData('token') ?? '';
-  final List<Widget> _screens = [
-    CompanyHomeScreen(),
-    CompanyProfileScreen(),
-    MenuScreen(),
-  ];
+  late List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
+    _screens = [
+      CompanyHomeScreen(),
+      PostJob(onNavigateToHome: () => _onItemTapped(0)),
+      CompanyProfileScreen(),
+      MenuScreen(),
+    ];
     _pageController = PageController(
       initialPage: _selectedIndex,
       viewportFraction: 1.0,
@@ -143,15 +145,17 @@ class _CompanyHomeNavBarState extends State<CompanyHomeNavBar> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                children: List.generate(3, (index) {
+                                children: List.generate(4, (index) {
                                   bool isSelected = _selectedIndex == index;
                                   List<String> labels = [
                                     "Home",
+                                    "Post Job",
                                     "Profile",
                                     "Menu",
                                   ];
                                   List<IconData> icons = [
                                     Icons.home,
+                                    Icons.post_add,
                                     Icons.person,
                                     Icons.menu,
                                   ];

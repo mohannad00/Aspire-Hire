@@ -20,10 +20,7 @@ class CreateJobPostCubit extends Cubit<CreateJobPostState> {
         ApiEndpoints.createJobPost,
         data: request.toJson(),
         options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token,
-          },
+          headers: {'Content-Type': 'application/json', 'Authorization': token},
         ),
       );
 
@@ -33,10 +30,17 @@ class CreateJobPostCubit extends Cubit<CreateJobPostState> {
       print('Headers: ${response.headers}');
       print('Data: ${response.data}');
 
-      if (response.statusCode == 200) {
+      if ((response.statusCode == 200 || response.statusCode == 201) &&
+          response.data['success'] == true) {
+        print('CUBIT: Emitting CreateJobPostSuccess state');
         emit(CreateJobPostSuccess('Job post created successfully'));
       } else {
-        emit(CreateJobPostFailure(response.data['message'] ?? 'Failed to create job post'));
+        print('CUBIT: Emitting CreateJobPostFailure state');
+        emit(
+          CreateJobPostFailure(
+            response.data['message'] ?? 'Failed to create job post',
+          ),
+        );
       }
     } on DioException catch (e) {
       // Print DioException details
