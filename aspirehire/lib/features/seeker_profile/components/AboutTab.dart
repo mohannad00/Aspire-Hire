@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/models/UserProfile.dart';
 import '../../../core/models/GetProfile.dart' as profile;
+import '../../../core/utils/cv_preview_service.dart';
 
 class AboutTab extends StatelessWidget {
   final UserProfile user;
@@ -43,7 +44,7 @@ class AboutTab extends StatelessWidget {
           if (user.resume != null) ...[
             _buildSectionTitle('Resume'),
             const SizedBox(height: 12),
-            _buildResumeCard(user.resume!),
+            _buildResumeCard(context, user.resume!),
             const SizedBox(height: 24),
           ],
         ],
@@ -163,7 +164,7 @@ class AboutTab extends StatelessWidget {
     );
   }
 
-  Widget _buildResumeCard(Resume resume) {
+  Widget _buildResumeCard(BuildContext context, Resume resume) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -193,10 +194,17 @@ class AboutTab extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              // Open resume URL
-              // You can use url_launcher package to open the URL
+              // Use the CV preview service
+              if (resume.secureUrl != null && resume.secureUrl!.isNotEmpty) {
+                CvPreviewService.previewCv(
+                  context: context,
+                  cvUrl: resume.secureUrl!,
+                  fileName: 'Resume.pdf',
+                );
+              }
             },
             icon: const Icon(Icons.open_in_new, color: Color(0xFF013E5D)),
+            tooltip: 'Preview Resume',
           ),
         ],
       ),

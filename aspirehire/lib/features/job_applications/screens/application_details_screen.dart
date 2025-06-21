@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/components/ReusableButton.dart';
 import '../../../config/datasources/cache/shared_pref.dart';
 import '../../../core/models/JobApplication.dart';
+import '../../../core/utils/cv_preview_service.dart';
 import '../state_management/application_details_cubit.dart';
 
 class ApplicationDetailsScreen extends StatefulWidget {
@@ -427,15 +428,15 @@ class _ApplicationDetailsScreenState extends State<ApplicationDetailsScreen> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // TODO: Implement resume download
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Resume download coming soon!'),
-                    ),
+                  // Use the CV preview service (PDF first, then WebView fallback)
+                  CvPreviewService.previewCv(
+                    context: context,
+                    cvUrl: application.resume.secureUrl,
+                    fileName: 'Resume.pdf',
                   );
                 },
-                icon: const Icon(Icons.download),
-                label: const Text('Download Resume'),
+                icon: const Icon(Icons.visibility),
+                label: const Text('Preview Resume'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF044463),
                   foregroundColor: Colors.white,

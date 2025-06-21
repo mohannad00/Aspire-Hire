@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/models/JobApplication.dart';
+import '../../../core/utils/cv_preview_service.dart';
 import '../screens/application_details_screen.dart';
 
 class ApplicationCard extends StatelessWidget {
@@ -155,15 +156,15 @@ class ApplicationCard extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          // TODO: Implement resume download
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Resume download coming soon!'),
-                            ),
+                          // Use the CV preview service (PDF first, then WebView fallback)
+                          CvPreviewService.previewCv(
+                            context: context,
+                            cvUrl: application.resume.secureUrl,
+                            fileName: 'Resume.pdf',
                           );
                         },
-                        icon: const Icon(Icons.download, size: 16),
-                        label: const Text('Download Resume'),
+                        icon: const Icon(Icons.visibility, size: 16),
+                        label: const Text('Preview Resume'),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: const Color(0xFF044463),
                           side: const BorderSide(color: Color(0xFF044463)),
