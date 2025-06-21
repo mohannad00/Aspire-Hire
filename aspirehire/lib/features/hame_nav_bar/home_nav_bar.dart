@@ -170,7 +170,7 @@ class _HomeNavBarState extends State<HomeNavBar> {
                                     "Jobs",
                                     "Community",
                                     "Profile",
-                                    "My Apps",
+                                    "Menu",
                                   ];
                                   List<IconData> icons = [
                                     Icons.home,

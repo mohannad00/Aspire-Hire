@@ -16,11 +16,36 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+
+    // Initialize animations
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
+    // Start animation
+    _animationController.forward();
+
+    // Initialize and navigate
     _initializeAndNavigate();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   Map<String, dynamic> decodeJwtPayload(String token) {
@@ -35,8 +60,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initializeAndNavigate() async {
-    // Wait for 2 seconds to show the splash screen
-    await Future.delayed(const Duration(seconds: 2));
+    // Reduced delay for better UX
+    await Future.delayed(const Duration(milliseconds: 1500));
 
     // Initialize cache helper
     await CacheHelper.init();
@@ -78,10 +103,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Text('Hiro', style: CustomTextStyles.pacifico400style64),
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: const Text('Hiro', style: CustomTextStyles.pacifico400style64),
+        ),
       ),
     );
   }
