@@ -2,7 +2,6 @@
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.7.0+-blue.svg)](https://flutter.dev/)
 [![Dart](https://img.shields.io/badge/Dart-3.7.0+-blue.svg)](https://dart.dev/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 AspireHire is a comprehensive job recruitment and networking platform built with Flutter, designed to connect job seekers, employees, and companies in a professional ecosystem. The platform features separate interfaces for different user types, advanced job matching, social networking capabilities, and professional tools.
 
@@ -202,10 +201,6 @@ We welcome contributions! Please follow these steps:
 - Add comments for complex logic
 - Maintain consistent formatting
 
-## 📱 Screenshots
-
-[Add screenshots of your app here]
-
 ## 🛠️ Development
 
 ### State Management
@@ -225,16 +220,6 @@ The project uses Flutter Bloc with Cubit pattern for state management:
 - Responsive layouts
 - Loading states with Shimmer
 - Custom components for reusability
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Flutter team for the amazing framework
-- All contributors and maintainers
-- The open-source community
 
 ## 📞 Support
 
